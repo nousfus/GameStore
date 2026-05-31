@@ -14,7 +14,10 @@ public class Users {
     private String avatar;
     private Date created_date;
     private String status;
-
+    
+    public String toString() {
+    	return username+email+password+fullname+avatar+created_date+status;
+    }
     public Users() {
     }
 

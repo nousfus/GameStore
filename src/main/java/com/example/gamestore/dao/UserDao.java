@@ -1,7 +1,4 @@
 package com.example.gamestore.dao;
-
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.gamestore.entity.Users;
@@ -14,4 +11,5 @@ public interface UserDao extends JpaRepository<Users, String> {
 //	void update(Users user);
 //	void delete(String username);
 //	Users login(String username, String password);
+	Users findByEmail(String email);
 }
