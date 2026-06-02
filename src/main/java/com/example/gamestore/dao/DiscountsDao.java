@@ -9,4 +9,5 @@ public interface DiscountsDao extends JpaRepository<Discounts, String> {
 //	void create(Discounts d); 
 //	void update(Discounts d); 
 //	void delete(String id);
+	Discounts findByGameId(String game_id);
 }

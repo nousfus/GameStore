@@ -1,6 +1,6 @@
 package com.example.gamestore.entity;
 
-import java.sql.Date;
+import java.util.Date;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,10 +19,10 @@ public class Cart {
 		this.created_at = created_at;
 		this.status = status;
 	}
-	public String getcart_id() {
+	public String getCart_id() {
 		return cart_id;
 	}
-	public void setcart_id(String cart_id) {
+	public void setCart_id(String cart_id) {
 		this.cart_id = cart_id;
 	}
 	public String getUsername() {
@@ -31,10 +31,10 @@ public class Cart {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public Date getcreated_at() {
+	public Date getCreated_at() {
 		return created_at;
 	}
-	public void setcreated_at(Date created_at) {
+	public void setCreated_at(Date created_at) {
 		this.created_at = created_at;
 	}
 	public String getStatus() {

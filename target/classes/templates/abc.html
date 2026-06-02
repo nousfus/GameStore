@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <form id="frm" action="/a" method="get">
+            <input type="number"
+            name="quantity"
+            onchange="this.form.submit()">
+        </form>
+		<h2 th:text = "${quantity}"></h2>
+		
+		<form action = "/checkout2" method = "post">
+			Chọn phương thức thanh toán 
+			    <input type = "radio" name = "pay" value = "Cash">Cash
+			    <input type = "radio" name = "pay" value = "Momo">Momo
+			    <input type = "radio" name = "pay" value = "Bank">Bank<br/>
+			    <button>Thanh toán</button><br><br><hr>
+		</form>
+		<h2 th:text = "${m}"></h2>
+</body>
+</html>

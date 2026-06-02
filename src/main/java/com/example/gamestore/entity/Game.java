@@ -30,22 +30,22 @@ public class Game {
 		this.thumbnail = thumbnail;
 		this.status = status;
 	}
-	public String getgame_id() {
+	public String getGame_id() {
 		return game_id;
 	}
-	public void setgame_id(String game_id) {
+	public void setGame_id(String game_id) {
 		this.game_id = game_id;
 	}
-	public String getdeveloper_id() {
+	public String getDeveloper_id() {
 		return developer_id;
 	}
-	public void setdeveloper_id(String developer_id) {
+	public void setDeveloper_id(String developer_id) {
 		this.developer_id = developer_id;
 	}
-	public String getgame_name() {
+	public String getGame_name() {
 		return game_name;
 	}
-	public void setgame_name(String game_name) {
+	public void setGame_name(String game_name) {
 		this.game_name = game_name;
 	}
 	public String getDescription() {
@@ -60,10 +60,10 @@ public class Game {
 	public void setPrice(float price) {
 		this.price = price;
 	}
-	public Date getrelease_date() {
+	public Date getRelease_date() {
 		return release_date;
 	}
-	public void setrelease_date(Date release_date) {
+	public void setRelease_date(Date release_date) {
 		this.release_date = release_date;
 	}
 	public int getRating() {

@@ -2,6 +2,7 @@ package com.example.gamestore.entity;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -10,7 +11,8 @@ import jakarta.persistence.Table;
 public class Discounts {
 	@Id
 	private String discount_id; 
-	private String game_id; 
+	@Column(name = "game_id")
+	private String gameId;
 	private float discount_percent; 
 	private Date start_date; 	
 	private Date end_date; 
@@ -20,7 +22,7 @@ public class Discounts {
 			String status) {
 		super();
 		this.discount_id = discount_id;
-		this.game_id = game_id;
+		this.gameId = game_id;
 		this.discount_percent = discount_percent;
 		this.start_date = start_date;
 		this.end_date = end_date;
@@ -33,10 +35,10 @@ public class Discounts {
 		this.discount_id = discount_id;
 	}
 	public String getgame_id() {
-		return game_id;
+		return gameId;
 	}
 	public void setgame_id(String game_id) {
-		this.game_id = game_id;
+		this.gameId = game_id;
 	}
 	public float getdiscount_percent() {
 		return discount_percent;

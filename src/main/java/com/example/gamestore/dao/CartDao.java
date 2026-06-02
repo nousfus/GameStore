@@ -13,4 +13,5 @@ public interface CartDao extends JpaRepository<Cart, String> {
 //	void create(Cart c); 
 //	void update(Cart c); 
 //	void delete(String id);
+	Cart findByUsername(String username);
 }

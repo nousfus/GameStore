@@ -11,4 +11,6 @@ public interface CartItemsDao extends JpaRepository<CartItems, String> {
 //	void create(CartItems ci); 
 //	void update(CartItems ci); 
 //	void delete(String id);
+	CartItems findByCartId(String cartId);
+	CartItems findByGameId(String gameid);
 }

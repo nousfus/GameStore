@@ -22,22 +22,22 @@ public class OrderDetails {
 		this.price = price;
 		this.discount_amount = discount_amount;
 	}
-	public String getorder_detail_id() {
+	public String getOrder_detail_id() {
 		return order_detail_id;
 	}
-	public void setorder_detail_id(String order_detail_id) {
+	public void setOrder_detail_id(String order_detail_id) {
 		this.order_detail_id = order_detail_id;
 	}
-	public String getorder_id() {
+	public String getOrder_id() {
 		return order_id;
 	}
-	public void setorder_id(String order_id) {
+	public void setOrder_id(String order_id) {
 		this.order_id = order_id;
 	}
-	public String getgame_id() {
+	public String getGame_id() {
 		return game_id;
 	}
-	public void setgame_id(String game_id) {
+	public void setGame_id(String game_id) {
 		this.game_id = game_id;
 	}
 	public float getPrice() {
@@ -46,10 +46,10 @@ public class OrderDetails {
 	public void setPrice(float price) {
 		this.price = price;
 	}
-	public float getdiscount_amount() {
+	public float getDiscount_amount() {
 		return discount_amount;
 	}
-	public void setdiscount_amount(float discount_amount) {
+	public void setDiscount_amount(float discount_amount) {
 		this.discount_amount = discount_amount;
 	}
 	

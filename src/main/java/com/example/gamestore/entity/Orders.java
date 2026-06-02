@@ -21,10 +21,10 @@ public class Orders {
 		this.total_amount = total_amount;
 		this.status = status;
 	}
-	public String getorder_id() {
+	public String getOrder_id() {
 		return order_id;
 	}
-	public void setorder_id(String order_id) {
+	public void setOrder_id(String order_id) {
 		this.order_id = order_id;
 	}
 	public String getUsername() {
@@ -33,16 +33,16 @@ public class Orders {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public Date getorder_date() {
+	public Date getOrder_date() {
 		return order_date;
 	}
-	public void setorder_date(Date order_date) {
+	public void setOrder_date(Date order_date) {
 		this.order_date = order_date;
 	}
-	public int gettotal_amount() {
+	public int getTotal_amount() {
 		return total_amount;
 	}
-	public void settotal_amount(int total_amount) {
+	public void setTotal_amount(int total_amount) {
 		this.total_amount = total_amount;
 	}
 	public String getStatus() {

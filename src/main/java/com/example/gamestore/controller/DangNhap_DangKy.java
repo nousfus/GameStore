@@ -1,5 +1,5 @@
 package com.example.gamestore.controller;
-import java.util.Date;
+import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,7 @@ public class DangNhap_DangKy {
 		if(!password.equals(password2)) {
 			m.addAttribute("kq","Mật khẩu không trùng");
 		}
-		Date date = new Date();
+		Date date = new Date(System.currentTimeMillis());
 		Users user = new Users(username,email,password,fullname,"a",date,"Active");
 		udao.save(user);
 		return "forward:/dndk";
