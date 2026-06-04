@@ -31,22 +31,22 @@ public class GameRequirements {
 		this.directx = directx;
 		this.storage = storage;
 	}
-	public String getrequirement_id() {
+	public String getRequirement_id() {
 		return requirement_id;
 	}
-	public void setrequirement_id(String requirement_id) {
+	public void setRequirement_id(String requirement_id) {
 		this.requirement_id = requirement_id;
 	}
-	public String getgame_id() {
+	public String getGame_id() {
 		return game_id;
 	}
-	public void setgame_id(String game_id) {
+	public void setGame_id(String game_id) {
 		this.game_id = game_id;
 	}
-	public String getrequirement_type() {
+	public String getRequirement_type() {
 		return requirement_type;
 	}
-	public void setrequirement_type(String requirement_type) {
+	public void setRequirement_type(String requirement_type) {
 		this.requirement_type = requirement_type;
 	}
 	public String getOs() {
@@ -61,16 +61,16 @@ public class GameRequirements {
 	public void setProcessor(String processor) {
 		this.processor = processor;
 	}
-	public String getmemory_ram() {
+	public String getMemory_ram() {
 		return memory_ram;
 	}
-	public void setmemory_ram(String memory_ram) {
+	public void setMemory_ram(String memory_ram) {
 		this.memory_ram = memory_ram;
 	}
-	public String getgraphicscard() {
+	public String getGraphicscard() {
 		return graphicscard;
 	}
-	public void setgraphicscard(String graphicscard) {
+	public void setGraphicscard(String graphicscard) {
 		this.graphicscard = graphicscard;
 	}
 	public String getDirectx() {

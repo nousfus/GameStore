@@ -18,22 +18,22 @@ public class GameVideos {
 		this.video_url = video_url;
 		this.title = title;
 	}
-	public String getvideo_id() {
+	public String getVideo_id() {
 		return video_id;
 	}
-	public void setvideo_id(String video_id) {
+	public void setVideo_id(String video_id) {
 		this.video_id = video_id;
 	}
-	public String getgame_id() {
+	public String getGame_id() {
 		return game_id;
 	}
-	public void setgame_id(String game_id) {
+	public void setGame_id(String game_id) {
 		this.game_id = game_id;
 	}
-	public String getvideo_url() {
+	public String getVideo_url() {
 		return video_url;
 	}
-	public void setvideo_url(String video_url) {
+	public void setVideo_url(String video_url) {
 		this.video_url = video_url;
 	}
 	public String getTitle() {

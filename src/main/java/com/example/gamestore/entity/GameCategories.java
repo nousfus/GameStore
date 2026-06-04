@@ -14,16 +14,16 @@ public class GameCategories {
 		this.game_id = game_id;
 		this.category_id = category_id;
 	}
-	public String getgame_id() {
+	public String getGame_id() {
 		return game_id;
 	}
-	public void setgame_id(String game_id) {
+	public void setGame_id(String game_id) {
 		this.game_id = game_id;
 	}
-	public String getcategory_id() {
+	public String getCategory_id() {
 		return category_id;
 	}
-	public void setcategory_id(String category_id) {
+	public void setCategory_id(String category_id) {
 		this.category_id = category_id;
 	}
 	

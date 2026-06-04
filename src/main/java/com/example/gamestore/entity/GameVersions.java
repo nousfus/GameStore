@@ -24,34 +24,34 @@ public class GameVersions {
 		this.update_description = update_description;
 		this.release_date = release_date;
 	}
-	public String getversion_id() {
+	public String getVersion_id() {
 		return version_id;
 	}
-	public void setversion_id(String version_id) {
+	public void setVersion_id(String version_id) {
 		this.version_id = version_id;
 	}
-	public String getgame_id() {
+	public String getGame_id() {
 		return game_id;
 	}
-	public void setgame_id(String game_id) {
+	public void setGame_id(String game_id) {
 		this.game_id = game_id;
 	}
-	public String getversion_number() {
+	public String getVersion_number() {
 		return version_number;
 	}
-	public void setversion_number(String version_number) {
+	public void setVersion_number(String version_number) {
 		this.version_number = version_number;
 	}
-	public String getupdate_description() {
+	public String getUpdate_description() {
 		return update_description;
 	}
-	public void setupdate_description(String update_description) {
+	public void setUpdate_description(String update_description) {
 		this.update_description = update_description;
 	}
-	public Date getrelease_date() {
+	public Date getRelease_date() {
 		return release_date;
 	}
-	public void setrelease_date(Date release_date) {
+	public void setRelease_date(Date release_date) {
 		this.release_date = release_date;
 	}
 	
