@@ -7,6 +7,8 @@
 <head>
 <body>
 		Danh sách sản phẩm 
-		
+		<block th:each = "item :${a}">
+			<input type = "checkbox" th:text = "${item.category_name}">
+		</block>
 </body>
 </html>
