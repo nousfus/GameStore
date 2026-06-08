@@ -6,20 +6,28 @@
     <title>Document</title>
 </head>
 <body>
-        <form id="frm" action="/a" method="get">
-            <input type="number"
-            name="quantity"
-            onchange="this.form.submit()">
-        </form>
-		<h2 th:text = "${quantity}"></h2>
-		
-		<form action = "/checkout2" method = "post">
-			Chọn phương thức thanh toán 
-			    <input type = "radio" name = "pay" value = "Cash">Cash
-			    <input type = "radio" name = "pay" value = "Momo">Momo
-			    <input type = "radio" name = "pay" value = "Bank">Bank<br/>
-			    <button>Thanh toán</button><br><br><hr>
-		</form>
-		<h2 th:text = "${m}"></h2>
+       <button>Chọn video game</button>
+	   <button>Chọn ảnh game</button>
+	   
+	   <h2>Chọn video trailer</h2>
+	   	<form action="/gameVideos"
+	   		      method="post"
+	   		      enctype="multipart/form-data">
+	   		    <input type="file" name="video" accept="video/*">
+	   		    <button type="submit">Upload</button>
+	   		</form>
+
+	       <h2>Chọn ảnh game</h2>
+	   	<form action="/gameImages"
+	   	      method="post"
+	   	      enctype="multipart/form-data">
+
+	   	    <input type="file"
+	   	           name="images"
+	   	           accept="image/*"
+	   	           multiple>
+
+	   	    <button type="submit">Upload</button>
+	   	</form>
 </body>
 </html>

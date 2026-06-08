@@ -144,7 +144,7 @@ public class MuaHang {
 				total += game.getPrice() * c.getQuantity();
 			}
 		}
-		Orders order = new Orders(neworderid,tempusername,date,total,"Paid");orderdao.save(order);	//tạo order
+		Orders order = new Orders(neworderid,tempusername,date,total,"Pending");orderdao.save(order);	//tạo order
 		
 		List<OrderDetails> temp = orderdetaildao.findAll();
 		OrderDetails od = temp.get(orderdetaildao.findAll().size()-1);

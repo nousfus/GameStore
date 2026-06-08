@@ -6,92 +6,96 @@
     <title>Game</title>
 </head>
 <body>
+<form action="/addgame"
+      method="post"
+      enctype="multipart/form-data">
+	  
     <h2>Tạo game</h2>
-    <input placeholder="GameId"><br/>
-    <input placeholder="Developer ID"><br/>
-    <input placeholder="Game Name"><br/>
-    <input placeholder="Description"><br/>
-    <input placeholder="price"><br/>
-    <input placeholder="ReleaseDate"><br/>
-    <input placeholder="Rating"><br/>
-    <input placeholder="Thumbnai"><br/>
-    <input placeholder="Active"><br/>
+    <input placeholder="Game Name" name = "gamename"><br/>
+    <input placeholder="Description" name = "description"><br/>
+    <input placeholder="price" type = "number" name = "price"><br/>
+	Thumbnail 	<input type="file" name="thumbnail"accept="image/*"><br/>	
     Chọn thể loại <br/>
-    <input type = "checkbox">abc
-    <input type = "checkbox">edf
-    <br/>Chọn phiên bản : 
-    <select>
-        <option>abc</option>
-         <option>abc</option>
-    </select><br/>
-    <input placeholder="Mô tả phiên bản cập nhật"><br/>
-    <h2>Cấu hình</h2>
-    <select>
-        <option>OS</option>
-        <option>Microsoft Windows</option>
-        <option>macOS</option>
-        <option>Ubuntu</option>
-        <option>Android</option>
-        <option>iOS</option>
-        <option>Linux</option>
-    </select><br/>
-    <select>
-        <option>CPU</option>
-        <option>Intel Celeron N4020</option>
-        <option>Intel Core i3-12100</option>
-        <option>AMD Ryzen 5 5600</option>
-        <option>Intel Core i5-14600K</option>
-        <option>AMD Ryzen 7 7800X3D</option>
-        <option>Intel Core Ultra 9 285K</option>
-        <option>AMD Ryzen 9 9950X</option>
-        <option>AMD Ryzen Threadripper PRO 7995WX</option>
-    </select><br/>
-    <select>
-        <option>RAM</option>
-        <option>4GB</option>
-        <option>8GB</option>
-        <option>12GB</option>
-        <option>16GB</option>
-        <option>24GB</option>
-        <option>32GB</option>
-        <option>48GB</option>
-        <option>64GB</option>
-    </select><br/>
-    <select>
-        <option>Graphics Card</option>
-        <option>Intel UHD Graphics, Intel HD Graphics</option>
-        <option>NVIDIA GeForce GTX 1050 Ti, AMD Radeon RX 560</option>
-        <option>NVIDIA GeForce GTX 1660 Super, AMD Radeon RX 6600</option>
-        <option>NVIDIA GeForce RTX 3060, AMD Radeon RX 7600 XT</option>
-        <option>NVIDIA GeForce RTX 4070 Super, AMD Radeon RX 7800 XT</option>
-        <option>NVIDIA GeForce RTX 5080, AMD Radeon RX 7900 XTX</option>
-        <option>NVIDIA GeForce RTX 5090</option>
-    </select><br/>
-    <select>
-        <option>Graphics Card</option>
-        <option>DirectX 8.0</option>
-        <option>DirectX 9.0</option>
-        <option>DirectX 10</option>
-        <option>DirectX 11</option>
-        <option>DirectX 12</option>
-        <option>DirectX 12 Ultimate</option>
-    </select><br/>
-    <select>
-        <option>Storage</option>
-        <option>128GB</option>
-        <option>256GB</option>
-        <option>512GB</option>
-        <option>1TB</option>
-        <option>2TB</option>
-        <option>4TB</option>
-    </select><br/>
+	<block th:each = "item :${dscategory}">
+					<input type = "checkbox" th:text = "${item.category_name}" th:value = "${item.category_id}" name = "category">
+				</block>
+	<h2>Cấu hình</h2>
 
+	<select name="os">
+	    <option value="">OS</option>
+	    <option value="Microsoft Windows">Microsoft Windows</option>
+	    <option value="macOS">macOS</option>
+	    <option value="Ubuntu">Ubuntu</option>
+	    <option value="Android">Android</option>
+	    <option value="iOS">iOS</option>
+	    <option value="Linux">Linux</option>
+	</select><br/>
+
+	<select name="cpu">
+	    <option value="">CPU</option>
+	    <option value="Intel Celeron N4020">Intel Celeron N4020</option>
+	    <option value="Intel Core i3-12100">Intel Core i3-12100</option>
+	    <option value="AMD Ryzen 5 5600">AMD Ryzen 5 5600</option>
+	    <option value="Intel Core i5-14600K">Intel Core i5-14600K</option>
+	    <option value="AMD Ryzen 7 7800X3D">AMD Ryzen 7 7800X3D</option>
+	    <option value="Intel Core Ultra 9 285K">Intel Core Ultra 9 285K</option>
+	    <option value="AMD Ryzen 9 9950X">AMD Ryzen 9 9950X</option>
+	    <option value="AMD Ryzen Threadripper PRO 7995WX">AMD Ryzen Threadripper PRO 7995WX</option>
+	</select><br/>
+
+	<select name="ram">
+	    <option value="">RAM</option>
+	    <option value="4GB">4GB</option>
+	    <option value="8GB">8GB</option>
+	    <option value="12GB">12GB</option>
+	    <option value="16GB">16GB</option>
+	    <option value="24GB">24GB</option>
+	    <option value="32GB">32GB</option>
+	    <option value="48GB">48GB</option>
+	    <option value="64GB">64GB</option>
+	</select><br/>
+
+	<select name="gpu">
+	    <option value="">Graphics Card</option>
+	    <option value="Intel UHD Graphics">Intel UHD Graphics</option>
+	    <option value="GTX 1050 Ti">NVIDIA GeForce GTX 1050 Ti</option>
+	    <option value="GTX 1660 Super">NVIDIA GeForce GTX 1660 Super</option>
+	    <option value="RTX 3060">NVIDIA GeForce RTX 3060</option>
+	    <option value="RTX 4070 Super">NVIDIA GeForce RTX 4070 Super</option>
+	    <option value="RTX 5080">NVIDIA GeForce RTX 5080</option>
+	    <option value="RTX 5090">NVIDIA GeForce RTX 5090</option>
+	</select><br/>
+
+	<select name="directx">
+	    <option value="">DirectX</option>
+	    <option value="8.0">DirectX 8.0</option>
+	    <option value="9.0">DirectX 9.0</option>
+	    <option value="10">DirectX 10</option>
+	    <option value="11">DirectX 11</option>
+	    <option value="12">DirectX 12</option>
+	    <option value="12 Ultimate">DirectX 12 Ultimate</option>
+	</select><br/>
+
+	<select name="storage">
+	    <option value="">Storage</option>
+	    <option value="128GB">128GB</option>
+	    <option value="256GB">256GB</option>
+	    <option value="512GB">512GB</option>
+	    <option value="1TB">1TB</option>
+	    <option value="2TB">2TB</option>
+	    <option value="4TB">4TB</option>
+	</select><br/>
 
     <h2>Chọn video trailer</h2>
-
+	    <input type="file" name="video" accept="video/*">
+		<input name = "title" placeholder = "title video">
     <h2>Chọn ảnh game</h2>
-
-
+	    <input type="file"
+	           name="images"
+	           accept="image/*"
+	           multiple>
+	<button>add Game</button>
+</form>	<!---->
     <hr/>
     <h2>Game</h2>
     <table border = 1>
@@ -198,7 +202,6 @@
             <th>Image ID</th>
             <th>Game ID</th>
             <th>Image URL</th>
-            <th>Display Order</th>
         </tr>
     </thead>
     <tbody>
@@ -206,7 +209,6 @@
             <td th:text="${item.image_id}"></td>
             <td th:text="${item.game_id}"></td>
             <td th:text="${item.image_url}"></td>
-            <td th:text="${item.display_order}"></td>
         </tr>
     </tbody>
 </table>

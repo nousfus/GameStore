@@ -1,5 +1,6 @@
 package com.example.gamestore.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,16 +10,15 @@ import jakarta.persistence.Table;
 public class GameImages {
 	@Id
 	private String image_id; 
-	private String game_id; 
+	@Column(name = "game_id")
+	private String gameId; 
 	private String image_url; 
-	private int display_order; 
 	public GameImages() { }
-	public GameImages(String image_id, String game_id, String image_url, int display_order) {
+	public GameImages(String image_id, String game_id, String image_url) {
 		super();
 		this.image_id = image_id;
-		this.game_id = game_id;
+		this.gameId = game_id;
 		this.image_url = image_url;
-		this.display_order = display_order;
 	}
 	public String getImage_id() {
 		return image_id;
@@ -27,10 +27,10 @@ public class GameImages {
 		this.image_id = image_id;
 	}
 	public String getGame_id() {
-		return game_id;
+		return gameId;
 	}
 	public void setGame_id(String game_id) {
-		this.game_id = game_id;
+		this.gameId = game_id;
 	}
 	public String getImage_url() {
 		return image_url;
@@ -38,11 +38,4 @@ public class GameImages {
 	public void setImage_url(String image_url) {
 		this.image_url = image_url;
 	}
-	public int getDisplay_order() {
-		return display_order;
-	}
-	public void setDisplay_order(int display_order) {
-		this.display_order = display_order;
-	}
-	
 }
