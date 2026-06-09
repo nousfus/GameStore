@@ -6,11 +6,12 @@ import jakarta.persistence.*;
 public class Roles { 
 	@Id
 	private String role_id; 
-	private String role_name; 
+	@Column(name = "role_name")
+	private String roleName; 
 	public Roles() { } 
 	public Roles(String role_id, String role_name) { 
 		this.role_id = role_id; 
-		this.role_name = role_name; 
+		this.roleName = role_name; 
 	}
 	public String getrole_id() {
 		return role_id;
@@ -19,10 +20,10 @@ public class Roles {
 		this.role_id = role_id;
 	}
 	public String getrole_name() {
-		return role_name;
+		return roleName;
 	}
 	public void setrole_name(String role_name) {
-		this.role_name = role_name;
+		this.roleName = role_name;
 	}
 	
 }
