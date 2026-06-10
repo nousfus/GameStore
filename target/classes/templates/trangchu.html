@@ -349,14 +349,26 @@
             <a href="#">Community</a>
             <a href="#">News</a>
             <a href="#">Support</a>
-        </nav>
+        </nav>	
 
         <div class="header-right">
             <input type="text" placeholder="Search games..." class="search-box">
-
-            <button class="login-btn">
-                Login
-            </button>
+	
+			<a href = "/login-register" th:if = "${username == null}">
+	            <button class="login-btn">
+	                Login
+	            </button>
+			</a>
+			<a href = "/user/logout" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Logout
+	            </button>
+			</a>
+			<a href = "/user/profile" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Profile
+	            </button>
+			</a>
         </div>
 
     </header>
@@ -365,7 +377,7 @@
     <div class="hero">
 
         <div class="hero-content">
-
+			<h2 th:if = "${username!=null}"th:text = "'Chào mừng '+${username}"></h2>
             <h1>
                 Discover The Best PC Games
             </h1>

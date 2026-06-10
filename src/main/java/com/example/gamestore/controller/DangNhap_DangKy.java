@@ -38,30 +38,24 @@ public class DangNhap_DangKy {
 		Users user = username.contains("@") ? udao.findByEmail(username) : udao.findById(username).orElse(null);
 		if(user==null) {
 			m.addAttribute("kq","Tài khoản không tồn tại");
-		}else {
-			String kq = password.equals(user.getPassword()) ? "Đăng nhập thành công" : "Mật khẩu không chính xác";
-			m.addAttribute("kq",kq);
-			System.out.println(kq);
+			return "forward:/login-register";
+		}else if(password.equals(user.getPassword())){
 			session.setAttribute("user", user);
+			return "forward:/";
+		}else {
+			System.out.println("Mật khẩu không chính xác");
+			return "forward:/login-register";
 		}
-		return "forward:/login-register";
 	}
-	@PostMapping("/dk")
+	@PostMapping("/user/register")
 	public String check2(Model m, 
 			@RequestParam("fullName") String fullname,
 			@RequestParam("email")String email,
 			@RequestParam("username") String username,
 			@RequestParam("password")String password,
-			@RequestParam("confirmPassword")String password2,
-			@RequestParam("acceptTerms")boolean acceptTerms) {
-		if(!password.equals(password2)) {
-			System.out.println("Đăng nhập thất bại");
-			System.out.println("Mật khẩu không trùng");
+			@RequestParam("confirmPassword")String password2) {
+		if(!password.equals(password2)) {							//Mật khẩu không trùng
 			m.addAttribute("kq","Mật khẩu không trùng");
-		}
-		if(!acceptTerms) {
-			System.out.println("Đăng nhập thất bại");
-			System.out.print("Vui lòng đồng ý với Điều khoản dịch vụ");
 		}else {
 			Date date = new Date(System.currentTimeMillis());
 			Users user = new Users(username,email,password,fullname,"a",date,"Active");
@@ -71,4 +65,5 @@ public class DangNhap_DangKy {
 		}
 		return "forward:/login-register";
 	}
+
 }
