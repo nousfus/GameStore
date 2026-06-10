@@ -1,5 +1,6 @@
 package com.example.gamestore.controller;
 import java.sql.Date;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,13 @@ public class DangNhap_DangKy {
 	RolesDao roledao;
 	@Autowired
 	HttpSession session;
+	@Autowired
     private EmailService emailService;
+    public String generateOTP() {				// Tạo mã OTP xác nhận email
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000);
+        return String.valueOf(otp);
+    }
 	@RequestMapping("/login-register")
 	public String dndk(Model m) {
 		return "User/login-register";
@@ -59,24 +66,48 @@ public class DangNhap_DangKy {
 			@RequestParam("confirmPassword")String password2) {
 		if(!password.equals(password2)) {							//Mật khẩu không trùng
 			m.addAttribute("kq","Mật khẩu không trùng");
+			System.out.println("Mật khẩu không trùng");
 		}else {
 			Date date = new Date(System.currentTimeMillis());
 			Users user = new Users(username,email,password,fullname,"a",date,"Active");
-			Roles role = roledao.findByRoleName("Customer");
-			userroledao.save(new UserRoles(user.getUsername(),role.getrole_id()));
-			udao.save(user);
+			session.setAttribute("user", user);
+			session.setAttribute("otp", generateOTP());
 		}
-		return "forward:/CheckRegister";
+		return "redirect:/CheckRegister";
 	}
 	@GetMapping("/CheckRegister")
     public String sendMail() {
 		Users user = (Users) session.getAttribute("user");
         emailService.sendEmail(
             user.getEmail(),
-            "Thông báo đổi mật khẩu",
-            "Mã OTP đổi mật khẩu của bạn là "+(String) session.getAttribute("otp")
+            "Thông báo đăng ký tài khoản",
+            "Mã OTP đăng ký của bạn là "+(String) session.getAttribute("otp")
         );
-        return "redirect:/verify";
+        return "redirect:/verify-register";
     }
+	@RequestMapping("/verify-register")
+	public String verify(Model m) {
+		return "User/verify-email_register";
+	}
+	@PostMapping("/verify-get-register")	
+	public String verify_get(Model m,@RequestParam("code")String code) {
+		if(code.equals((String)session.getAttribute("otp"))){
+			Users user = (Users)session.getAttribute("user");
+			Roles role = roledao.findByRoleName("Customer");
+			udao.save(user);
+			userroledao.save(new UserRoles(user.getUsername(),role.getrole_id()));
+			session.setAttribute("user", user);
+			session.removeAttribute("otp");
+			return "redirect:/";
+		}else {
+			System.out.println("Mã xác nhận không đúng");
+			return "redirect:/verify-register";
+		}
+	}
+	@RequestMapping("/resend-register")
+	public String resend() {
+		session.setAttribute("otp",generateOTP());
+		return "redirect:/CheckRegister";
+	}
 
 }

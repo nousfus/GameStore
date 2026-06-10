@@ -249,7 +249,7 @@
                 <div class="auth-section register" style="padding:0;">
                     <h2>Đăng Ký</h2>
 
-                    <form method="POST" action="/user/register">
+                    <form method="POST" th:action="@{/user/register}">
                         <div class="form-group">
                             <label for="reg-fullname">Họ và Tên</label>
                             <input type="text" id="reg-fullname" name="fullName" placeholder="Nhập họ và tên" required>
