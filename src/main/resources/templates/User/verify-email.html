@@ -49,13 +49,28 @@
                 </div>
                 <div style="display:flex;gap:12px">
                     <button type="submit" class="btn btn-primary">Xác nhận</button>
-                    <button type="button" onclick="document.getElementById('email').focus()" class="btn btn-secondary">Gửi lại mã</button>
+                    <a href = "/resend"><button type="button" onclick="document.getElementById('email').focus()" class="btn btn-secondary"  id="resendBtn" disabled>Gửi lại mã (10s)</button></a>
                 </div>
             </form>
 
         </div>
     </main>
+	<script>
+	    let timeLeft = 10;
+	    const btn = document.getElementById("resendBtn");
 
+	    const countdown = setInterval(() => {
+	        timeLeft--;
+
+	        btn.textContent = `Gửi lại mã (${timeLeft}s)`;
+
+	        if (timeLeft <= 0) {
+	            clearInterval(countdown);
+	            btn.disabled = false;
+	            btn.textContent = "Gửi lại mã";
+	        }
+	    }, 1000);
+	</script>
     <footer>
         <p>© 2026 GameStore. All Rights Reserved.</p>
     </footer>

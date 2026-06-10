@@ -81,7 +81,11 @@ public class ChangePassword {
 			return "redirect:/verify";
 		}
 	}
-	
+	@RequestMapping("/resend")
+	public String resend() {
+		session.setAttribute("otp",generateOTP());
+		return "redirect:/send";
+	}
 	@GetMapping("/send")
     public String sendMail() {
 		Users user = (Users) session.getAttribute("user");
