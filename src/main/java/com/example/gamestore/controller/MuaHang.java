@@ -156,7 +156,7 @@ public class MuaHang {
 		if(discount!=null) {
 			discountamount = (game.getPrice() * discount.getdiscount_percent()) / 100;
 		}else {discountamount = 0;}
-		OrderDetails odd = new OrderDetails(neworderdetailid,neworderid,game.getGame_id(),game.getPrice(),discountamount);orderdetaildao.save(odd);	
+		OrderDetails odd = new OrderDetails(neworderdetailid,order,game,game.getPrice(),discountamount);orderdetaildao.save(odd);	
 		
 		
 		//Payments

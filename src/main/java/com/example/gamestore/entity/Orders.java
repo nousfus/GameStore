@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Table(name = "Orders")
 public class Orders {
 	@Id
-	private String order_id; 
+    private String order_id;
 	private String username; 
 	private Date order_date; 
 	private int total_amount; 

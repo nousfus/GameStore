@@ -517,40 +517,36 @@
                 <div class="orders-container">
 
             <!-- ORDER 0 - PENDING -->
-            <div class="order-card">
+            <div class="order-card" th:each = "item :${dsorder}">
                 <div class="order-header">
                     <div class="order-info">
                         <label>Mã đơn</label>
-                        <span>#ORD-2026-001235</span>
+                        <span th:text = "${item.order_id}">#ORD-2026-001235</span>
                     </div>
                     <div class="order-info">
                         <label>Ngày mua</label>
-                        <span>09/06/2026</span>
+                        <span th:text = "${item.order_date}">09/06/2026</span>
                     </div>
                     <div class="order-info">
                         <label>Tổng tiền</label>
-                        <span>1.298.000đ</span>
+                        <span th:text = "${item.total_amount}+'đ'">1.298.000đ</span>
                     </div>
                     <div class="order-info order-status">
-                        <span class="status-badge status-pending">⏳ Đang chờ xử lý</span>
+                        <span class="status-badge status-pending" th:if = "${item.status.equals('Pending')}">⏳ Đang chờ xử lý</span>
+						<span class="status-badge status-completed" th:if = "${item.status.equals('Paid')}">✓ Đã mua</span>
+						<span class="status-badge status-cancelled" th:if = "${item.status.equals('Cancelled')}">✗ Đã hủy</span>
+						<span class="status-badge status-cancelled" th:if = "${item.status.equals('Error')}">✗ Error</span>
                     </div>
                 </div>
 
                 <div class="order-items">
-                    <h4>Sản phẩm (2 game)</h4>
                     <div class="items-list">
+						<h4>Sản phẩm (2 game)</h4>
                         <div class="item-preview">
                             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=300&auto=format&fit=crop">
                             <div class="item-details">
-                                <div class="item-name">Shadow Strike</div>
+                                <div class="item-name" >Shadow Strike</div>
                                 <div class="item-price">799.000đ</div>
-                            </div>
-                        </div>
-                        <div class="item-preview">
-                            <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=300&auto=format&fit=crop">
-                            <div class="item-details">
-                                <div class="item-name">Galaxy Mission</div>
-                                <div class="item-price">499.000đ</div>
                             </div>
                         </div>
                     </div>
@@ -558,8 +554,11 @@
 
                 <div class="order-actions">
                     <button class="action-btn btn-primary">Xem chi tiết</button>
-                    <button class="action-btn btn-secondary">Theo dõi đơn hàng</button>
-                    <button class="action-btn btn-danger">Hủy đơn</button>
+                    <button class="action-btn btn-secondary"  th:if = "${item.status.equals('Pending')}">Theo dõi đơn hàng</button>
+                    <button class="action-btn btn-danger"  th:if = "${item.status.equals('Pending')}">Hủy đơn</button>
+					<button class="action-btn btn-secondary" th:if = "${item.status.equals('Paid')}">Tải lại game</button>
+					<button class="action-btn btn-secondary"  th:if = "${item.status.equals('Cancelled')}">Mua lại</button>
+					<button class="action-btn btn-danger" th:if = "${item.status.equals('Error')}">Yêu cầu hỗ trợ</button>
                 </div>
             </div>
 

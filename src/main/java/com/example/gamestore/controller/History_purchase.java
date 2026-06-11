@@ -2,6 +2,7 @@ package com.example.gamestore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.gamestore.dao.OrderDetailsDao;
@@ -19,11 +20,15 @@ public class History_purchase {
 	@Autowired
 	OrdersDao orderdao;
 	@RequestMapping("/user/history-purchase")
-	public String history() {
+	public String history(Model m) {
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
 			System.out.print(user.getUsername());
 		}
+		m.addAttribute("orderdetaildao", orderdetaildao);
+		m.addAttribute("dsorder",orderdao.findAll());
 		return "User/purchase-history";
 	}
 }
+
+//  th:each = "itemsDetail :${orderdetaildao.findByOrder_orderId(item.orderId)}"
