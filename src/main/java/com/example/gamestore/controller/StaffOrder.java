@@ -41,7 +41,7 @@ public class StaffOrder {
 		//Notification id
 		List<Notifications> notilist = notidao.findAll();
 		Notifications noti = notilist.get(notidao.findAll().size()-1);
-		int last_no_id = Integer.parseInt(noti.getnotification_id().substring(4));
+		int last_no_id = Integer.parseInt(noti.getNotification_id().substring(4));
 		String new_no_id = "NT00"+(last_no_id + 1);
 		
 		//notification content

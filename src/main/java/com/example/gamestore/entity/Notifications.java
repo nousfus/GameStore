@@ -24,10 +24,10 @@ public class Notifications {
 		this.is_read = is_read;
 		this.created_at = created_at;
 	}
-	public String getnotification_id() {
+	public String getNotification_id() {
 		return notification_id;
 	}
-	public void setnotification_id(String notification_id) {
+	public void setNotification_id(String notification_id) {
 		this.notification_id = notification_id;
 	}
 	public String getUsername() {
@@ -54,10 +54,10 @@ public class Notifications {
 	public void setRead(boolean is_read) {
 		this.is_read = is_read;
 	}
-	public Date getcreated_at() {
+	public Date getCreated_at() {
 		return created_at;
 	}
-	public void setcreated_at(Date created_at) {
+	public void setCreated_at(Date created_at) {
 		this.created_at = created_at;
 	}
 	

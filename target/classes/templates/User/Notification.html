@@ -55,7 +55,7 @@
             <a href="#">News</a>
         </nav>
         <div class="header-right">
-            <button class="user-menu">Tài khoản</button>
+            <button class="user-menu" th:text = "'Xin chào '+${username}">Tài khoản</button>
         </div>
     </header>
 
@@ -91,17 +91,17 @@
                         <div class="notification-left">
                             <div style="display:flex;align-items:center;">
                                 <div class="notification-title" th:text="${n.title}">Tiêu đề thông báo</div>
-                                <div th:if="${!n.isread}" class="badge-unread">Chưa đọc</div>
+                                <div th:if="${!n.is_read}" class="badge-unread">Chưa đọc</div>
                             </div>
                             <div class="notification-content" th:text="${n.content}">Nội dung thông báo...</div>
                             <div class="notification-meta">
-                                <span th:text="${#dates.format(n.createdDate, 'dd-MM-yyyy HH:mm')}">01-01-2026 12:00</span>
+                                <span th:text="${#dates.format(n.created_at, 'dd-MM-yyyy HH:mm')}">01-01-2026 12:00</span>
                             </div>
                         </div>
 
                         <div class="actions">
-                            <a th:href="@{/user/notifications/mark-read/{id}(id=${n.id})}"><button class="btn btn-mark">Đánh dấu đã đọc</button></a>
-                            <a th:href="@{/user/notifications/delete/{id}(id=${n.id})}" onclick="return confirm('Xác nhận xóa thông báo?')"><button class="btn btn-delete">Xóa</button></a>
+                            <a th:href="@{/user/notifications/mark-read/{id}(id=${n.notification_id})}"><button class="btn btn-mark" th:if="${!n.is_read}">Đánh dấu đã đọc</button></a>
+                            <a th:href="@{/user/notifications/delete/{id}(id=${n.notification_id})}" onclick="return confirm('Xác nhận xóa thông báo?')"><button class="btn btn-delete">Xóa</button></a>
                         </div>
                     </div>
 

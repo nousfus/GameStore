@@ -12,4 +12,5 @@ public interface NotificationsDao extends JpaRepository<Notifications, String> {
 //	void create(Notifications n); 
 //	void update(Notifications n); 
 //	void delete(String id);
+	List<Notifications> findByUsername(String username);
 }
