@@ -16,9 +16,10 @@ public class Game {
 	private int rating; 
 	private String thumbnail; 
 	private String status; 
+	private String video_url;
 	public Game() { }
 	public Game(String game_id, String developer_id, String game_name, String description, float price, Date release_date,
-			int rating, String thumbnail, String status) {
+			int rating, String thumbnail, String status, String video_url) {
 		super();
 		this.game_id = game_id;
 		this.developer_id = developer_id;
@@ -29,6 +30,13 @@ public class Game {
 		this.rating = rating;
 		this.thumbnail = thumbnail;
 		this.status = status;
+		this.video_url = video_url;
+	}
+	public String getVideo_url() {
+		return video_url;
+	}
+	public void setVideo_url(String video_url) {
+		this.video_url = video_url;
 	}
 	public String getGame_id() {
 		return game_id;

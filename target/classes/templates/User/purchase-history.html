@@ -407,6 +407,15 @@
             }
         }
 
+        /* SIDEBAR + LAYOUT (reused from profile) */
+        .profile-container{display:grid;grid-template-columns:250px 1fr;gap:30px}
+        .sidebar{background-color:#111827;padding:20px;border-radius:15px;border:1px solid #374151;height:fit-content;position:sticky;top:100px}
+        .sidebar h3{color:#22d3ee;margin-bottom:20px;font-size:16px}
+        .menu-item{padding:12px 15px;margin-bottom:8px;background:none;border:none;color:#d1d5db;text-align:left;cursor:pointer;border-radius:8px;transition:0.3s;width:100%;font-size:14px}
+        .menu-item:hover, .menu-item.active{background-color:#1f2937;color:#22d3ee}
+        .content-section{background-color:#111827;padding:30px;border-radius:15px;border:1px solid #374151}
+        .section-title{font-size:24px;margin-bottom:25px;color:#22d3ee}
+
         @media(max-width: 768px){
             header{
                 flex-direction: column;
@@ -459,7 +468,7 @@
         </nav>
 
         <div class="header-right">
-            <button class="user-menu">Tài khoản</button>
+            <button class="user-menu"><h3 th:text = "'Xin chào '+${username}"></h3></button>
         </div>
     </header>
 
@@ -470,29 +479,42 @@
             <h1>Lịch sử Mua hàng</h1>
         </div>
 
-        <!-- TABS -->
-        <div class="tabs">
-            <button class="tab active">Tất cả</button>
-            <button class="tab">Đang chờ xử lý</button>
-            <button class="tab">Đã mua</button>
-            <button class="tab">Đã hủy</button>
-            <button class="tab">Hoàn lại</button>
-        </div>
+        <div class="profile-container">
 
-        <!-- FILTER & SEARCH -->
-        <div class="controls">
-            <input type="text" placeholder="Tìm kiếm theo tên game hoặc mã đơn..." class="search-input">
-            <select class="filter-select">
-                <option>Tất cả thời gian</option>
-                <option>7 ngày qua</option>
-                <option>30 ngày qua</option>
-                <option>3 tháng qua</option>
-                <option>12 tháng qua</option>
-            </select>
-        </div>
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <h3>Quản lý tài khoản</h3>
+                <a href="/user/profile"><button class="menu-item">Thông tin cá nhân</button></a>
+                <a href="/user/change-password"><button class="menu-item">Đổi mật khẩu</button></a>
+                <a href="/user/history-purchase"><button class="menu-item active">Lịch sử mua hàng</button></a>
+                <a href="/user/notifications"><button class="menu-item">Quản lý thông báo</button></a>
+            </aside>
 
-        <!-- ORDERS LIST -->
-        <div class="orders-container">
+            <!-- CONTENT -->
+            <div class="content-section">
+
+                <!-- TABS -->
+                <div class="tabs">
+                    <button class="tab active">Tất cả</button>
+                    <button class="tab">Đang chờ xử lý</button>
+                    <button class="tab">Đã mua</button>
+                    <button class="tab">Đã hủy</button>
+                </div>
+
+                <!-- FILTER & SEARCH -->
+                <div class="controls">
+                    <input type="text" placeholder="Tìm kiếm theo tên game hoặc mã đơn..." class="search-input">
+                    <select class="filter-select">
+                        <option>Tất cả thời gian</option>
+                        <option>7 ngày qua</option>
+                        <option>30 ngày qua</option>
+                        <option>3 tháng qua</option>
+                        <option>12 tháng qua</option>
+                    </select>
+                </div>
+
+                <!-- ORDERS LIST -->
+                <div class="orders-container">
 
             <!-- ORDER 0 - PENDING -->
             <div class="order-card">

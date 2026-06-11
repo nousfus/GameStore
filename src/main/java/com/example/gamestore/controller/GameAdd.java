@@ -23,13 +23,11 @@ import com.example.gamestore.dao.GameDao;
 import com.example.gamestore.dao.GameImagesDao;
 import com.example.gamestore.dao.GameRequirementsDao;
 import com.example.gamestore.dao.GameVersionsDao;
-import com.example.gamestore.dao.GameVideosDao;
 import com.example.gamestore.entity.Game;
 import com.example.gamestore.entity.GameCategories;
 import com.example.gamestore.entity.GameImages;
 import com.example.gamestore.entity.GameRequirements;
 import com.example.gamestore.entity.GameVersions;
-import com.example.gamestore.entity.GameVideos;
 
 @Controller
 public class GameAdd {
@@ -37,8 +35,6 @@ public class GameAdd {
 	GameDao gamedao;
 	@Autowired
 	GameVersionsDao gameversiondao;
-	@Autowired
-	GameVideosDao gamevideodao;
 	@Autowired
 	GameRequirementsDao gamerequirementdao;
 	@Autowired
@@ -52,7 +48,6 @@ public class GameAdd {
 	public String listgame(Model m) {
 		m.addAttribute("dsgame",gamedao.findAll());
 		m.addAttribute("dsgameversion",gameversiondao.findAll());
-		m.addAttribute("dsgamevideo",gamevideodao.findAll());
 		m.addAttribute("dsgamerequirement",gamerequirementdao.findAll());
 		m.addAttribute("dsgameimage",gameimagedao.findAll());
 		m.addAttribute("dsgamecategory",gamecategorydao.findAll());
@@ -128,7 +123,6 @@ public class GameAdd {
 		String new_game_id = "GM00"+(lastID+1);								// Tạo game id mới
 		Date date = new Date(System.currentTimeMillis());
 		
-		gamedao.save(new Game(new_game_id,developer_id,game_name,description,price,date,0,fileNameThumbnail,"Active"));
 
 		
 		//Thêm Category
@@ -157,12 +151,6 @@ public class GameAdd {
 		if (file == null || file.isEmpty()) {
 	        return "redirect:/game";
 	    }
-		
-	    String temp_game = "GM001";
-		List<GameVideos> listvideo = gamevideodao.findAll();
-		GameVideos gamevideo = listvideo.get(gamevideodao.findAll().size()-1);
-		int lastid = Integer.parseInt(gamevideo.getVideo_id().substring(5));
-		String new_game_video_id = "VID00" + (lastid +1);
 
 		
         String fileName = file.getOriginalFilename();
@@ -178,8 +166,8 @@ public class GameAdd {
         m.addAttribute("videoPath",
                            "/videos/" + fileName);
         
-        gamevideodao.save(new GameVideos(new_game_video_id,temp_game,fileName,title));
-        
+		gamedao.save(new Game(new_game_id,developer_id,game_name,description,price,date,0,fileNameThumbnail,"Active",fileName));
+
         //Images
         if (images == null || images.length == 0 ||
     	        (images.length == 1 && images[0].isEmpty())) {
