@@ -12,4 +12,5 @@ public interface OrdersDao extends JpaRepository<Orders, String>{
 //	void create(Orders o); 
 //	void update(Orders o); 
 //	void delete(String id);
+	List<Orders> findByUsername(String username);
 }
