@@ -494,12 +494,28 @@
             <div class="content-section">
 
                 <!-- TABS -->
-                <div class="tabs">
-                    <button class="tab active">Tất cả</button>
-                    <button class="tab">Đang chờ xử lý</button>
-                    <button class="tab">Đã mua</button>
-                    <button class="tab">Đã hủy</button>
-                </div>
+				<div class="tabs">
+				    <a class="tab" th:href="@{/history}">Tất cả</a>
+
+				    <a class="tab"
+				       th:href="@{/history(status='Pending')}">
+				       Đang chờ xử lý
+				    </a>
+
+				    <a class="tab"
+				       th:href="@{/history(status='Paid')}">
+				       Đã mua
+				    </a>
+
+				    <a class="tab"
+				       th:href="@{/history(status='Cancelled')}">
+				       Đã hủy
+				    </a>
+					<a class="tab"
+				       th:href="@{/history(status='Error')}">
+				       Bị lỗi
+				    </a>
+				</div>
 
                 <!-- FILTER & SEARCH -->
                 <div class="controls">
@@ -516,7 +532,6 @@
                 <!-- ORDERS LIST -->
                 <div class="orders-container">
 
-            <!-- ORDER 0 - PENDING -->
             <div class="order-card" th:each = "item :${dsorder}">
                 <div class="order-header">
                     <div class="order-info">

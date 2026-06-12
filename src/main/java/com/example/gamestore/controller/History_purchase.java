@@ -1,11 +1,14 @@
 package com.example.gamestore.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.gamestore.dao.OrderDetailsDao;
 import com.example.gamestore.dao.OrdersDao;
@@ -23,17 +26,22 @@ public class History_purchase {
 	OrderDetailsDao orderdetaildao;
 	@Autowired
 	OrdersDao orderdao;
-	@RequestMapping("/user/history-purchase")
-	public String history(Model m) {
+	@RequestMapping("/history")
+	public String history(Model m,@RequestParam(required = false) String status) {
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
 			m.addAttribute("username",user.getUsername());
-			System.out.print(user.getUsername());
+		    List<Orders> dsorder;
+
+		    if(status == null || status.isEmpty()) {
+		        dsorder = orderdao.findByUsername(user.getUsername());
+		    } else {
+		        dsorder = orderdao.findByUsernameAndStatus(user.getUsername(),status);
+		    }
+
+		    m.addAttribute("dsorder", dsorder);
 			m.addAttribute("orderdetaildao", orderdetaildao);
-			m.addAttribute("dsorder",orderdao.findByUsername(user.getUsername()));
 		}
 		return "User/purchase-history";
 	}
 }
-
-//  th:each = "itemsDetail :${orderdetaildao.findByOrderID(item.orderId)}"
