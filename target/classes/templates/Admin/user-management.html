@@ -27,17 +27,122 @@
 <main>
     <h1 style="margin-bottom:12px">Quản lý Người dùng</h1>
     <div class="card">
-        <p style="color:#9ca3af;margin-bottom:12px">Tìm kiếm / Lọc / Thao tác quản lý người dùng (placeholder)</p>
+        <p style="color:#9ca3af;margin-bottom:12px">Tìm kiếm / Lọc / Thao tác quản lý người dùng</p>
+
+        <!-- Add User Form -->
+        <form class="form-row" method="post" action="/admin/user-management/add" style="margin-bottom:12px;align-items:center">
+            <input name="name" placeholder="Tên" required>
+            <input name="email" placeholder="Email" type="email" required>
+            <select name="role">
+                <option value="user">user</option>
+                <option value="staff">staff</option>
+                <option value="admin">admin</option>
+            </select>
+            <select name="status">
+                <option value="active">active</option>
+                <option value="inactive">inactive</option>
+            </select>
+            <button type="submit">Thêm</button>
+        </form>
+
         <table>
             <thead>
                 <tr><th>Id</th><th>Tên</th><th>Email</th><th>Role</th><th>Trạng thái</th><th>Hành động</th></tr>
             </thead>
             <tbody>
-                <tr><td>1</td><td>Nguyễn Văn A</td><td>a@example.com</td><td>user</td><td>active</td><td><button>Chi tiết</button></td></tr>
-                <tr><td>2</td><td>Trần Thị B</td><td>b@example.com</td><td>staff</td><td>active</td><td><button>Chi tiết</button></td></tr>
+                <!-- Example row 1 -->
+                <tr>
+                    <td>1</td>
+                    <td class="name">Nguyễn Văn A</td>
+                    <td class="email">a@example.com</td>
+                    <td class="role">user</td>
+                    <td class="status">active</td>
+                    <td>
+                        <button type="button" class="edit-btn" data-id="1">Sửa</button>
+                        <form method="post" action="/admin/user-management/delete" style="display:inline">
+                            <input type="hidden" name="id" value="1">
+                            <button type="submit">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="edit-row" id="edit-1" style="display:none;background:#0b1220">
+                    <form method="post" action="/admin/user-management/edit">
+                        <td colspan="6" style="padding:10px">
+                            <input type="hidden" name="id" value="1">
+                            <input name="name" value="Nguyễn Văn A" required>
+                            <input name="email" value="a@example.com" type="email" required>
+                            <select name="role">
+                                <option value="user" selected>user</option>
+                                <option value="staff">staff</option>
+                                <option value="admin">admin</option>
+                            </select>
+                            <select name="status">
+                                <option value="active" selected>active</option>
+                                <option value="inactive">inactive</option>
+                            </select>
+                            <button type="submit">Lưu</button>
+                            <button type="button" class="cancel-edit" data-id="1">Hủy</button>
+                        </td>
+                    </form>
+                </tr>
+
+                <!-- Example row 2 -->
+                <tr>
+                    <td>2</td>
+                    <td class="name">Trần Thị B</td>
+                    <td class="email">b@example.com</td>
+                    <td class="role">staff</td>
+                    <td class="status">active</td>
+                    <td>
+                        <button type="button" class="edit-btn" data-id="2">Sửa</button>
+                        <form method="post" action="/admin/user-management/delete" style="display:inline">
+                            <input type="hidden" name="id" value="2">
+                            <button type="submit">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="edit-row" id="edit-2" style="display:none;background:#0b1220">
+                    <form method="post" action="/admin/user-management/edit">
+                        <td colspan="6" style="padding:10px">
+                            <input type="hidden" name="id" value="2">
+                            <input name="name" value="Trần Thị B" required>
+                            <input name="email" value="b@example.com" type="email" required>
+                            <select name="role">
+                                <option value="user">user</option>
+                                <option value="staff" selected>staff</option>
+                                <option value="admin">admin</option>
+                            </select>
+                            <select name="status">
+                                <option value="active" selected>active</option>
+                                <option value="inactive">inactive</option>
+                            </select>
+                            <button type="submit">Lưu</button>
+                            <button type="button" class="cancel-edit" data-id="2">Hủy</button>
+                        </td>
+                    </form>
+                </tr>
             </tbody>
         </table>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            document.querySelectorAll('.edit-btn').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var id = this.dataset.id;
+                    var row = document.getElementById('edit-' + id);
+                    if(row) row.style.display = 'table-row';
+                });
+            });
+            document.querySelectorAll('.cancel-edit').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var id = this.dataset.id;
+                    var row = document.getElementById('edit-' + id);
+                    if(row) row.style.display = 'none';
+                });
+            });
+        });
+    </script>
 </main>
 <footer style="background:#111827;padding:20px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
 </body>
