@@ -49,10 +49,36 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-test</artifactId>
+		    <scope>test</scope>
+		</dependency>
+<<<<<<< HEAD
+=======
+
+		
+>>>>>>> 087e7d66eb19a14da61b5126c8d09dafa02e2f44
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 087e7d66eb19a14da61b5126c8d09dafa02e2f44
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 087e7d66eb19a14da61b5126c8d09dafa02e2f44
  <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
 </dependency>
     </dependencies>
-
 </project>
