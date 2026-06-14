@@ -347,7 +347,6 @@
             <a href="#">Store</a>
             <a href="#">Library</a>
             <a href="#">Community</a>
-            <a href="#">News</a>
             <a href="#">Support</a>
         </nav>	
 
@@ -369,8 +368,13 @@
 	                Profile
 	            </button>
 			</a>
+			<a href = "/carttemp" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Cart
+	            </button>
+			</a>
         </div>
-
+		
     </header>
 
     <!-- HERO -->

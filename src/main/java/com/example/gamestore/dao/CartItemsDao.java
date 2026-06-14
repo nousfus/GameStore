@@ -1,9 +1,12 @@
 package com.example.gamestore.dao;
 
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.gamestore.entity.CartItems;
+import com.example.gamestore.entity.Game;
 
 public interface CartItemsDao extends JpaRepository<CartItems, String> {
 //	List<CartItems> findAll(); 
@@ -11,6 +14,6 @@ public interface CartItemsDao extends JpaRepository<CartItems, String> {
 //	void create(CartItems ci); 
 //	void update(CartItems ci); 
 //	void delete(String id);
-	CartItems findByCartId(String cartId);
-	CartItems findByGameId(String gameid);
+	List<CartItems> findByCartId(String cartId);
+	CartItems findByGame(Game game);
 }

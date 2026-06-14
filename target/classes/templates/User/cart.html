@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -487,7 +487,7 @@
         </nav>
 
         <div class="header-right">
-            <button class="user-menu">Tài khoản</button>
+            <button class="user-menu" th:text = "${username}">Tài khoản</button>
         </div>
     </header>
 
@@ -500,10 +500,19 @@
 
         <!-- CART TABS -->
         <div class="cart-tabs">
-            <button class="cart-tab active">Giỏ hàng 1 <span class="badge">3</span></button>
-            <button class="cart-tab">Giỏ hàng 2 <span class="badge">2</span></button>
-            <button class="cart-tab">Giỏ hàng 3 <span class="badge">1</span></button>
-            <button class="cart-tab" style="margin-left: auto; background-color: #1f2937; color: #22d3ee;">+ Tạo giỏ mới</button>
+			<form method="get">
+			    <button class="cart-tab"
+			            th:each="cart, stat : ${dscart}"
+			            th:classappend="${stat.index == 0} ? ' active' : ''"
+			            th:formaction="@{/user/cartitem/{id}(id=${cart.cart_id})}">
+			        Giỏ hàng [[${stat.count}]]
+			        <span class="badge"
+			              th:text="${cartitemdao.findByCartId(cart.cart_id).size()}">
+			            3
+			        </span>
+			    </button>
+			</form>            
+			<button class="cart-tab" style="margin-left: auto; background-color: #1f2937; color: #22d3ee;">+ Tạo giỏ mới</button>
         </div>
 
         <!-- CONTAINER -->
@@ -521,68 +530,25 @@
                 </div>
 
                 <!-- ITEM 1 -->
-                <div class="cart-item">
-                    <div class="item-info">
+                <div class="cart-item"  th:each = "item :${cartitem}">
+                    <div class="item-info" >
                         <div class="item-image">
                             <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=300&auto=format&fit=crop">
                         </div>
                         <div class="item-details">
-                            <h3>Cyber Warriors</h3>
-                            <p>Action | Sci-Fi</p>
+                            <h3 th:text = "${item.game.game_name}">Hehe</h3>
+                            <p th:text = "${item.game.description}">Action | Sci-Fi</p>
                         </div>
                     </div>
                     <div class="quantity-control">
                         <button>-</button>
-                        <input type="number" value="1" min="1">
+                        <input type="number" value="1" min="1" th:value = "${item.quantity}">
                         <button>+</button>
                     </div>
-                    <div class="item-price">499.000đ</div>
-                    <div class="item-total">499.000đ</div>
+                    <div class="item-price" th:text = "${item.game.price}">aa</div>
+                    <div class="item-total" th:text = "${item.game.price * item.quantity}">abc</div>
                     <button class="remove-btn">✕</button>
                 </div>
-
-                <!-- ITEM 2 -->
-                <div class="cart-item">
-                    <div class="item-info">
-                        <div class="item-image">
-                            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=300&auto=format&fit=crop">
-                        </div>
-                        <div class="item-details">
-                            <h3>Legends Arena</h3>
-                            <p>RPG | Multiplayer</p>
-                        </div>
-                    </div>
-                    <div class="quantity-control">
-                        <button>-</button>
-                        <input type="number" value="1" min="1">
-                        <button>+</button>
-                    </div>
-                    <div class="item-price">699.000đ</div>
-                    <div class="item-total">699.000đ</div>
-                    <button class="remove-btn">✕</button>
-                </div>
-
-                <!-- ITEM 3 -->
-                <div class="cart-item">
-                    <div class="item-info">
-                        <div class="item-image">
-                            <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=300&auto=format&fit=crop">
-                        </div>
-                        <div class="item-details">
-                            <h3>Racing Horizon</h3>
-                            <p>Racing | Sports</p>
-                        </div>
-                    </div>
-                    <div class="quantity-control">
-                        <button>-</button>
-                        <input type="number" value="2" min="1">
-                        <button>+</button>
-                    </div>
-                    <div class="item-price">299.000đ</div>
-                    <div class="item-total">598.000đ</div>
-                    <button class="remove-btn">✕</button>
-                </div>
-
             </div>
 
             <!-- CART SUMMARY -->
@@ -592,33 +558,21 @@
 
                 <div class="summary-row">
                     <span>Tổng phụ:</span>
-                    <span>1.796.000đ</span>
-                </div>
-
-                <div class="summary-row">
-                    <span>Phí vận chuyển:</span>
-                    <span>0đ</span>
+                    <span th:text = "${total}">1.796.000đ</span>
                 </div>
 
                 <div class="summary-row discount">
                     <span>Giảm giá:</span>
-                    <span>-50.000đ</span>
+                    <span th:text = "${discount}">-50.000đ</span>
                 </div>
 
                 <div class="summary-row total">
                     <span>Tổng cộng:</span>
-                    <span>1.746.000đ</span>
+                    <span th:text = "${total-discount}">1.746.000đ</span>
                 </div>
 
-                <button class="checkout-btn">Thanh toán</button>
+                <a href = "/thanhtoan"><button class="checkout-btn">Thanh toán</button></a>
                 <button class="continue-btn">Tiếp tục mua sắm</button>
-
-                <div class="promo-section">
-                    <h4>Mã khuyến mãi</h4>
-                    <input type="text" class="promo-input" placeholder="Nhập mã khuyến mãi">
-                    <button class="apply-promo">Áp dụng</button>
-                </div>
-
             </div>
 
         </div>
