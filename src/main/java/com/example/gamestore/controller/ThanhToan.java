@@ -67,15 +67,17 @@ public class ThanhToan {
 		int lastorder = Integer.parseInt(od.getOrder_detail_id().substring(5));
 		String neworderdetailid = "ODD00"+(lastorder+1);									//Mã orderdetails
 		
-		Game game = new Game();
-		Discounts discount = discountdao.findByGameId(game.getGame_id());					// Discount của game
-		float discountamount = 0;
-		if(discount!=null) {
-			discountamount = (game.getPrice() * discount.getdiscount_percent()) / 100;
-		}else {discountamount = 0;}
-		OrderDetails odd = new OrderDetails(neworderdetailid,order,game.getGame_id(),game.getPrice(),discountamount);orderdetaildao.save(odd);	
 		
-		
+		for(CartItems c : cartitemdao.findByCartId(neededCart_id)) {
+			Discounts discount = discountdao.findByGameId(c.getGame().getGame_id());					// Discount của game
+			float discountamount = 0;
+			if(discount!=null) {
+				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
+			}else {discountamount = 0;}
+			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
+			
+		}
+
 		//Payments
 		List<Payments> hahaha = paymentdao.findAll();
 		Payments pa = hahaha.get(paymentdao.findAll().size()-1);
