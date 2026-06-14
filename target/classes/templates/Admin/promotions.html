@@ -13,21 +13,77 @@
     <h1>Quản lý Khuyến mãi</h1>
     <div class="card">
         <p style="color:#9ca3af;margin-bottom:12px">Tạo / Sửa / Xóa mã khuyến mãi</p>
-        <div class="form-row">
-            <input placeholder="Mã khuyến mãi">
-            <input placeholder="Giảm (%) hoặc số tiền">
-            <select><option>Loại</option><option>Giảm giá phần trăm</option><option>Giảm giá cố định</option></select>
-            <button>Thêm</button>
-        </div>
+
+        <!-- Create Promotion Form -->
+        <form class="form-row" method="post" action="/admin/promotions/add" style="margin-bottom:12px">
+            <input name="code" placeholder="Mã khuyến mãi" required>
+            <input name="value" placeholder="Giảm (%) hoặc số tiền" required>
+            <select name="type">
+                <option value="percent">Giảm giá phần trăm</option>
+                <option value="fixed">Giảm giá cố định</option>
+            </select>
+            <input name="expiry" placeholder="Hạn (dd/mm/yyyy)">
+            <input name="games" placeholder="IDs game (phân tách bằng dấu phẩy)" style="min-width:200px">
+            <button type="submit">Thêm</button>
+        </form>
+
         <div style="margin-top:16px">
             <table style="width:100%;border-collapse:collapse">
-                <thead><tr style="color:#9ca3af"><th>Mã</th><th>Giảm</th><th>Hạn</th><th>Hành động</th></tr></thead>
+                <thead><tr style="color:#9ca3af"><th>Mã</th><th>Giảm</th><th>Hạn</th><th>Áp dụng cho</th><th>Hành động</th></tr></thead>
                 <tbody>
-                    <tr><td>SUMMER21</td><td>10%</td><td>31/07/2026</td><td><button>Sửa</button> <button>Xóa</button></td></tr>
+                    <tr>
+                        <td>SUMMER21</td>
+                        <td>10%</td>
+                        <td>31/07/2026</td>
+                        <td>GAME123, GAME456</td>
+                        <td>
+                            <button type="button" class="promo-edit" data-code="SUMMER21">Sửa</button>
+                            <form method="post" action="/admin/promotions/delete" style="display:inline">
+                                <input type="hidden" name="code" value="SUMMER21">
+                                <button type="submit">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr class="promo-edit-row" id="promo-edit-SUMMER21" style="display:none;background:#0b1220">
+                        <form method="post" action="/admin/promotions/edit">
+                            <td colspan="5" style="padding:10px">
+                                <input type="hidden" name="code" value="SUMMER21">
+                                <input name="code_new" value="SUMMER21" required>
+                                <input name="value" value="10%" required>
+                                <select name="type">
+                                    <option value="percent" selected>Giảm giá phần trăm</option>
+                                    <option value="fixed">Giảm giá cố định</option>
+                                </select>
+                                <input name="expiry" value="31/07/2026">
+                                <input name="games" value="GAME123, GAME456" placeholder="IDs game (phân tách bằng dấu phẩy)" style="min-width:200px">
+                                <button type="submit">Lưu</button>
+                                <button type="button" class="promo-cancel" data-code="SUMMER21">Hủy</button>
+                            </td>
+                        </form>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            document.querySelectorAll('.promo-edit').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var code = this.dataset.code;
+                    var row = document.getElementById('promo-edit-' + code);
+                    if(row) row.style.display = 'table-row';
+                });
+            });
+            document.querySelectorAll('.promo-cancel').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var code = this.dataset.code;
+                    var row = document.getElementById('promo-edit-' + code);
+                    if(row) row.style.display = 'none';
+                });
+            });
+        });
+    </script>
 </main>
 <footer style="background:#111827;padding:20px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
 </body>
