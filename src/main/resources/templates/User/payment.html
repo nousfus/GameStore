@@ -64,8 +64,7 @@
         <div class="content-section">
             <div class="summary-row">
                 <div class="summary-left">
-                    <p>Đơn hàng: <strong th:text="${order.id}">#12345</strong></p>
-                    <p>Người nhận: <strong th:text="${order.customerName}">Người dùng</strong></p>
+                    <p>Người nhận: <strong th:text="${username}">Người dùng</strong></p>
                 </div>
                 <div class="summary-amount">
                     <span th:text="${order.amount}">100000</span> VND
@@ -105,7 +104,7 @@
 
                 <div class="button-row">
                     <button type="submit" class="btn btn-primary">Thanh toán</button>
-                    <a href="/cart" style="text-decoration:none"><button type="button" class="btn btn-secondary">Quay lại giỏ hàng</button></a>
+                    <a href="/user/cart" style="text-decoration:none"><button type="button" class="btn btn-secondary">Quay lại giỏ hàng</button></a>
                 </div>
             </form>
         </div>

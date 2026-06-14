@@ -62,6 +62,7 @@ public class UserCart {
 	public String cartitem(Model m,
 	        @PathVariable("id") String id) {
 		session.removeAttribute("list0");
+		session.setAttribute("cartid", id);													// Cart để thanh toán
 	    List<CartItems> list = cartitemdao.findByCartId(id);
 	    m.addAttribute("cartitem", list);
 		float total = 0;
@@ -76,12 +77,15 @@ public class UserCart {
 		}
 		m.addAttribute("discount",discount);
 		m.addAttribute("total",total);
+		session.setAttribute("total", total);
 	    return "forward:/user/cart";
 	}
 	@RequestMapping("/thanhtoan")
-	public String thanhtoan() {
-		
-		return "User/cart";
+	public String thanhtoan(Model m) {
+		Users user = (Users) session.getAttribute("user");
+		m.addAttribute("total",session.getAttribute("total"));
+		m.addAttribute("username",user.getUsername());
+		return "User/payment";
 	}
 }
 // Ý tưởng thêm : 

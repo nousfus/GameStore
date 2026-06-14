@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameStore - Trang Chủ</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background-color: #0f172a;
+            color: white;
+        }
+
+        /* HEADER */
+        header{
+            background-color: #111827;
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #374151;
+            position: sticky;
+            top: 0;
+        }
+
+        .logo{
+            color: #22d3ee;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        nav a{
+            text-decoration: none;
+            color: #d1d5db;
+            margin: 0 15px;
+            transition: 0.3s;
+        }
+
+        nav a:hover{
+            color: white;
+        }
+
+        .header-right{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box{
+            padding: 10px 15px;
+            width: 250px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            background-color: #1f2937;
+            color: white;
+        }
+
+        .login-btn{
+            background-color: #22d3ee;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-btn:hover{
+            background-color: #67e8f9;
+        }
+
+        /* HERO */
+        .hero{
+            height: 500px;
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+            url('https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=1400&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            padding: 0 80px;
+        }
+
+        .hero-content{
+            width: 600px;
+        }
+
+        .hero-content h1{
+            font-size: 55px;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p{
+            color: #d1d5db;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .hero-buttons button{
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .store-btn{
+            background-color: #22d3ee;
+            color: black;
+        }
+
+        .store-btn:hover{
+            background-color: #67e8f9;
+        }
+
+        .trailer-btn{
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .trailer-btn:hover{
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        /* SECTION */
+        section{
+            padding: 60px 80px;
+        }
+
+        .section-title{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title h2{
+            font-size: 35px;
+        }
+
+        .section-title a{
+            text-decoration: none;
+            color: #22d3ee;
+        }
+
+        /* CATEGORIES */
+        .categories{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .category{
+            background-color: #1e293b;
+            padding: 25px;
+            text-align: center;
+            border-radius: 20px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .category:hover{
+            background-color: #22d3ee;
+            color: black;
+        }
+
+        /* GAME CARDS */
+        .games{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .game-card{
+            background-color: #111827;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .game-card:hover{
+            transform: translateY(-8px);
+        }
+
+        .game-card img{
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .game-info{
+            padding: 20px;
+        }
+
+        .game-info h3{
+            margin-bottom: 15px;
+            font-size: 25px;
+        }
+
+        .price-row{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price{
+            color: #22d3ee;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .cart-btn{
+            background-color: #22d3ee;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cart-btn:hover{
+            background-color: #67e8f9;
+        }
+
+        /* TRENDING */
+        .trending{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .trend-card{
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .trend-card img{
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .trend-card:hover img{
+            transform: scale(1.1);
+        }
+
+        .trend-overlay{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, black);
+        }
+
+        .trend-overlay p{
+            color: #d1d5db;
+            margin-top: 5px;
+        }
+
+        /* FOOTER */
+        footer{
+            background-color: #111827;
+            padding: 30px;
+            text-align: center;
+            color: #9ca3af;
+            margin-top: 40px;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 1024px){
+
+            .games{
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .trending{
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .categories{
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 768px){
+
+            header{
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            nav{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero{
+                padding: 20px;
+            }
+
+            .hero-content{
+                width: 100%;
+            }
+
+            .hero-content h1{
+                font-size: 40px;
+            }
+
+            section{
+                padding: 40px 20px;
+            }
+
+            .games,
+            .trending,
+            .categories{
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+
+        <div class="logo">GameStore</div>
+
+        <nav>
+            <a href="#">Store</a>
+            <a href="#">Library</a>
+            <a href="#">Community</a>
+            <a href="#">Support</a>
+        </nav>	
+
+        <div class="header-right">
+            <input type="text" placeholder="Search games..." class="search-box">
+	
+			<a href = "/login-register" th:if = "${username == null}">
+	            <button class="login-btn">
+	                Login
+	            </button>
+			</a>
+			<a href = "/user/logout" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Logout
+	            </button>
+			</a>
+			<a href = "/user/profile" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Profile
+	            </button>
+			</a>
+			<a href = "/carttemp" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Cart
+	            </button>
+			</a>
+        </div>
+		
+    </header>
+
+    <!-- HERO -->
+    <div class="hero">
+
+        <div class="hero-content">
+			<h2 th:if = "${username!=null}"th:text = "'Chào mừng '+${username}"></h2>
+            <h1>
+                Discover The Best PC Games
+            </h1>
+
+            <p>
+                Mua và tải hàng ngàn trò chơi bản quyền trực tuyến.
+                Khám phá game mới, game multiplayer, game indie
+                và các đợt giảm giá lớn giống Steam.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button class="store-btn">
+                    Browse Store
+                </button>
+
+                <button class="trailer-btn">
+                    Watch Trailer
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CATEGORIES -->
+    <section>
+
+        <div class="section-title">
+            <h2>Popular Categories</h2>
+            <a href="#">View All</a>
+        </div>
+
+        <div class="categories">
+
+            <div class="category">Action</div>
+            <div class="category">Adventure</div>
+            <div class="category">RPG</div>
+            <div class="category">Survival</div>
+            <div class="category">Open World</div>
+            <div class="category">Strategy</div>
+            <div class="category">Indie</div>
+            <div class="category">Multiplayer</div>
+
+        </div>
+
+    </section>
+
+    <!-- FEATURED GAMES -->
+    <section>
+
+        <div class="section-title">
+            <h2>Featured Games</h2>
+            <a href="#">Explore More</a>
+        </div>
+
+        <div class="games">
+
+            <div class="game-card">
+
+                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="game-info">
+
+                    <h3>Cyber Warriors</h3>
+
+                    <div class="price-row">
+
+                        <div class="price">499.000đ</div>
+
+                        <button class="cart-btn">
+                            Add To Cart
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="game-card">
+
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="game-info">
+
+                    <h3>Legends Arena</h3>
+
+                    <div class="price-row">
+
+                        <div class="price">699.000đ</div>
+
+                        <button class="cart-btn">
+                            Add To Cart
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="game-card">
+
+                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="game-info">
+
+                    <h3>Racing Horizon</h3>
+
+                    <div class="price-row">
+
+                        <div class="price">299.000đ</div>
+
+                        <button class="cart-btn">
+                            Add To Cart
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- TRENDING -->
+    <section>
+
+        <div class="section-title">
+            <h2>Trending Now</h2>
+            <a href="#">See Rankings</a>
+        </div>
+
+        <div class="trending">
+
+            <div class="trend-card">
+
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="trend-overlay">
+                    <h3>Shadow Strike</h3>
+                    <p>120K Players</p>
+                </div>
+
+            </div>
+
+            <div class="trend-card">
+
+                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="trend-overlay">
+                    <h3>Battle Force</h3>
+                    <p>95K Players</p>
+                </div>
+
+            </div>
+
+            <div class="trend-card">
+
+                <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="trend-overlay">
+                    <h3>Fantasy Quest</h3>
+                    <p>80K Players</p>
+                </div>
+
+            </div>
+
+            <div class="trend-card">
+
+                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="trend-overlay">
+                    <h3>Galaxy Mission</h3>
+                    <p>60K Players</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p>
+            © 2026 GameStore. All Rights Reserved.
+        </p>
+
+    </footer>
+
+</body>
+</html>
