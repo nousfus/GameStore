@@ -1,5 +1,6 @@
 package com.example.gamestore.controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.gamestore.dao.CartDao;
 import com.example.gamestore.dao.CartItemsDao;
@@ -61,6 +63,10 @@ public class UserCart {
 	@GetMapping("/user/cartitem/{id}")
 	public String cartitem(Model m,
 	        @PathVariable("id") String id) {
+		Users user = (Users) session.getAttribute("user");
+		List<Cart> CartCount = cartdao.findByUsername(user.getUsername());
+		m.addAttribute("max",CartCount.size());
+		m.addAttribute("selectedCartId", id);
 		session.removeAttribute("list0");
 		session.setAttribute("cartid", id);													// Cart để thanh toán
 	    List<CartItems> list = cartitemdao.findByCartId(id);
@@ -86,6 +92,26 @@ public class UserCart {
 		m.addAttribute("total",session.getAttribute("total"));
 		m.addAttribute("username",user.getUsername());
 		return "User/payment";
+	}
+	@RequestMapping("/user/createcart")
+	public String createcart(Model m) {
+		Users user = (Users) session.getAttribute("user");
+		List<Cart> CartCount = cartdao.findByUsername(user.getUsername());
+		m.addAttribute("max",CartCount.size());
+		if(CartCount.size() < 6) {
+			Date date = new Date(System.currentTimeMillis());
+			List<Cart> list = cartdao.findAll();
+			Cart cart = list.get(cartdao.findAll().size()-1);
+			int lastid = Integer.parseInt(cart.getCart_id().substring(6));
+			String cartid = "CART00"+(lastid+1);
+			cartdao.save(new Cart(cartid,user.getUsername(),date,"Open"));
+		}
+		return "redirect:/carttemp";
+	}
+	@RequestMapping("/user/deletecart/{id}")
+	public String dleelte(@PathVariable("id")String id) {
+		cartdao.delete(cartdao.findById(id).orElse(null));
+		return "redirect:/carttemp";
 	}
 }
 // Ý tưởng thêm : 

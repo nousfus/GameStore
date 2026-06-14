@@ -51,7 +51,7 @@ public class MuaHang {
 		List<CartItems> cartitems = cartitemsdao.findAll();
 		int total = 0;
 		for(CartItems c : cartitemsdao.findAll()) {
-			if(c.getCart_id().equals("CART004")) {							// Cart mãua
+			if(c.getCart_id().equals("CART001")) {							// Cart mãua
 				Game game = gamedao.findById(c.getGame().getGame_id()).orElse(null);
 				CartItems abc = new CartItems(c.getCart_item_id(),c.getCart_id(),game,c.getQuantity());
 				total += game.getPrice() * c.getQuantity();
@@ -65,7 +65,7 @@ public class MuaHang {
 	@PostMapping("/addToCart/{id}")
 	public String addToCart(Model m, @PathVariable("id")String id) {
 		Game game = gamedao.findById(id).orElse(null);
-		Cart a = cartdao.findById("CART004").orElse(null);						// Tìm kiếm cart theo username
+		Cart a = cartdao.findById("CART001").orElse(null);						// Tìm kiếm cart theo username
 		
 		List<Cart> newcart = cartdao.findAll();
 		Cart lastCart = newcart.get(cartdao.findAll().size()-1);
@@ -152,11 +152,12 @@ public class MuaHang {
 		
 		Discounts discount = discountdao.findByGameId(game.getGame_id());					// Discount của game
 		float discountamount = 0;
-		if(discount!=null) {
-			discountamount = (game.getPrice() * discount.getdiscount_percent()) / 100;
-		}else {discountamount = 0;}
-		OrderDetails odd = new OrderDetails(neworderdetailid,order,game.getGame_id(),game.getPrice(),discountamount);orderdetaildao.save(odd);	
-		
+		for(CartItems c : cartitemsdao.findByCartId(neededCart_id)) {
+			if(discount!=null) {
+				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
+			}else {discountamount = 0;}
+			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
+		}
 		
 		//Payments
 		List<Payments> hahaha = paymentdao.findAll();

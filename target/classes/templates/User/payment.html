@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - GameStore</title>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif}
+        body{background-color:#0f172a;color:white}
+        header{background-color:#111827;padding:20px 80px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #374151;position:sticky;top:0;z-index:10}
+        .logo{color:#22d3ee;font-size:32px;font-weight:bold;text-decoration:none}
+        nav a{text-decoration:none;color:#d1d5db;margin:0 15px;transition:0.3s}
+        nav a:hover{color:white}
+        .header-right{display:flex;align-items:center;gap:10px}
+
+        main{padding:40px 80px;min-height:calc(100vh - 150px)}
+        .page-header{margin-bottom:30px}
+        .page-header h1{font-size:32px;margin-bottom:10px}
+
+        .content-section{background-color:#111827;padding:30px;border-radius:15px;border:1px solid #374151}
+
+        .summary-row{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:20px}
+        .summary-left p{color:#d1d5db}
+        .summary-amount{font-size:20px;color:#22d3ee;font-weight:bold}
+
+        .methods label{display:block;margin:12px 0;color:#d1d5db}
+        .instructions{background:#0f172a;border:1px solid #374151;padding:16px;border-radius:8px;margin-top:10px;color:#d1d5db}
+
+        .button-row{display:flex;gap:15px;margin-top:20px}
+        .btn{flex:1;padding:14px;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer}
+        .btn-primary{background-color:#22d3ee;color:black}
+        .btn-primary:hover{background-color:#67e8f9}
+        .btn-secondary{background-color:#374151;color:white}
+
+        footer{background-color:#111827;padding:30px;text-align:center;color:#9ca3af;border-top:1px solid #374151;margin-top:40px}
+
+        @media(max-width:1024px){main{padding:20px 40px}}
+        @media(max-width:768px){header{flex-direction:column;gap:20px;padding:20px}main{padding:20px}}
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo">GameStore</a>
+
+        <nav>
+            <a href="/">Store</a>
+            <a href="/user/product-list">Library</a>
+            <a href="#">Community</a>
+            <a href="#">News</a>
+        </nav>
+
+        <div class="header-right">
+            <button class="btn-secondary">Tài khoản</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Thanh toán</h1>
+        </div>
+
+        <div class="content-section">
+            <div class="summary-row">
+                <div class="summary-left">
+                    <p>Người nhận: <strong th:text="${username}">Người dùng</strong></p>
+                </div>
+                <div class="summary-amount">
+                    <span th:text="${order.amount}">100000</span> VND
+                </div>
+            </div>
+
+            <form th:action="@{/payment/process}" method="post">
+                <input type="hidden" name="orderId" th:value="${order.id}" />
+                <input type="hidden" name="amount" th:value="${order.amount}" />
+
+                <h3 style="color:#22d3ee;margin-bottom:12px">Chọn phương thức thanh toán</h3>
+
+                <div class="methods">
+                    <label><input type="radio" name="method" value="momo" checked onclick="showInstructions('momo')"> Momo</label>
+                    <label><input type="radio" name="method" value="vnpay" onclick="showInstructions('vnpay')"> VNPay</label>
+                    <label><input type="radio" name="method" value="bank" onclick="showInstructions('bank')"> Chuyển khoản ngân hàng</label>
+                </div>
+
+                <div id="momo" class="instructions">
+                    <h4 style="color:#22d3ee;margin-bottom:8px">Thanh toán Momo</h4>
+                    <p>Quét mã QR bằng ứng dụng Momo hoặc sử dụng API trả về link thanh toán.</p>
+                    <p>Vui lòng kiểm tra số tiền và nội dung chuyển khoản trước khi thanh toán.</p>
+                </div>
+
+                <div id="vnpay" class="instructions" style="display:none">
+                    <h4 style="color:#22d3ee;margin-bottom:8px">Thanh toán VNPay</h4>
+                    <p>Bạn sẽ được chuyển tới cổng VNPay để hoàn tất thanh toán. Hệ thống sẽ cập nhật trạng thái đơn sau khi có phản hồi từ cổng.</p>
+                </div>
+
+                <div id="bank" class="instructions" style="display:none">
+                    <h4 style="color:#22d3ee;margin-bottom:8px">Chuyển khoản ngân hàng</h4>
+                    <p>Ngân hàng: <strong>Ngân hàng ABC</strong></p>
+                    <p>Chủ tài khoản: <strong>Công ty GameStore</strong></p>
+                    <p>Số tài khoản: <strong>0123456789</strong></p>
+                    <p>Nội dung: <strong>Thanh toán đơn #<span th:text="${order.id}">12345</span></strong></p>
+                </div>
+
+                <div class="button-row">
+                    <button type="submit" class="btn btn-primary">Thanh toán</button>
+                    <a href="/user/cart" style="text-decoration:none"><button type="button" class="btn btn-secondary">Quay lại giỏ hàng</button></a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 GameStore
+    </footer>
+
+    <script>
+        function showInstructions(id){['momo','vnpay','bank'].forEach(function(x){var el=document.getElementById(x);if(!el) return;el.style.display=(x===id)?'block':'none';});}
+    </script>
+</body>
+</html>

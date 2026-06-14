@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button>Video</button>
+    <button>Images</button>
+    <form>
+        video
+        <button>video</button>
+    </form>
+    <form>
+        images
+        <button>images</button>
+    </form>
+    <button onclick="openForm()">Thêm Game</button>
+
+<div id="popup" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeForm()">&times;</span>
+
+        <h2>Form Thêm Game</h2>
+
+        <form>
+            <label>Tên game:</label><br>
+            <input type="text"><br><br>
+
+            <label>Giá:</label><br>
+            <input type="number"><br><br>
+
+            <button type="submit">Lưu</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
