@@ -3,11 +3,14 @@ package com.example.gamestore.dao;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.jpa.repository.Query;
 import com.example.gamestore.entity.UserRoles;
+import com.example.gamestore.service.UserRoleId;
 
-public interface UserRolesDao extends JpaRepository<UserRoles, String>{
+public interface UserRolesDao extends JpaRepository<UserRoles, UserRoleId>{
 //	List<UserRoles> findAll(); 
 //	void create(UserRoles ur); 
 //	void delete(String username, String roleId);
+    @Query("SELECT u FROM UserRoles u WHERE u.username = :username")
+    List<UserRoles> findByUsername(String username);
 }
