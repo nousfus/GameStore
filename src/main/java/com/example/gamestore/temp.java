@@ -2,9 +2,8 @@ package com.example.gamestore;
 
 public class temp {
 	public static void main(String[] args) {
-		String abc = "CART0010";
-		
-		int a = Integer.parseInt(abc.substring(6))+1;
-		System.out.println(a);
+		double a = 1.23;
+		int b = (int) (1 + a);
+		System.out.print(b);
 	}
 }

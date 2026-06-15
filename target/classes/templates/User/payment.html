@@ -67,14 +67,11 @@
                     <p>Người nhận: <strong th:text="${username}">Người dùng</strong></p>
                 </div>
                 <div class="summary-amount">
-                    <span th:text="${order.amount}">100000</span> VND
+                    <span th:text="${total}">100000</span> VND
                 </div>
             </div>
 
             <form th:action="@{/payment/process}" method="post">
-                <input type="hidden" name="orderId" th:value="${order.id}" />
-                <input type="hidden" name="amount" th:value="${order.amount}" />
-
                 <h3 style="color:#22d3ee;margin-bottom:12px">Chọn phương thức thanh toán</h3>
 
                 <div class="methods">
@@ -99,7 +96,7 @@
                     <p>Ngân hàng: <strong>Ngân hàng ABC</strong></p>
                     <p>Chủ tài khoản: <strong>Công ty GameStore</strong></p>
                     <p>Số tài khoản: <strong>0123456789</strong></p>
-                    <p>Nội dung: <strong>Thanh toán đơn #<span th:text="${order.id}">12345</span></strong></p>
+                    <p>Nội dung: <strong>Thanh toán đơn #<span>12345</span></strong></p>
                 </div>
 
                 <div class="button-row">

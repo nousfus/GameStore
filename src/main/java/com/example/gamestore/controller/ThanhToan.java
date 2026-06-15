@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -44,7 +45,13 @@ public class ThanhToan {
 	GameDao gamedao;
 	@Autowired
 	DiscountsDao discountdao;
-	
+	@GetMapping("/payment/process")
+	public String a(Model m) {
+		Users user = (Users) session.getAttribute("user");
+		m.addAttribute("username",user.getUsername());
+		m.addAttribute("total",session.getAttribute("total"));
+		return "User/payment";
+	}
 	@PostMapping("/payment/process")
 	public String abc(Model m,@RequestParam("method") String pay) {
 		Users user = (Users) session.getAttribute("user");
@@ -56,8 +63,8 @@ public class ThanhToan {
 		Date date = new Date(System.currentTimeMillis());
 		
 		String neededCart_id = (String) session.getAttribute("cartid");
-		String tempusername = user.getUsername();
-		int total = Integer.parseInt((String) session.getAttribute("total"));														//Tổng giá sản phẩm
+		String tempusername = user.getUsername();									//Tổng giá sản phẩm
+		int total =	(int)session.getAttribute("total");							
 		Orders order = new Orders(neworderid,tempusername,date,total,"Pending");orderdao.save(order);	//tạo order
 		
 		
@@ -103,6 +110,6 @@ public class ThanhToan {
 		cartdao.delete(cartdao.findById(neededCart_id).orElse(null));		// Xóa cart
 		session.removeAttribute("cartid");
 		session.removeAttribute("total");
-		return "User/payments";
+		return "forward:/user/cart";
 	}
 }

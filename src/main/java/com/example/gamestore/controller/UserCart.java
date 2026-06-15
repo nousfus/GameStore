@@ -71,7 +71,7 @@ public class UserCart {
 		session.setAttribute("cartid", id);													// Cart để thanh toán
 	    List<CartItems> list = cartitemdao.findByCartId(id);
 	    m.addAttribute("cartitem", list);
-		float total = 0;
+		int total = 0;
 		float discount = 0;
 		for(CartItems c : list) {
 			total += c.getGame().getPrice() * c.getQuantity();
