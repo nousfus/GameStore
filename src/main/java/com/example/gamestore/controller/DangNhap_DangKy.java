@@ -99,7 +99,7 @@ public class DangNhap_DangKy {
 	public String verify_get(Model m,@RequestParam("code")String code) {
 		if(code.equals((String)session.getAttribute("otp"))){
 			Users user = (Users)session.getAttribute("user");
-			Roles role = roledao.findByRoleName("Customer");
+			Roles role = roledao.findByRolename("Customer");
 			udao.save(user);
 			userroledao.save(new UserRoles(user.getUsername(),role.getrole_id()));
 			session.setAttribute("user", user);

@@ -375,9 +375,18 @@
             <a href="#">News</a>
         </nav>
 
-        <div class="header-right">
-            <button class="user-menu">Tài khoản</button>
-        </div>
+		<div class="header-right">
+		    <button class="user-menu">Tài khoản</button>
+
+		    <form action="/user/role" method="post">
+		        <select class="user-menu" name="role" onchange="this.form.submit()">
+		            <option th:each="item : ${dsrole}"
+		                    th:value="${item.role_id}"
+		                    th:text="${item.rolename}">
+		            </option>
+		        </select>
+		    </form>
+		</div>
     </header>
 
     <!-- MAIN CONTENT -->

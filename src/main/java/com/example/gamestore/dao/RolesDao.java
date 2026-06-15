@@ -10,5 +10,5 @@ public interface RolesDao extends JpaRepository<Roles, String> {
 //	void create(Roles role); 
 //	void update(Roles role); 
 //	void delete(String roleId);
-	Roles findByRoleName(String name);
+	Roles findByRolename(String name);
 }
