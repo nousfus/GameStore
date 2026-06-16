@@ -1,7 +1,7 @@
 package com.example.gamestore.entity;
 import jakarta.persistence.Entity;
 
-import com.example.gamestore.entity.GameCategoriesId;
+import com.example.gamestore.service.GameCategoriesId;
 
 import jakarta.persistence.*;
 

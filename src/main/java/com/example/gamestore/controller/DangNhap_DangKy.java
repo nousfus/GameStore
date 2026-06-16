@@ -1,5 +1,7 @@
 package com.example.gamestore.controller;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.gamestore.dao.CartDao;
 import com.example.gamestore.dao.RolesDao;
 import com.example.gamestore.dao.UserDao;
 import com.example.gamestore.dao.UserRolesDao;
+import com.example.gamestore.entity.Cart;
 import com.example.gamestore.entity.Roles;
 import com.example.gamestore.entity.UserRoles;
 import com.example.gamestore.entity.Users;
@@ -30,6 +34,8 @@ public class DangNhap_DangKy {
 	RolesDao roledao;
 	@Autowired
 	HttpSession session;
+	@Autowired
+	CartDao cartdao;
 	@Autowired
     private EmailService emailService;
     public String generateOTP() {				// Tạo mã OTP xác nhận email
@@ -93,11 +99,20 @@ public class DangNhap_DangKy {
 	public String verify_get(Model m,@RequestParam("code")String code) {
 		if(code.equals((String)session.getAttribute("otp"))){
 			Users user = (Users)session.getAttribute("user");
-			Roles role = roledao.findByRoleName("Customer");
+			Roles role = roledao.findByRolename("Customer");
 			udao.save(user);
 			userroledao.save(new UserRoles(user.getUsername(),role.getrole_id()));
 			session.setAttribute("user", user);
 			session.removeAttribute("otp");
+			
+			// Tạo giỏ hàng cho người dùng mới
+			List<Cart> cartList = cartdao.findAll();
+			Cart cart = cartList.get(cartdao.findAll().size()-1);
+			int id = Integer.parseInt(cart.getCart_id().substring(6));
+			String newCartId = "CART00"+(id+1);
+			
+			Date date = new Date(System.currentTimeMillis());
+			cartdao.save(new Cart(newCartId,user.getUsername(),date,"Open"));
 			return "redirect:/";
 		}else {
 			System.out.println("Mã xác nhận không đúng");

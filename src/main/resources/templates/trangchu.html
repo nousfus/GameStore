@@ -272,13 +272,175 @@
         }
 
         /* FOOTER */
-        footer{
-            background-color: #111827;
-            padding: 30px;
-            text-align: center;
-            color: #9ca3af;
-            margin-top: 40px;
-        }
+        .site-footer {
+		    background-color: #0b0f19; /* Nền tối đậm hơn body tạo chiều sâu */
+		    border-top: 1px solid #1e293b;
+		    padding: 60px 0 20px 0;
+		    margin-top: 80px;
+		    font-size: 14px;
+		    color: #94a3b8; /* Màu chữ xám nhạt dễ đọc */
+		}
+		
+		.footer-container {
+		    max-width: 1200px;
+		    margin: 0 auto;
+		    padding: 0 40px;
+		    display: grid;
+		    grid-template-columns: 2fr 1fr 1.5fr 2fr; /* Chia tỉ lệ 4 cột */
+		    gap: 40px;
+		}
+		
+		.footer-column h4 {
+		    color: #22d3ee; /* Tông màu xanh Cyan đồng bộ với Logo */
+		    font-size: 18px;
+		    font-weight: bold;
+		    margin-bottom: 20px;
+		    position: relative;
+		    padding-bottom: 8px;
+		}
+		
+		/* Đường gạch chân trang trí dưới tiêu đề mỗi cột */
+		.footer-column h4::after {
+		    content: '';
+		    position: absolute;
+		    left: 0;
+		    bottom: 0;
+		    width: 35px;
+		    height: 2px;
+		    background-color: #22d3ee;
+		}
+		
+		.footer-column p {
+		    line-height: 1.6;
+		    margin-bottom: 15px;
+		}
+		
+		.footer-column ul {
+		    list-style: none;
+		    padding: 0;
+		    margin: 0;
+		}
+		
+		.footer-column ul li {
+		    margin-bottom: 12px;
+		}
+		
+		.footer-column ul li a {
+		    color: #94a3b8;
+		    text-decoration: none;
+		    transition: all 0.3s ease;
+		    display: inline-block;
+		}
+		
+		/* Hiệu ứng hover dịch chuyển nhẹ và đổi màu chữ sang trắng */
+		.footer-column ul li a:hover {
+		    color: #ffffff;
+		    padding-left: 6px;
+		}
+		
+		/* Cấu hình danh sách thông tin liên hệ */
+		.contact-info li {
+		    display: flex;
+		    align-items: flex-start;
+		    gap: 10px;
+		    line-height: 1.5;
+		}
+		
+		.info-icon {
+		    color: #22d3ee;
+		}
+		
+		/* Các nút liên kết mạng xã hội */
+		.footer-socials {
+		    display: flex;
+		    gap: 10px;
+		    margin-top: 20px;
+		}
+		
+		.social-icon {
+		    color: #94a3b8;
+		    text-decoration: none;
+		    padding: 8px 16px;
+		    background-color: #1e293b;
+		    border-radius: 6px;
+		    font-weight: 500;
+		    font-size: 13px;
+		    transition: all 0.3s ease;
+		}
+		
+		.social-icon:hover {
+		    color: #0f172a;
+		    background-color: #22d3ee;
+		    transform: translateY(-3px); /* Nhấc nhẹ nút lên khi hover */
+		}
+		
+		/* Form đăng ký nhận bản tin */
+		.newsletter-form {
+		    display: flex;
+		    gap: 8px;
+		    margin-top: 15px;
+		}
+		
+		.newsletter-form input {
+		    flex: 1;
+		    padding: 10px 14px;
+		    background-color: #1e293b;
+		    border: 1px solid #334155;
+		    border-radius: 6px;
+		    color: #ffffff;
+		    outline: none;
+		    font-size: 13px;
+		    transition: border-color 0.3s ease;
+		}
+		
+		.newsletter-form input:focus {
+		    border-color: #22d3ee;
+		}
+		
+		.newsletter-form button {
+		    background-color: #22d3ee;
+		    color: #0f172a;
+		    border: none;
+		    padding: 10px 18px;
+		    border-radius: 6px;
+		    font-weight: bold;
+		    cursor: pointer;
+		    font-size: 13px;
+		    transition: background-color 0.3s ease;
+		}
+		
+		.newsletter-form button:hover {
+		    background-color: #06b6d4;
+		}
+		
+		/* Khu vực hàng bản quyền dưới cùng */
+		.footer-bottom {
+		    max-width: 1200px;
+		    margin: 50px auto 0 auto;
+		    padding: 20px 40px 0 40px;
+		    border-top: 1px solid #1e293b;
+		    text-align: center;
+		    font-size: 13px;
+		    color: #64748b;
+		}
+		
+		/* Tối ưu hóa hiển thị trên màn hình Tablet và Mobile (Responsive) */
+		@media (max-width: 992px) {
+		    .footer-container {
+		        grid-template-columns: 1fr 1fr; /* Chuyển thành 2 hàng, mỗi hàng 2 cột */
+		        gap: 30px;
+		    }
+		}
+		
+		@media (max-width: 576px) {
+		    .footer-container {
+		        grid-template-columns: 1fr; /* Điện thoại nhỏ hiển thị 1 cột đứng dọc */
+		        padding: 0 20px;
+		    }
+		    .newsletter-form {
+		        flex-direction: column; /* Ô nhập và nút bấm xếp dọc trên mobile */
+		    }
+		}
 
         /* RESPONSIVE */
         @media(max-width: 1024px){
@@ -571,11 +733,53 @@
     </section>
 
     <!-- FOOTER -->
-    <footer>
+    <footer class="site-footer">
 
-        <p>
-            © 2026 GameStore. All Rights Reserved.
-        </p>
+        <div class="footer-container">
+        <div class="footer-column about-store">
+            <h4>Về Game Store</h4>
+            <p>Nền tảng cung cấp game bản quyền hàng đầu. Chúng tôi cam kết mang lại trải nghiệm mua sắm an toàn, nhanh chóng và giá cả cạnh tranh nhất thị trường.</p>
+            <div class="footer-socials">
+                <a href="#" class="social-icon">Facebook</a>
+                <a href="#" class="social-icon">Youtube</a>
+                <a href="#" class="social-icon">Discord</a>
+            </div>
+        </div>
+
+        <div class="footer-column">
+            <h4>Liên kết nhanh</h4>
+            <ul>
+                <li><a th:href="@{/}">Trang chủ</a></li>
+                <li><a th:href="@{/cart/view}">Giỏ hàng của bạn</a></li>
+                <li><a th:href="@{/account/profile}">Thông tin tài khoản</a></li>
+                <li><a href="#">Chính sách bảo mật</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h4>Thông tin hỗ trợ</h4>
+            <ul class="contact-info">
+                <li><span class="info-icon">📍</span> Địa chỉ: Quận 12, TP. Hồ Chí Minh</li>
+                <li><span class="info-icon">📧</span> Email: gamestore@gmail.com</li>
+                <li><span class="info-icon">📞</span> Hotline: 0909 999 999</li>
+                <li><span class="info-icon">⏰</span> Giờ làm việc: 8:00 – 22:00</li>
+            </ul>
+        </div>
+
+        <div class="footer-column newsletter">
+            <h4>Đăng ký nhận tin</h4>
+            <p>Nhận thông báo sớm nhất về các sự kiện giảm giá game và sự kiện hot.</p>
+            <form class="newsletter-form" onsubmit="event.preventDefault();">
+                <input type="email" placeholder="Nhập email của bạn..." required>
+                <button type="submit">Đăng ký</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 GameStore. All rights reserved. Phát triển bởi Gamers nhóm 5.</p>
+    </div>
+
 
     </footer>
 

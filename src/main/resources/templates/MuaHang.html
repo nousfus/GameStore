@@ -65,7 +65,7 @@
 
 			<tr th:each="item : ${dscartitem}">
 			    <td th:text="${item.cart_id}"></td>
-			    <td th:text="${item.game_id}"></td>
+			    <td th:text="${item.game.game_id}"></td>
 
 			    <td>
 			        <form action="/update" method="get">
@@ -125,7 +125,7 @@
         </thead>
         <tbody>
              <tr th:each = "item :${dsorderdetail}">
-                <td th:text = "${item.order_id}">orderid</td>
+                <td th:text = "${item.order.order_id}">orderid</td>
 				<td th:text = "${item.game_id}">gameid</td>
                 <td th:text = "${item.price}">gia</td>
                 <td th:text = "${item.discount_amount}">giamgia</td>
