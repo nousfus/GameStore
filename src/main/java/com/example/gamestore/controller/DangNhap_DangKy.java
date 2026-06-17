@@ -101,7 +101,7 @@ public class DangNhap_DangKy {
 			Users user = (Users)session.getAttribute("user");
 			Roles role = roledao.findByRolename("Customer");
 			udao.save(user);
-			userroledao.save(new UserRoles(user.getUsername(),role.getrole_id()));
+			userroledao.save(new UserRoles(user.getUsername(),role.getRole_id()));
 			session.setAttribute("user", user);
 			session.removeAttribute("otp");
 			

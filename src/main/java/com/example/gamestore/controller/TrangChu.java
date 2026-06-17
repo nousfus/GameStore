@@ -87,7 +87,16 @@ public class TrangChu {
 			}
 			m.addAttribute("dsrole",roles);
 		}
-		return "User/profile";
+		if(role.equals("R01")) {
+			return "redirect:/admin/home";
+		}else if(role.equals("R04")){
+			return "redirect:/staff/home";
+		}else if(role.equals("R03")){
+			return "redirect:/developer/home";
+		}
+		else {
+			return "User/profile";
+		}
 	}
 	@RequestMapping("/carttemp")
 	public String a(Model m) {
@@ -97,5 +106,9 @@ public class TrangChu {
 		List<CartItems> list0 = cartitemdao.findByCartId(list.get(0).getCart_id());
 		session.setAttribute("list0",list0);
 		return "forward:/user/cart";
+	}
+	@RequestMapping("/user/product")
+	public String product() {
+		return "User/product-list";
 	}
 }
