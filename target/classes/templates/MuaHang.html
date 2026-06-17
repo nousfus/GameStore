@@ -65,11 +65,7 @@
 
 			<tr th:each="item : ${dscartitem}">
 			    <td th:text="${item.cart_id}"></td>
-<<<<<<< HEAD
 			    <td th:text="${item.game.game_id}"></td>
-=======
-			    <td th:text="${item.game_id}"></td>
->>>>>>> 7a1e458a11b9b29fcba57968fdc863233b120c75
 
 			    <td>
 			        <form action="/update" method="get">
@@ -129,11 +125,7 @@
         </thead>
         <tbody>
              <tr th:each = "item :${dsorderdetail}">
-<<<<<<< HEAD
                 <td th:text = "${item.order.order_id}">orderid</td>
-=======
-                <td th:text = "${item.order_id}">orderid</td>
->>>>>>> 7a1e458a11b9b29fcba57968fdc863233b120c75
 				<td th:text = "${item.game_id}">gameid</td>
                 <td th:text = "${item.price}">gia</td>
                 <td th:text = "${item.discount_amount}">giamgia</td>

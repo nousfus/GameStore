@@ -1,6 +1,5 @@
 package com.example.gamestore.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import com.example.gamestore.entity.Users;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/developer")
 public class TrangChuDeveloper {
 	@Autowired
 	HttpSession session;
@@ -25,7 +25,7 @@ public class TrangChuDeveloper {
 	UserRolesDao userroledao;
 	@Autowired
 	RolesDao roledao;
-	@RequestMapping("/developer/home")
+	@RequestMapping("/home")
 	public String home(Model m) {
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
@@ -33,35 +33,29 @@ public class TrangChuDeveloper {
 		}
 		return "Developer/home";
 	}
-	@RequestMapping("/developer/profile")									// Profile
+	@RequestMapping("/profile")									// Profile
 	public String profile(Model m) {
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
+			m.addAttribute("rolepicked",session.getAttribute("rolepicked"));
 			m.addAttribute("username",user.getUsername());
 			m.addAttribute("user",user);
-			List<UserRoles> list = userroledao.findByUsername(user.getUsername());
-			List<Roles> roles = new ArrayList<>();
-			for(UserRoles ur : list) {
-			    Roles role = roledao.findById(ur.getRole_id()).orElse(null);
-			    if(role != null) {
-			        roles.add(role);
-			    }
-			}
-			m.addAttribute("dsrole",roles);
+			List<Roles> list = userroledao.findByUsername(user.getUsername());
+			m.addAttribute("dsrole",list);
 		}
 		return "User/profile";
 	}
-	@RequestMapping("/developer/game-management")
+	@RequestMapping("/game-management")
 	public String game_mana(Model m) {
 		
 		return "Developer/game-management";
 	}
-	@RequestMapping("/developer/revenue-tracking")
+	@RequestMapping("/revenue-tracking")
 	public String revenue(Model m) {
 		
 		return "Developer/revenue-tracking";
 	}
-	@RequestMapping("/developer/review-feedback")
+	@RequestMapping("/review-feedback")
 	public String reviews(Model m) {
 		
 		return "Developer/review-feedback";

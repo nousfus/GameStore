@@ -15,7 +15,7 @@
 
         body{
             background-color: #0f172a;
-            color: white;
+	            color: white;
         }
 
         /* HEADER */
@@ -400,7 +400,7 @@
         <div class="profile-container">
 
             <!-- SIDEBAR -->
-            <aside class="sidebar">
+            <aside class="sidebar" th:if = "${rolepicked.equals('User')}">
                 <h3>Quản lý tài khoản</h3>
 				<button class="menu-item" active>Thông tin cá nhân</button>
                 <a href = "/user/change-password"><button class="menu-item">Đổi mật khẩu</button></a>
@@ -408,6 +408,36 @@
                 <a href = "/user/notification"><button class="menu-item">Quản lý thông báo</button></a>
                 <a href = ""><button class="menu-item">Danh sách ưa thích</button></a>
             </aside>
+			
+			<!-- SIDEBAR -->
+			<aside class="sidebar" th:if = "${rolepicked.equals('Admin')}">
+               <h3>Quản lý tài khoản</h3>
+			<button class="menu-item" active>Thông tin cá nhân</button>
+               <a href = "/user/change-password"><button class="menu-item">Đổi mật khẩu</button></a>
+               <a href = "/admin/user-management"><button class="menu-item">Quản lý người dùng</button></a>
+               <a href = "/admin/promotions"><button class="menu-item">Quản lý khuyến mãi</button></a>
+               <a href = "/admin/revenue-report"><button class="menu-item">Quản lý doanh thu</button></a>
+           </aside>
+		   
+		   <!-- SIDEBAR -->
+		   <aside class="sidebar" th:if = "${rolepicked.equals('Staff')}">
+                  <h3>Quản lý tài khoản</h3>
+   			<button class="menu-item" active>Thông tin cá nhân</button>
+                  <a href = "/user/change-password"><button class="menu-item">Đổi mật khẩu</button></a>
+                  <a href = "/staff/notifications"><button class="menu-item">Quản lý thông báo</button></a>
+                  <a href = "/staff/orders"><button class="menu-item">Quản lý đơn hàng</button></a>
+                  <a href = "/staff/reviews"><button class="menu-item">Quản lý đánh giá</button></a>
+              </aside>
+			  
+			  <!-- SIDEBAR -->
+			  <aside class="sidebar" th:if = "${rolepicked.equals('Developer')}">
+                 <h3>Quản lý tài khoản</h3>
+  			<button class="menu-item" active>Thông tin cá nhân</button>
+                 <a href = "/user/change-password"><button class="menu-item">Đổi mật khẩu</button></a>
+                 <a href = "/developer/game-management"><button class="menu-item">Quản lý game</button></a>
+                 <a href = "/developer/revenue-tracking"><button class="menu-item">Quản lý doanh thu</button></a>
+                 <a href = "/developer/review-feedback"><button class="menu-item">Phản hồi bình luận</button></a>
+             </aside>
 
             <!-- CONTENT -->
             <div class="content-section">

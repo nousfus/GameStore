@@ -33,21 +33,15 @@ public class TrangChuAdmin {
 		}
 		return "Admin/home";
 	}
-	@RequestMapping("/admin/profile")									// Profile
+	@RequestMapping("/profile")									// Profile
 	public String profile(Model m) {
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
+			m.addAttribute("rolepicked",session.getAttribute("rolepicked"));
 			m.addAttribute("username",user.getUsername());
 			m.addAttribute("user",user);
-			List<UserRoles> list = userroledao.findByUsername(user.getUsername());
-			List<Roles> roles = new ArrayList<>();
-			for(UserRoles ur : list) {
-			    Roles role = roledao.findById(ur.getRole_id()).orElse(null);
-			    if(role != null) {
-			        roles.add(role);
-			    }
-			}
-			m.addAttribute("dsrole",roles);
+			List<Roles> list = userroledao.findByUsername(user.getUsername());
+			m.addAttribute("dsrole",list);
 		}
 		return "User/profile";
 	}
