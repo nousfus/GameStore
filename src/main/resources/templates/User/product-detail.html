@@ -435,7 +435,7 @@
 
             <!-- PRODUCT INFO -->
             <div class="product-info">
-                <h1>Cyber Warriors</h1>
+                <h1 th:text = "${game.game_name}">Cyber Warriors</h1>
 
                 <div class="product-rating">
                     <span>★★★★★</span>
@@ -444,7 +444,7 @@
 
                 <div style="display: flex; align-items: center; margin-bottom: 20px;">
                     <div class="product-price">499.000đ</div>
-                    <div class="product-original-price">599.000đ</div>
+                    <div class="product-original-price" th:text = "${game.price}">599.000đ</div>
                     <div class="discount-badge">-17%</div>
                 </div>
 

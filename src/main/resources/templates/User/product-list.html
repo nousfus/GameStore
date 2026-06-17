@@ -263,7 +263,7 @@
             border-top: 1px solid #374151;
         }
 
-        .pagination button{
+        .pagination a{
             padding: 10px 15px;
             background-color: #1f2937;
             color: white;
@@ -271,9 +271,19 @@
             border-radius: 8px;
             cursor: pointer;
             transition: 0.3s;
+			align-content : center;
+        }
+		.pagination button{
+            padding: 10px 15px;
+            background-color: #1f2937;
+            color: white;
+            border: 3px solid #374151;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .pagination button:hover, .pagination button.active{
+        .pagination button:hover, .pagination button.active, .pagination a:hover{
             background-color: #22d3ee;
             color: black;
             border-color: #22d3ee;
@@ -320,6 +330,9 @@
                 grid-template-columns: 1fr;
             }
         }
+		a{
+			text-decoration : none;
+		}
 
     </style>
 </head>
@@ -348,18 +361,11 @@
 
         <!-- SIDEBAR - FILTER -->
         <aside class="sidebar">
-            <h3>Bộ lọc</h3>
-
             <div class="filter-group">
-                <h4>Thể loại</h4>
-                <label><input type="checkbox"> Action</label>
-                <label><input type="checkbox"> Adventure</label>
-                <label><input type="checkbox"> RPG</label>
-                <label><input type="checkbox"> Strategy</label>
-                <label><input type="checkbox"> Indie</label>
-                <label><input type="checkbox"> Multiplayer</label>
-                <label><input type="checkbox"> Survival</label>
-                <label><input type="checkbox"> Open World</label>
+                <h3>Thể loại</h3>
+                <label th:each = "item :${dscate}">
+					<input type="checkbox" th:text = "${item.category_name}"> 
+				</label>
             </div>
 
             <div class="filter-group">
@@ -452,14 +458,14 @@
             </div>
 
             <div class="filter-group">
-                <h4>Đánh giá</h4>
+                <h3>Đánh giá</h3>
                 <label><input type="checkbox"> 5 sao</label>
                 <label><input type="checkbox"> 4+ sao</label>
                 <label><input type="checkbox"> 3+ sao</label>
             </div>
 
             <div class="filter-group">
-                <h4>Trạng thái</h4>
+                <h3>Trạng thái</h3>
                 <label><input type="checkbox"> Mới nhất</label>
                 <label><input type="checkbox"> Giảm giá</label>
                 <label><input type="checkbox"> Best seller</label>
@@ -480,125 +486,46 @@
                 </select>
             </div>
 
-            <div class="games">
-			
-				<a href = "/user/product-detail">
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
-                    <div class="game-info">
-                        <div class="game-title">Cyber Warriors</div>
-                        <div class="game-rating">★★★★★ (4.8)</div>
-                        <div class="game-category">Action | Sci-Fi</div>
-                        <div class="price-row">
-                            <div class="price">499.000đ</div>
-                        </div>
-                        <div class="action-buttons">
-							<a href = "/login-register"><button class="cart-btn">Thêm giỏ hàng</button></a>
-                            <button class="wishlist-btn">❤</button>
-                        </div>
-                    </div>
-                </div>
-				</a>
+			<div class="games">
 
-				<a href = "/user/product-detail">
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop">
-                    <div class="game-info">
-                        <div class="game-title">Legends Arena</div>
-                        <div class="game-rating">★★★★☆ (4.5)</div>
-                        <div class="game-category">RPG | Multiplayer</div>
-                        <div class="price-row">
-                            <div class="price">699.000đ</div>
-                        </div>
-                        <div class="action-buttons">
-							<a href = "/login-register"><button class="cart-btn">Thêm giỏ hàng</button></a>
-                            <button class="wishlist-btn">❤</button>
-                        </div>
-                    </div>
-                </div>
-				</a>
+			    <div class="game-card"
+			         th:each="game : ${gamePage.content}">
 
-				<a href = "/user/product-detail">
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=1200&auto=format&fit=crop">
-                    <div class="game-info">
-                        <div class="game-title">Racing Horizon</div>
-                        <div class="game-rating">★★★★★ (4.9)</div>
-                        <div class="game-category">Racing | Sports</div>
-                        <div class="price-row">
-                            <div class="price">299.000đ</div>
-                        </div>
-                        <div class="action-buttons">
-							<a href = "/login-register"><button class="cart-btn">Thêm giỏ hàng</button></a>
-                            <button class="wishlist-btn">❤</button>
-                        </div>
-                    </div>
-                </div>
-				</a>
+			        <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}">
+			            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
 
-				<a href = "/user/product-detail">
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop">
-                    <div class="game-info">
-                        <div class="game-title">Shadow Strike</div>
-                        <div class="game-rating">★★★★☆ (4.6)</div>
-                        <div class="game-category">Action | Thriller</div>
-                        <div class="price-row">
-                            <div class="price">799.000đ</div>
-                        </div>
-                        <div class="action-buttons">
-							<a href = "/login-register"><button class="cart-btn">Thêm giỏ hàng</button></a>
-                            <button class="wishlist-btn">❤</button>
-                        </div>
-                    </div>
-                </div>
-				</a>
-				
-				<a href = "/user/product-detail">
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=1200&auto=format&fit=crop">
-                    <div class="game-info">
-                        <div class="game-title">Battle Force</div>
-                        <div class="game-rating">★★★★★ (4.7)</div>
-                        <div class="game-category">Strategy | Multiplayer</div>
-                        <div class="price-row">
-                            <div class="price">599.000đ</div>
-                        </div>
-                        <div class="action-buttons">
-							<a href = "/login-register"><button class="cart-btn">Thêm giỏ hàng</button></a>
-                            <button class="wishlist-btn">❤</button>
-                        </div>
-                    </div>
-                </div>
-				</a>
+			            <div class="game-info">
+			                <div class="game-title"
+			                     th:text="${game.game_name}">
+			                </div>
 
-				<a href = "/user/product-detail">
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?q=80&w=1200&auto=format&fit=crop">
-                    <div class="game-info">
-                        <div class="game-title">Fantasy Quest</div>
-                        <div class="game-rating">★★★★☆ (4.4)</div>
-                        <div class="game-category">RPG | Adventure</div>
-                        <div class="price-row">
-                            <div class="price">449.000đ</div>
-                        </div>
-                        <div class="action-buttons">
-                            <a href = "/login-register"><button class="cart-btn">Thêm giỏ hàng</button></a>
-                            <button class="wishlist-btn">❤</button>
-                        </div>
-                    </div>
-                </div>
-				</a>
-            </div>
+			                <div class="game-rating">★★★★★ (4.8)</div>
 
+			                <div class="game-category">
+			                    Action | Sci-Fi
+			                </div>
+
+			                <div class="price-row">
+			                    <div class="price"
+			                         th:text="${game.price}">
+			                    </div>
+			                </div>
+
+			                <div class="action-buttons">
+			                    <button class="cart-btn">Thêm giỏ hàng</button>
+			                    <button class="wishlist-btn">❤</button>
+			                </div>
+			            </div>
+			        </a>
+
+			    </div>
+
+			</div>
             <!-- PAGINATION -->
             <div class="pagination">
-                <button>&lt;</button>
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>&gt;</button>
+                <a th:if="${!gamePage.first}" th:href="@{/user/product-list(page=${currentPage-1})}"><button>&lt;</button></a>
+                <a th:each="i : ${#numbers.sequence(0, gamePage.totalPages-1)}" th:href="@{/user/product-list(page=${i})}" th:text="${i+1}"><button class="active">1</button></a>
+                <a th:if="${!gamePage.first}" th:href="@{/user/product-list(page=${currentPage+1})}"><button>&gt;</button></a>
             </div>
 
         </section>

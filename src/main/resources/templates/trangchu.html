@@ -494,7 +494,9 @@
                 grid-template-columns: 1fr;
             }
         }
-
+        a{
+            text-decoration: none;
+        }
     </style>
 </head>
 
@@ -600,20 +602,21 @@
             <h2>Featured Games</h2>
             <a href="/user/product">Explore More</a>
         </div>
-		<a href = "/user/product-detail">
+
         <div class="games">
+			
 
-            <div class="game-card">
-
+            <div class="game-card" th:each = "game :${top3game}">
+				<a href = "/user/product-detail">
                 <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
 
                 <div class="game-info">
 
-                    <h3>Cyber Warriors</h3>
+                    <h3 th:text = "${game.game_name}">Cyber Warriors</h3>
 
                     <div class="price-row">
 
-                        <div class="price">499.000đ</div>
+                        <div class="price" th:text = "${game.price}">499.000đ</div>
 
                         <button class="cart-btn">
                             Add To Cart
@@ -622,58 +625,10 @@
                     </div>
 
                 </div>
-
+				</a>
             </div>
-			</a>
-	
-			<a href = "/user/product-detail">
-            <div class="game-card">
 
-                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="game-info">
-
-                    <h3>Legends Arena</h3>
-
-                    <div class="price-row">
-
-                        <div class="price">699.000đ</div>
-
-                        <button class="cart-btn">
-                            Add To Cart
-                        </button>
-
-
-                    </div>
-
-                </div>
-
-            </div>
-			</a>
-			<a href = "/user/product-detail">
-            <div class="game-card">
-
-                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="game-info">
-
-                    <h3>Racing Horizon</h3>
-
-                    <div class="price-row">
-
-                        <div class="price">299.000đ</div>
-
-                        <button class="cart-btn">
-                            Add To Cart
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-			</a>
-
+			
         </div>
 
     </section>

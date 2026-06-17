@@ -1,9 +1,12 @@
 package com.example.gamestore.controller;
 
+import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.gamestore.dao.CartDao;
 import com.example.gamestore.dao.CartItemsDao;
 import com.example.gamestore.dao.CategoriesDao;
+import com.example.gamestore.dao.GameDao;
 import com.example.gamestore.dao.RolesDao;
 import com.example.gamestore.dao.UserDao;
 import com.example.gamestore.dao.UserRolesDao;
 import com.example.gamestore.entity.Cart;
 import com.example.gamestore.entity.CartItems;
 import com.example.gamestore.entity.Categories;
+import com.example.gamestore.entity.Game;
 import com.example.gamestore.entity.Roles;
 import com.example.gamestore.entity.Users;
 
@@ -40,14 +45,18 @@ public class TrangChu {
 	RolesDao roledao;
 	@Autowired
 	CategoriesDao categorydao;
+	@Autowired
+	GameDao gamedao;
 	@RequestMapping("/")
-	public String abc(Model model) {
+	public String abc(Model m) {
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
-			model.addAttribute("username",user.getUsername());
+			m.addAttribute("username",user.getUsername());
 		}
 		// Hiển thị sản phẩm
-		//Hiển thi thể loại
+		List<Game> games = gamedao.findTop3ByRating(5);
+		m.addAttribute("top3game",games);
+		
 		return "trangchu";
 	}
 	@RequestMapping("/user/logout")										//Đăng xuất
