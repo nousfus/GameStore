@@ -6,6 +6,7 @@
     <title>GameStore - Trang Chủ</title>
 <head>
 <body>
+<<<<<<< HEAD
 		<table>
 			<thead>
 				<tr>
@@ -21,5 +22,15 @@
 			</tbody>
 		</table>
 
+=======
+		Danh sách sản phẩm 
+		<form action = "/abc2" method = "post">
+			<block th:each = "item :${dscategory}">
+				<input type = "checkbox" th:text = "${item.category_name}" th:value = "${item.category_id}" name = "category">
+			</block>
+			<button>upload</button>
+		</form>
+		<h2 th:text = "${cate}"></h2>
+>>>>>>> 7a1e458a11b9b29fcba57968fdc863233b120c75
 </body>
 </html>

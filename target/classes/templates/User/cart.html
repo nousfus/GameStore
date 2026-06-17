@@ -469,11 +469,14 @@
                 padding: 20px;
             }
         }
+<<<<<<< HEAD
 		.deletecart{
 			text-decoration : none;
             color : red;
             margin-left: 10px;
 		}
+=======
+>>>>>>> 7a1e458a11b9b29fcba57968fdc863233b120c75
 
     </style>
 </head>
@@ -502,18 +505,27 @@
         <div class="page-header">
             <h1>Giỏ hàng</h1>
         </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7a1e458a11b9b29fcba57968fdc863233b120c75
         <!-- CART TABS -->
         <div class="cart-tabs">
 			<form method="get">
 			    <button class="cart-tab"
 			            th:each="cart, stat : ${dscart}"
+<<<<<<< HEAD
 						th:classappend="${cart.cart_id == selectedCartId} ? ' active' : ''"
+=======
+			            th:classappend="${stat.index == 0} ? ' active' : ''"
+>>>>>>> 7a1e458a11b9b29fcba57968fdc863233b120c75
 			            th:formaction="@{/user/cartitem/{id}(id=${cart.cart_id})}">
 			        Giỏ hàng [[${stat.count}]]
 			        <span class="badge"
 			              th:text="${cartitemdao.findByCartId(cart.cart_id).size()}">
 			            3
 			        </span>
+<<<<<<< HEAD
 					<a class="deletecart"
 					   th:href="@{/user/deletecart/{id}(id=${cart.cart_id})}">
 					    X
@@ -523,6 +535,13 @@
 			<a href = "/user/createcart"><button th:if = "${max < 6}" class="cart-tab" style="margin-left: auto; background-color: #1f2937; color: #22d3ee;">+ Tạo giỏ mới</button></a>
         </div>
 		
+=======
+			    </button>
+			</form>            
+			<button class="cart-tab" style="margin-left: auto; background-color: #1f2937; color: #22d3ee;">+ Tạo giỏ mới</button>
+        </div>
+
+>>>>>>> 7a1e458a11b9b29fcba57968fdc863233b120c75
         <!-- CONTAINER -->
         <div class="cart-container">
 
@@ -579,7 +598,11 @@
                     <span th:text = "${total-discount}">1.746.000đ</span>
                 </div>
 
+<<<<<<< HEAD
                 <a href = "/payment/process"><button class="checkout-btn">Thanh toán</button></a>
+=======
+                <a href = "/thanhtoan"><button class="checkout-btn">Thanh toán</button></a>
+>>>>>>> 7a1e458a11b9b29fcba57968fdc863233b120c75
                 <button class="continue-btn">Tiếp tục mua sắm</button>
             </div>
 
