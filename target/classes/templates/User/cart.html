@@ -550,7 +550,15 @@
                     </div>
                     <div class="quantity-control">
                         <button>-</button>
-                        <input type="number" value="1" min="1" th:value = "${item.quantity}">
+						<form action="/update" method="get">
+				            <input type="hidden" name="cartItemId"
+				                   th:value="${item.cart_item_id}">
+						   <input type="hidden" name="cartid"
+   				                   th:value="${item.cartid}">
+				            <input type="number" name="quantity"
+				                   th:value="${item.quantity}"
+				                   onchange="this.form.submit()">
+				        </form>
                         <button>+</button>
                     </div>
                     <div class="item-price" th:text = "${item.game.price}">aa</div>

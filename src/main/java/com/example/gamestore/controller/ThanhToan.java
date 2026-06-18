@@ -96,14 +96,8 @@ public class ThanhToan {
 		String newtransactionid = "TRANS00"+(lsattrancation+1);									//Mã transaction
 		
 		Payments payments = new Payments(newpaymentid,neworderid,pay,"Success",date,newtransactionid);paymentdao.save(payments);
-		
-		for(CartItems c : cartitemdao.findAll()) {
-			if(c.getCart_id().equals("neededCart_id")) {
-				cartitemdao.delete(c);
-			}
-		}
 		for(CartItems c : cartitemdao.findAll()) {							// Xóa item trong cart item
-			if(c.getCart_id().equals(neededCart_id)) {
+			if(c.getCartid().equals(neededCart_id)) {
 				cartitemdao.delete(c);
 			}
 		}

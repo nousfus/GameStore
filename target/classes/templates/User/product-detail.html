@@ -375,7 +375,19 @@
                 grid-template-columns: 100px 1fr;
             }
         }
+		.user-menu{
+            background-color: #22d3ee;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
+        .user-menu:hover{
+            background-color: #67e8f9;
+        }
     </style>
 </head>
 
@@ -487,8 +499,17 @@
                 </div>
 
                 <div class="product-actions">
-                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
-                    <button class="btn btn-secondary">Mua ngay</button>
+					<form action="/user/addcart" method="post">
+					    <button class="btn btn-primary">Thêm vào giỏ hàng</button>                 
+				        <select class="user-menu" name="addcart">
+							<option>Chọn giỏ hàng</option>
+				            <option th:each="item,stat : ${carts}"
+				                    th:value="${item.cart_id}"
+				                    th:text="'Giỏ hàng '+${stat.index+1}">
+				            </option>
+				        </select>
+				    </form>
+					<button class="btn btn-secondary">Mua ngay</button>
                     <button class="btn btn-wishlist" title="Thêm vào danh sách ưa thích">❤</button>
                 </div>
             </div>

@@ -51,9 +51,9 @@ public class MuaHang {
 		List<CartItems> cartitems = cartitemsdao.findAll();
 		int total = 0;
 		for(CartItems c : cartitemsdao.findAll()) {
-			if(c.getCart_id().equals("CART001")) {							// Cart mãua
+			if(c.getCartid().equals("CART001")) {							// Cart mãua
 				Game game = gamedao.findById(c.getGame().getGame_id()).orElse(null);
-				CartItems abc = new CartItems(c.getCart_item_id(),c.getCart_id(),game,c.getQuantity());
+				CartItems abc = new CartItems(c.getCart_item_id(),c.getCartid(),game,c.getQuantity());
 				total += game.getPrice() * c.getQuantity();
 				list.add(abc);
 			}
@@ -82,9 +82,9 @@ public class MuaHang {
 			if(cartitemsdao.findAll().size()!=0) {
 				CartItems cart_item = abc.get(cartitemsdao.findAll().size()-1);
 				int lastcart = Integer.parseInt(cart_item.getCart_item_id().substring(4));
-				 newcartitem_id = newcartitem_id = "CI00"+(lastcart+1);
+				newcartitem_id = "CI00"+(lastcart+1);
 			}else {
-				 newcartitem_id = newcartitem_id = "CI00"+1;
+				 newcartitem_id = "CI00"+1;
 			}
 			CartItems cartitem = new CartItems(newcartitem_id,cart.getCart_id(),game,1); cartitemsdao.save(cartitem);
 		}else {
@@ -106,7 +106,7 @@ public class MuaHang {
 		}
 		return "forward:/list";
 	}
-	@GetMapping("/update")
+	@GetMapping("/update2")
 	public String update(Model m,@RequestParam(value = "quantity") int quantity,
 									@RequestParam("cartItemId") String cartitemid) {
 		CartItems a = cartitemsdao.findById(cartitemid).orElse(null);
@@ -138,7 +138,7 @@ public class MuaHang {
 		int total = 0;														//Tổng giá sản phẩm
 		Game game = new Game();
 		for(CartItems c : cartitemsdao.findAll()) {
-			if(c.getCart_id().equals(neededCart_id)) {
+			if(c.getCartid().equals(neededCart_id)) {
 				game = gamedao.findById(c.getGame().getGame_id()).orElse(null);
 				total += game.getPrice() * c.getQuantity();
 			}
@@ -172,7 +172,7 @@ public class MuaHang {
 		Payments payments = new Payments(newpaymentid,neworderid,pay,"Success",date,newtransactionid);paymentdao.save(payments);
 		
 		for(CartItems c : cartitemsdao.findAll()) {
-			if(c.getCart_id().equals("neededCart_id")) {
+			if(c.getCartid().equals("neededCart_id")) {
 				cartitemsdao.delete(c);
 			}
 		}

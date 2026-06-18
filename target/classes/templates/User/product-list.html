@@ -333,7 +333,19 @@
 		a{
 			text-decoration : none;
 		}
+		.user-menu{
+            background-color: #22d3ee;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
+        .user-menu:hover{
+            background-color: #67e8f9;
+        }
     </style>
 </head>
 
@@ -477,6 +489,13 @@
 
             <div class="products-header">
                 <h2>Danh sách Sản phẩm</h2>
+				<select class="user-menu" name="addcart">
+					<option>Chọn giỏ hàng</option>
+		            <option th:each="item,stat : ${carts}"
+		                    th:value="${item.cart_id}"
+		                    th:text="'Giỏ hàng '+${stat.index+1}">
+		            </option>
+		        </select>
                 <select class="sort-options">
                     <option>Sắp xếp theo</option>
                     <option>Mới nhất</option>
