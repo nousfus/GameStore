@@ -584,7 +584,7 @@
 
                 <div class="summary-row total">
                     <span>Tổng cộng:</span>
-                    <span th:text = "${total-discount}">1.746.000đ</span>
+					<span th:text="${#numbers.formatDecimal(total - discount, 0, 'COMMA', 0, 'POINT')}"></span>
                 </div>
 
                 <a href = "/payment/process"><button class="checkout-btn">Thanh toán</button></a>
