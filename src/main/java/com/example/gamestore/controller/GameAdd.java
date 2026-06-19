@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,6 +56,20 @@ public class GameAdd {
 		m.addAttribute("dscategory",categorydao.findAll());
 		
 		return "game/game";
+	}
+	@RequestMapping("/game/edit/{id}")
+	public String edit(@PathVariable("id") String id, Model m) {
+		Game game = gamedao.findById(id).orElse(null);
+		m.addAttribute("gamedetail",game);
+		  if(game.getVideo_url() == null) return "";
+
+		    String id2 = "";
+
+		    if(game.getVideo_url().contains("watch?v=")) {
+		        id2 = game.getVideo_url().split("watch\\?v=")[1].split("&")[0];
+		    }
+		m.addAttribute("videourl","https://www.youtube.com/embed/"+id2);
+		return "game/temp";
 	}
 	@PostMapping("/addgame")
 	public String addGame(Model m,
