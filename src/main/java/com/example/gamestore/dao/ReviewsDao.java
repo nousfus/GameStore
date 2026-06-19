@@ -12,4 +12,5 @@ public interface ReviewsDao extends JpaRepository<Reviews, String>{
 //	void create(Reviews r); 
 //	void update(Reviews r); 
 //	void delete(String id);
+	List<Reviews> findByGameid(String gameid);
 }

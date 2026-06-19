@@ -8,7 +8,9 @@ import jakarta.persistence.*;
 public class Game {
 	@Id
 	private String game_id; 
-	private String developer_id; 
+	@ManyToOne
+    @JoinColumn(name = "developer_id")
+    private DeveloperProfiles developer;
 	private String game_name; 
 	private String description; 
 	private float price; 
@@ -18,11 +20,11 @@ public class Game {
 	private String status; 
 	private String video_url;
 	public Game() { }
-	public Game(String game_id, String developer_id, String game_name, String description, float price, Date release_date,
+	public Game(String game_id, DeveloperProfiles developer_id, String game_name, String description, float price, Date release_date,
 			int rating, String thumbnail, String status, String video_url) {
 		super();
 		this.game_id = game_id;
-		this.developer_id = developer_id;
+		this.developer = developer_id;
 		this.game_name = game_name;
 		this.description = description;
 		this.price = price;
@@ -44,11 +46,11 @@ public class Game {
 	public void setGame_id(String game_id) {
 		this.game_id = game_id;
 	}
-	public String getDeveloper_id() {
-		return developer_id;
+	public DeveloperProfiles getDeveloper() {
+		return developer;
 	}
-	public void setDeveloper_id(String developer_id) {
-		this.developer_id = developer_id;
+	public void setDeveloper(DeveloperProfiles developer) {
+		this.developer = developer;
 	}
 	public String getGame_name() {
 		return game_name;

@@ -12,4 +12,5 @@ public interface GameRequirementsDao extends JpaRepository<GameRequirements, Str
 //	void create(GameRequirements gr); 
 //	void update(GameRequirements gr); 
 //	void delete(String id);
+	GameRequirements findByGameid(String id);
 }

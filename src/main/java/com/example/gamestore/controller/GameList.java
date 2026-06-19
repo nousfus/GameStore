@@ -16,27 +16,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.gamestore.dao.CartDao;
-import com.example.gamestore.dao.CartItemsDao;
-import com.example.gamestore.dao.CategoriesDao;
-import com.example.gamestore.dao.DiscountsDao;
-import com.example.gamestore.dao.GameDao;
-import com.example.gamestore.dao.OrderDetailsDao;
-import com.example.gamestore.dao.OrdersDao;
-import com.example.gamestore.dao.PaymentsDao;
+import com.example.gamestore.dao.*;
 import com.example.gamestore.entity.Cart;
 import com.example.gamestore.entity.CartItems;
 import com.example.gamestore.entity.Discounts;
 import com.example.gamestore.entity.Game;
+import com.example.gamestore.entity.GameRequirements;
 import com.example.gamestore.entity.OrderDetails;
 import com.example.gamestore.entity.Orders;
 import com.example.gamestore.entity.Payments;
+import com.example.gamestore.entity.Reviews;
 import com.example.gamestore.entity.Users;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class GameList {
+
 	@Autowired
 	HttpSession session;
 	@Autowired
@@ -55,6 +51,10 @@ public class GameList {
 	DiscountsDao discountdao;
 	@Autowired
 	PaymentsDao paymentdao;
+	@Autowired
+	ReviewsDao reviewsdao;
+	@Autowired
+	GameRequirementsDao requirementdao;
 	@GetMapping("/user/product-list")
 	public String productList(
 	        @RequestParam(defaultValue = "0") int page,
@@ -68,14 +68,60 @@ public class GameList {
 
 	    return "user/product-list";
 	}
-	@RequestMapping("/user/product-detail/{id}")
+	@RequestMapping("/user/product-detail/{id}")								// Trang chi tiết sản phẩm
 	public String detail(@PathVariable("id") String id,Model m) {
-		m.addAttribute("game",gamedao.findById(id).orElse(null));
-		session.setAttribute("game", gamedao.findById(id).orElse(null));
+		//Hiển thị thông tin game
+		Game game = gamedao.findById(id).orElse(null);
+		m.addAttribute("game",game);
+			
+		//discount
+		Discounts discount = discountdao.findByGameId(id);	
+		m.addAttribute("discount",discount.getdiscount_percent());
+		float price = game.getPrice() - ((game.getPrice()*discount.getdiscount_percent()) / 100);
+		m.addAttribute("priceafterdiscount",price);
+		
+		// Đánh giá
+		List<Reviews> reviews = reviewsdao.findByGameid(id);
+		m.addAttribute("countreviews",reviews.size());
+		double star = reviews.stream()
+		        .mapToInt(Reviews::getRating)
+		        .average()
+		        .orElse(0.0);
+
+		m.addAttribute("stars", star);
+		m.addAttribute("reviews",reviews);
+		
+		//Cấu hình game
+		GameRequirements requirement = requirementdao.findByGameid(id);
+		m.addAttribute("requirement",requirement);
+		
+		// Hiển thị giỏ hàng
 	    Users user = (Users) session.getAttribute("user");
 	    List<Cart> carts = cartDao.findByUsername(user.getUsername());
 	    m.addAttribute("carts", carts);
+	    
+	    session.setAttribute("game",game);
 		return "User/product-detail";
+	}
+	@PostMapping("/user/addComment")
+	public String addcommen(@RequestParam("gameId") String gameId,
+							@RequestParam("rating") String rating,
+							@RequestParam("comment") String comment) {
+		Users user = (Users) session.getAttribute("user");
+		if(rating!=null) {
+			List<Reviews> list = reviewsdao.findAll();
+			Reviews reviews = list.get(reviewsdao.findAll().size()-1);
+			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getreview_id().substring(4)))+1); 
+			Date date = new Date(System.currentTimeMillis());
+			reviewsdao.save(new Reviews(reviews_id,user.getUsername(),gameId,Integer.parseInt(rating),comment,date));
+		}else {
+			List<Reviews> list = reviewsdao.findAll();
+			Reviews reviews = list.get(reviewsdao.findAll().size()-1);
+			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getreview_id().substring(4)))+1); 
+			Date date = new Date(System.currentTimeMillis());
+			reviewsdao.save(new Reviews(reviews_id,user.getUsername(),gameId,1,comment,date));
+		}
+		return "User/product-detail/"+gameId;
 	}
 	@PostMapping("/user/addcart")
 	public String addcart(

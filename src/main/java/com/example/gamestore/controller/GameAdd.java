@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.gamestore.dao.CategoriesDao;
+import com.example.gamestore.dao.DeveloperProfilesDao;
 import com.example.gamestore.dao.GameCategoriesDao;
 import com.example.gamestore.dao.GameDao;
 import com.example.gamestore.dao.GameImagesDao;
@@ -45,7 +46,8 @@ public class GameAdd {
 	GameCategoriesDao gamecategorydao;
 	@Autowired
 	CategoriesDao categorydao;
-	
+	@Autowired
+	DeveloperProfilesDao developerdao;
 	@GetMapping("/game")
 	public String listgame(Model m) {
 		m.addAttribute("dsgame",gamedao.findAll());
@@ -182,7 +184,7 @@ public class GameAdd {
         m.addAttribute("videoPath",
                            "/videos/" + fileName);
         
-		gamedao.save(new Game(new_game_id,developer_id,game_name,description,price,date,0,fileNameThumbnail,"Active",fileName));
+		gamedao.save(new Game(new_game_id,developerdao.findById(developer_id).orElse(null),game_name,description,price,date,0,fileNameThumbnail,"Active",fileName));
 
         //Images
         if (images == null || images.length == 0 ||

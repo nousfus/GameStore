@@ -35,10 +35,10 @@ public class DeveloperProfiles {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public String getstudio_name() {
+	public String getStudio_name() {
 		return studio_name;
 	}
-	public void setstudio_name(String studio_name) {
+	public void setStudio_name(String studio_name) {
 		this.studio_name = studio_name;
 	}
 	public String getDescription() {

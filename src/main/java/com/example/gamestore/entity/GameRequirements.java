@@ -1,5 +1,6 @@
 package com.example.gamestore.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,7 +10,8 @@ import jakarta.persistence.Table;
 public class GameRequirements {
 	@Id
 	private String requirement_id; 
-	private String game_id; 
+	@Column(name = "game_id")
+	private String gameid; 
 	private String requirement_type; 
 	private String os; 
 	private String processor; 
@@ -22,7 +24,7 @@ public class GameRequirements {
 			String memory_ram, String graphicscard, String directx, String storage) {
 		super();
 		this.requirement_id = requirement_id;
-		this.game_id = game_id;
+		this.gameid = game_id;
 		this.requirement_type = requirement_type;
 		this.os = os;
 		this.processor = processor;
@@ -37,11 +39,11 @@ public class GameRequirements {
 	public void setRequirement_id(String requirement_id) {
 		this.requirement_id = requirement_id;
 	}
-	public String getGame_id() {
-		return game_id;
+	public String getGameid() {
+		return gameid;
 	}
-	public void setGame_id(String game_id) {
-		this.game_id = game_id;
+	public void setGameid(String game_id) {
+		this.gameid = game_id;
 	}
 	public String getRequirement_type() {
 		return requirement_type;
