@@ -2,6 +2,7 @@ package com.example.gamestore.controller;
 
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.gamestore.dao.*;
 import com.example.gamestore.entity.Cart;
 import com.example.gamestore.entity.CartItems;
+import com.example.gamestore.entity.Categories;
 import com.example.gamestore.entity.Discounts;
 import com.example.gamestore.entity.Game;
-import com.example.gamestore.entity.GameRequirements;
+import com.example.gamestore.entity.GameCategories;
+import com.example.gamestore.entity.GameImages;
 import com.example.gamestore.entity.OrderDetails;
 import com.example.gamestore.entity.Orders;
 import com.example.gamestore.entity.Payments;
@@ -54,7 +57,9 @@ public class GameList {
 	@Autowired
 	ReviewsDao reviewsdao;
 	@Autowired
-	GameRequirementsDao requirementdao;
+	GameCategoriesDao gamecategorydao;
+	@Autowired
+	GameImagesDao gameimagedao;
 	@GetMapping("/user/product-list")
 	public String productList(
 	        @RequestParam(defaultValue = "0") int page,
@@ -91,9 +96,31 @@ public class GameList {
 		m.addAttribute("stars", star);
 		m.addAttribute("reviews",reviews);
 		
-		//Cấu hình game
-		GameRequirements requirement = requirementdao.findByGameid(id);
-		m.addAttribute("requirement",requirement);
+		//Hiển thị thể loại game
+		List<String> list = new ArrayList<>();
+		List<GameCategories> gameCategories = gamecategorydao.findByGameid(id);
+		for(GameCategories g : gameCategories) {
+			for(Categories c : categorydao.findAll()) {
+				if(g.getCategory_id().equals(c.getCategory_id())) {
+					list.add(c.getCategory_name());
+				}
+			}	
+		}
+		m.addAttribute("listCategories",list);
+		
+		// Hiển thị hình ảnh game
+		List<GameImages> listimages = gameimagedao.thumbnail(id);
+		m.addAttribute("listimages",listimages);
+		
+		//Hiển thị video game
+		  if(game.getVideo_url() == null) return "";
+
+		    String id2 = "";
+
+		    if(game.getVideo_url().contains("watch?v=")) {
+		        id2 = game.getVideo_url().split("watch\\?v=")[1].split("&")[0];
+		    }
+		m.addAttribute("videourl","https://www.youtube.com/embed/"+id2);
 		
 		// Hiển thị giỏ hàng
 	    Users user = (Users) session.getAttribute("user");

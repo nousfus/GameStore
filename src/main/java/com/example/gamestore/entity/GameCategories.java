@@ -11,7 +11,8 @@ import jakarta.persistence.*;
 public class GameCategories {
 
     @Id
-    private String game_id;
+    @Column(name = "game_id")
+    private String gameid;
 
     @Id
     private String category_id;
@@ -19,14 +20,14 @@ public class GameCategories {
     public GameCategories() {}
 
     public GameCategories(String game_id, String category_id) {
-        this.game_id = game_id;
+        this.gameid = game_id;
         this.category_id = category_id;
     }
-	public String getGame_id() {
-		return game_id;
+	public String getGameid() {
+		return gameid;
 	}
-	public void setGame_id(String game_id) {
-		this.game_id = game_id;
+	public void setGameid(String game_id) {
+		this.gameid = game_id;
 	}
 	public String getCategory_id() {
 		return category_id;

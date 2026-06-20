@@ -117,7 +117,7 @@
         <tbody>
             <tr th:each = "item : ${dsgame}">
                 <td th:text = "${item.game_id}">GameId</td>
-                <td th:text = "${item.developer_id}">Developer Id</td>
+                <td th:text = "${item.developer.developer_id}">Developer Id</td>
                 <td th:text = "${item.game_name}">Game name</td>
                 <td th:text = "${item.description}">Description</td>
                 <td th:text = "${item.price}">price</td>

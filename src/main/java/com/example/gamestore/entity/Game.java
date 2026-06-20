@@ -19,9 +19,11 @@ public class Game {
 	private String thumbnail; 
 	private String status; 
 	private String video_url;
+	private String ram;
+	private String storage;
 	public Game() { }
 	public Game(String game_id, DeveloperProfiles developer_id, String game_name, String description, float price, Date release_date,
-			int rating, String thumbnail, String status, String video_url) {
+			int rating, String thumbnail, String status, String video_url, String ram, String storage) {
 		super();
 		this.game_id = game_id;
 		this.developer = developer_id;
@@ -33,6 +35,8 @@ public class Game {
 		this.thumbnail = thumbnail;
 		this.status = status;
 		this.video_url = video_url;
+		this.ram = ram;
+		this.storage = storage;
 	}
 	public String getVideo_url() {
 		return video_url;
@@ -93,6 +97,18 @@ public class Game {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getRam() {
+		return ram;
+	}
+	public void setRam(String ram) {
+		this.ram = ram;
+	}
+	public String getStorage() {
+		return storage;
+	}
+	public void setStorage(String storage) {
+		this.storage = storage;
 	}
 	
 }
