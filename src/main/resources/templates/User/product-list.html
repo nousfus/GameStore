@@ -373,45 +373,20 @@
 
         <!-- SIDEBAR - FILTER -->
         <aside class="sidebar">
+			<form action="/user/product-list/filter" method="get">
             <div class="filter-group">
+				<button type="submit" class="user-menu">Lọc</button><br/><br/>
                 <h3>Thể loại</h3>
                 <label th:each = "item :${dscate}">
-					<input type="checkbox" th:text = "${item.category_name}"> 
+					<input type="checkbox" th:text = "${item.category_name}" name = "categories" th:value = "${item.category_id}"> 
 				</label>
+
             </div>
 
             <div class="filter-group">
                 <h4>Giá</h4>
                 <label>Từ: <strong>0đ</strong> - Tới: <strong>1.000.000đ</strong></label>
-                <input type="range" min="0" max="1000000" value="1000000">
-            </div>
-
-            <div class="filter-group">
-                <h4>Hệ điều hành</h4>
-                <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
-                    <option value="">Chọn OS</option>
-                    <option value="windows">Microsoft Windows</option>
-                    <option value="macos">macOS</option>
-                    <option value="ubuntu">Ubuntu</option>
-                    <option value="android">Android</option>
-                    <option value="ios">iOS</option>
-                    <option value="linux">Linux</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <h4>CPU</h4>
-                <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
-                    <option value="">Chọn CPU</option>
-                    <option value="intel-celeron">Intel Celeron N4020</option>
-                    <option value="intel-i3">Intel Core i3-12100</option>
-                    <option value="amd-ryzen5">AMD Ryzen 5 5600</option>
-                    <option value="intel-i5">Intel Core i5-14600K</option>
-                    <option value="amd-ryzen7">AMD Ryzen 7 7800X3D</option>
-                    <option value="intel-core-ultra">Intel Core Ultra 9 285K</option>
-                    <option value="amd-ryzen9">AMD Ryzen 9 9950X</option>
-                    <option value="amd-threadripper">AMD Ryzen Threadripper PRO 7995WX</option>
-                </select>
+                <input type="range" min="0" max="1000000" value="1000000" name = "price">
             </div>
 
             <div class="filter-group">
@@ -430,33 +405,6 @@
             </div>
 
             <div class="filter-group">
-                <h4>Card đồ họa</h4>
-                <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
-                    <option value="">Chọn GPU</option>
-                    <option value="intel-uhd">Intel UHD Graphics</option>
-                    <option value="gtx-1050">NVIDIA GTX 1050 Ti</option>
-                    <option value="gtx-1660">NVIDIA GTX 1660 Super</option>
-                    <option value="rtx-3060">NVIDIA RTX 3060</option>
-                    <option value="rtx-4070">NVIDIA RTX 4070 Super</option>
-                    <option value="rtx-5080">NVIDIA RTX 5080</option>
-                    <option value="rtx-5090">NVIDIA RTX 5090</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <h4>DirectX</h4>
-                <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
-                    <option value="">Chọn DirectX</option>
-                    <option value="dx8">DirectX 8.0</option>
-                    <option value="dx9">DirectX 9.0</option>
-                    <option value="dx10">DirectX 10</option>
-                    <option value="dx11">DirectX 11</option>
-                    <option value="dx12">DirectX 12</option>
-                    <option value="dx12-ultimate">DirectX 12 Ultimate</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
                 <h4>Dung lượng lưu trữ</h4>
                 <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
                     <option value="">Chọn Storage</option>
@@ -471,9 +419,14 @@
 
             <div class="filter-group">
                 <h3>Đánh giá</h3>
-                <label><input type="checkbox"> 5 sao</label>
-                <label><input type="checkbox"> 4+ sao</label>
-                <label><input type="checkbox"> 3+ sao</label>
+				<select id="rating" name="rating">
+                    <option value="">Chọn số sao</option>
+                    <option value="5">5 - Xuất sắc</option>
+                    <option value="4">4 - Rất tốt</option>
+                    <option value="3">3 - Tốt</option>
+                    <option value="2">2 - Trung bình</option>
+                    <option value="1">1 - Kém</option>
+                </select>
             </div>
 
             <div class="filter-group">
@@ -482,6 +435,7 @@
                 <label><input type="checkbox"> Giảm giá</label>
                 <label><input type="checkbox"> Best seller</label>
             </div>
+			</form>
         </aside>
 
         <!-- PRODUCTS -->
@@ -490,7 +444,7 @@
             <div class="products-header">
                 <h2>Danh sách Sản phẩm</h2>
 				<select class="user-menu" name="addcart">
-					<option>Chọn giỏ hàng</option>
+					<option value = "">Chọn giỏ hàng</option>
 		            <option th:each="item,stat : ${carts}"
 		                    th:value="${item.cart_id}"
 		                    th:text="'Giỏ hàng '+${stat.index+1}">
@@ -511,7 +465,7 @@
 			         th:each="game : ${gamePage.content}">
 
 			        <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}">
-			            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
+			            <img th:src="@{/uploads/images/{file}(file=${game.thumbnail})}">
 
 			            <div class="game-info">
 			                <div class="game-title"
@@ -520,7 +474,7 @@
 
 			                <div class="game-rating">★★★★★ (4.8)</div>
 
-			                <div class="game-category">
+			                <div class="game-category" th:text = "${game.categories}">
 			                    Action | Sci-Fi
 			                </div>
 

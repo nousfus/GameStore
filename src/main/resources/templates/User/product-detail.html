@@ -55,7 +55,6 @@
             gap: 10px;
         }
 
-        /* BREADCRUMB */
         .breadcrumb{
             padding: 15px 80px;
             background-color: #111827;
@@ -498,8 +497,8 @@
             <div class="product-images">
                 <div class="main-image">
                         <div class="view-toggle" style="position:absolute; top:12px; left:12px; z-index:8;">
-                            <button id="btn-images" class="user-menu ">Ảnh</button>
-                            <button id="btn-video" class="user-menu" style="margin-left:8px;" active>Video</button>
+							<button id="btn-video" class="user-menu" style="margin-left:8px;">Video</button>
+                            <button id="btn-images" class="user-menu" >Ảnh</button>
                         </div>
 
                         <button class="nav-btn prev" aria-label="Previous image">‹</button>
@@ -701,15 +700,12 @@
             }
 
             // initialize
-            if (srcs.length > 0){
-                updateMain(currentIndex);
-                showImageView();
-            } else {
-                // no images -> show video if available
-                const src = (videoFrame && (videoFrame.getAttribute('src') || videoFrame.src || '').trim());
-                if (src) showVideoView();
-                else { /* nothing to show */ }
-            }
+			if (videoFrame && videoFrame.src) {
+			    showVideoView();
+			} else if (srcs.length > 0) {
+			    updateMain(currentIndex);
+			    showImageView();
+			}
 
             thumbnails.forEach(function(thumb, idx) {
                 thumb.addEventListener('click', function() {

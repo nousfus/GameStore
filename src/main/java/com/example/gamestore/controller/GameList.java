@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ import com.example.gamestore.entity.Orders;
 import com.example.gamestore.entity.Payments;
 import com.example.gamestore.entity.Reviews;
 import com.example.gamestore.entity.Users;
+import com.example.gamestore.service.GameSpecification;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -60,6 +62,8 @@ public class GameList {
 	GameCategoriesDao gamecategorydao;
 	@Autowired
 	GameImagesDao gameimagedao;
+	
+	
 	@GetMapping("/user/product-list")
 	public String productList(
 	        @RequestParam(defaultValue = "0") int page,
@@ -68,9 +72,67 @@ public class GameList {
 		Pageable pageable = PageRequest.of(page, 9);
 		Page<Game> gamePage = gamedao.findAllGame(pageable);
 
+		for(Game game : gamePage.getContent()) {
+
+		    List<String> names = new ArrayList<>();
+
+		    List<GameCategories> listCategories =
+		            gamecategorydao.findByGameid(game.getGame_id());
+
+		    for(GameCategories gc : listCategories) {
+		        Categories c = categorydao.findById(gc.getCategory_id()).orElse(null);
+		        if(c != null) {
+		            names.add(c.getCategory_name());
+		        }
+		    }
+
+		    game.setCategories(String.join(" | ", names));
+		}
+		
 	    m.addAttribute("gamePage", gamePage);
 	    m.addAttribute("currentPage", page);
+	    
 
+	    return "user/product-list";
+	}
+	@GetMapping("/user/product-list/filter")
+	public String filter(
+	        @RequestParam(required = false) List<String> categories,
+	        @RequestParam(required = false) String ram,
+	        @RequestParam(required = false) String storage,
+	        @RequestParam(required = false) Double price,
+	        @RequestParam(defaultValue = "0") int page,
+	        Model m) {
+
+	    Specification<Game> spec = Specification
+	            .where(GameSpecification.hasRam(ram))
+	            .and(GameSpecification.hasStorage(storage))
+	            .and(GameSpecification.priceLessThan(price))
+	            .and(GameSpecification.hasCategory(categories));
+
+	    Pageable pageable = PageRequest.of(page, 9);
+	    Page<Game> gamePage = gamedao.findAll(spec, pageable);
+	    
+	    for(Game game : gamePage.getContent()) {
+
+		    List<String> names = new ArrayList<>();
+
+		    List<GameCategories> listCategories =
+		            gamecategorydao.findByGameid(game.getGame_id());
+
+		    for(GameCategories gc : listCategories) {
+		        Categories c = categorydao.findById(gc.getCategory_id()).orElse(null);
+		        if(c != null) {
+		            names.add(c.getCategory_name());
+		        }
+		    }
+
+		    game.setCategories(String.join(" | ", names));
+		}
+	    
+	    m.addAttribute("gamePage", gamePage);
+	    m.addAttribute("currentPage", page);
+	    m.addAttribute("dscate",categorydao.findAll());
 	    return "user/product-list";
 	}
 	@RequestMapping("/user/product-detail/{id}")								// Trang chi tiết sản phẩm
@@ -148,7 +210,7 @@ public class GameList {
 			Date date = new Date(System.currentTimeMillis());
 			reviewsdao.save(new Reviews(reviews_id,user.getUsername(),gameId,1,comment,date));
 		}
-		return "User/product-detail/"+gameId;
+		return "forward:/user/product-detail/"+gameId;
 	}
 	@PostMapping("/user/addcart")
 	public String addcart(
