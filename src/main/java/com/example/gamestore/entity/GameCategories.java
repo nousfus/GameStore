@@ -14,7 +14,7 @@ public class GameCategories {
     @Column(name = "game_id")
     private String gameid;
 
-    @Id
+    @Id	
     private String category_id;
 
     public GameCategories() {}

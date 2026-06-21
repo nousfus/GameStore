@@ -171,7 +171,7 @@ public class GameList {
 		m.addAttribute("listCategories",list);
 		
 		// Hiển thị hình ảnh game
-		List<GameImages> listimages = gameimagedao.thumbnail(id);
+		List<GameImages> listimages = gameimagedao.findByGameid(id);
 		m.addAttribute("listimages",listimages);
 		
 		//Hiển thị video game

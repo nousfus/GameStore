@@ -78,7 +78,6 @@ public class GameAdd {
 	        ) throws IOException {
 		String developer_id = "DEV001";										//Dev mẫu
 		//Tạo thumbnail
-		 //Images
 		String fileNameThumbnail  = null;
         if (thumbnail == null || thumbnail.length == 0 ||
     	        (thumbnail.length == 1 && thumbnail[0].isEmpty())) {

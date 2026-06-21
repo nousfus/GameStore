@@ -52,6 +52,7 @@ public class TrangChu {
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
 			m.addAttribute("username",user.getUsername());
+			session.setAttribute("rolepicked", "User");
 		}
 		// Hiển thị sản phẩm
 		List<Game> games = gamedao.findTop3ByRating(5);
