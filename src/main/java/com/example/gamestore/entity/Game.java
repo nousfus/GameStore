@@ -19,19 +19,8 @@ public class Game {
 	private String thumbnail; 
 	private String status; 
 	private String video_url;
-//	private String ram;
-//	private String storage;
-	
-	@OneToOne(mappedBy = "game", cascade = CascadeType.ALL)
-    private GameRequirement gameRequirement;
-
-    // Nhớ tạo Getter và Setter cho gameRequirements nhé!
-    public GameRequirement getGameRequirement() { 
-    	return gameRequirement; 
-    }
-    public void setGameRequirements(GameRequirement gameRequirement) { 
-    	this.gameRequirement = gameRequirement; 
-    }
+	private String ram;
+	private String storage;
 	@Transient
 	private String categories;
 
@@ -119,17 +108,17 @@ public class Game {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-//	public String getRam() {
-//		return ram;
-//	}
-//	public void setRam(String ram) {
-//		this.ram = ram;
-//	}
-//	public String getStorage() {
-//		return storage;
-//	}
-//	public void setStorage(String storage) {
-//		this.storage = storage;
-//	}
+	public String getRam() {
+		return ram;
+	}
+	public void setRam(String ram) {
+		this.ram = ram;
+	}
+	public String getStorage() {
+		return storage;
+	}
+	public void setStorage(String storage) {
+		this.storage = storage;
+	}
 	
 }

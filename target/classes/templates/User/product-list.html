@@ -443,13 +443,6 @@
 
             <div class="products-header">
                 <h2>Danh sách Sản phẩm</h2>
-				<select class="user-menu" name="addcart">
-					<option value = "">Chọn giỏ hàng</option>
-		            <option th:each="item,stat : ${carts}"
-		                    th:value="${item.cart_id}"
-		                    th:text="'Giỏ hàng '+${stat.index+1}">
-		            </option>
-		        </select>
                 <select class="sort-options">
                     <option>Sắp xếp theo</option>
                     <option>Mới nhất</option>
@@ -485,7 +478,9 @@
 			                </div>
 
 			                <div class="action-buttons">
-			                    <button class="cart-btn" th:if = "${game.status=='Active'}">Thêm giỏ hàng</button>
+								<form action="/user/addcart" method="post">
+			                   		 <button class="cart-btn" th:if = "${game.status=='Active'}" type = "submit">Thêm giỏ hàng</button>
+								</form>
 								<button class="cart-btn" th:if = "${game.status=='Unactive'}">Sắp ra mắt</button>
 			                    <button class="wishlist-btn">❤</button>
 			                </div>

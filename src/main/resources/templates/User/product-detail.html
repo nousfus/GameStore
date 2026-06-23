@@ -584,13 +584,6 @@
                 <div class="product-actions"  th:if = "${gameStatus=='Active'}">
 					<form action="/user/addcart" method="post">
 					    <button class="btn btn-primary">Thêm vào giỏ hàng</button>                 
-				        <select class="btn btn-primary" name="addcart">
-							<option>Chọn giỏ hàng</option>
-				            <option th:each="item,stat : ${carts}"
-				                    th:value="${item.cart_id}"
-				                    th:text="'Giỏ hàng '+${stat.index+1}">
-				            </option>
-				        </select>
 				    </form>
 					<button class="btn btn-secondary">Mua ngay</button>
                     <button class="btn btn-wishlist" title="Thêm vào danh sách ưa thích">❤</button>

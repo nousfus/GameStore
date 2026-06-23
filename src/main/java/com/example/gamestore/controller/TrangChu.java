@@ -101,15 +101,6 @@ public class TrangChu {
 			return "User/profile";
 		}
 	}
-	@RequestMapping("/carttemp")
-	public String a(Model m) {
-		Users user = (Users) session.getAttribute("user");
-		List<Cart> list = cartdao.findByUsername(user.getUsername());
-		m.addAttribute("max",list.size());
-		List<CartItems> list0 = cartitemdao.findByCartId(list.get(0).getCart_id());
-		session.setAttribute("list0",list0);
-		return "forward:/user/cart";
-	}
 	@RequestMapping("/user/product")
 	public String product() {
 		return "User/product-list";

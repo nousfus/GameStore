@@ -187,11 +187,6 @@ public class GameList {
 		        id2 = game.getVideo_url().split("watch\\?v=")[1].split("&")[0];
 		    }
 		m.addAttribute("videourl","https://www.youtube.com/embed/"+id2);
-		
-		// Hiển thị giỏ hàng
-	    Users user = (Users) session.getAttribute("user");
-	    List<Cart> carts = cartDao.findByUsername(user.getUsername());
-	    m.addAttribute("carts", carts);
 	    
 	    session.setAttribute("game",game);
 		return "User/product-detail";
@@ -217,13 +212,13 @@ public class GameList {
 		return "forward:/user/product-detail/"+gameId;
 	}
 	@PostMapping("/user/addcart")
-	public String addcart(
-	        @RequestParam("addcart") String cartid) {
-
+	public String addcart() {
+		Users user = (Users) session.getAttribute("user");
+		Cart cart = cartDao.findByUsername(user.getUsername());
 	    Game game = (Game) session.getAttribute("game");
 
 	    CartItems cartItem =
-	            cartitemdao.findByCartIdAndGame(cartid, game);
+	            cartitemdao.findByCartIdAndGame(cart.getCart_id(), game);
 
 	    if (cartItem != null) {
 
@@ -251,14 +246,8 @@ public class GameList {
 
 	            newId = "CI001";
 	        }
-
-	        CartItems newItem = new CartItems(
-	                newId,
-	                cartid,
-	                game,
-	                1
-	        );
-
+	        
+	        CartItems newItem = new CartItems(newId,cart.getCart_id(),game,1);
 	        cartitemdao.save(newItem);
 	    }
 

@@ -503,25 +503,6 @@
             <h1>Giỏ hàng</h1>
         </div>
         <!-- CART TABS -->
-        <div class="cart-tabs">
-			<form method="get">
-			    <button class="cart-tab"
-			            th:each="cart, stat : ${dscart}"
-						th:classappend="${cart.cart_id == selectedCartId} ? ' active' : ''"
-			            th:formaction="@{/user/cartitem/{id}(id=${cart.cart_id})}">
-			        Giỏ hàng [[${stat.count}]]
-			        <span class="badge"
-			              th:text="${cartitemdao.findByCartId(cart.cart_id).size()}">
-			            3
-			        </span>
-					<a class="deletecart"
-					   th:href="@{/user/deletecart/{id}(id=${cart.cart_id})}">
-					    X
-					</a>			    
-				</button>
-			</form>            
-			<a href = "/user/createcart"><button th:if = "${max < 6}" class="cart-tab" style="margin-left: auto; background-color: #1f2937; color: #22d3ee;">+ Tạo giỏ mới</button></a>
-        </div>
 		
         <!-- CONTAINER -->
         <div class="cart-container">
