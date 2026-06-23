@@ -9,7 +9,8 @@ public class Reviews {
 	@Id
 	private String review_id; 
 	private String username; 
-	private String game_id; 
+	@Column(name = "game_id")
+	private String gameid; 
 	private int rating; 
 	private String comment; 
 	private Date created_at; 
@@ -18,7 +19,7 @@ public class Reviews {
 		super();
 		this.review_id = review_id;
 		this.username = username;
-		this.game_id = game_id;
+		this.gameid = game_id;
 		this.rating = rating;
 		this.comment = comment;
 		this.created_at = created_at;
@@ -34,12 +35,13 @@ public class Reviews {
 	}
 	public void setUsername(String username) {
 		this.username = username;
+	}	
+	
+	public String getGameid() {
+		return gameid;
 	}
-	public String getgame_id() {
-		return game_id;
-	}
-	public void setgame_id(String game_id) {
-		this.game_id = game_id;
+	public void setGameid(String gameid) {
+		this.gameid = gameid;
 	}
 	public int getRating() {
 		return rating;
@@ -53,10 +55,10 @@ public class Reviews {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public Date getcreated_at() {
+	public Date getCreated_at() {
 		return created_at;
 	}
-	public void setcreated_at(Date created_at) {
+	public void setCreated_at(Date created_at) {
 		this.created_at = created_at;
 	}
 	

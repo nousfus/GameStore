@@ -22,6 +22,19 @@
         a.card-link{color:inherit;text-decoration:none}
         footer{background-color:#111827;padding:30px;text-align:center;color:#9ca3af;margin-top:40px}
         @media(max-width:768px){header{padding:16px} .hero{height:200px;padding:16px} .container{padding:20px}}
+		.login-btn{
+            background-color: #22d3ee;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-btn:hover{
+            background-color: #67e8f9;
+        }
     </style>
 
 </head>
@@ -37,9 +50,19 @@
         <a href="/staff/support">Support</a>
     </nav>
 
-    <div class="header-right">
-        <div class="muted">Signed in as <strong th:text="${username}">Staff</strong></div>
-    </div>
+	<div class="header-right">
+	        <div class="muted">Signed in as <strong th:text="${username}">Developer</strong></div>
+			<a href = "/logout">
+	            <button class="login-btn">
+	                Logout
+	            </button>
+			</a>
+			<a href = "/staff/profile">
+	            <button class="login-btn">
+	                Profile
+	            </button>
+			</a>
+	    </div>
 
 </header>
 
@@ -60,8 +83,7 @@
         <div class="grid">
             <a class="card-link" href="/staff/notifications"><div class="card"><h3>Thông báo</h3><p class="muted">Xem và phát hành thông báo</p></div></a>
             <a class="card-link" href="/staff/orders"><div class="card"><h3>Đơn hàng</h3><p class="muted">Quản lý đơn hàng và hỗ trợ khách hàng</p></div></a>
-            <a class="card-link" href="/staff/support"><div class="card"><h3>Hỗ trợ</h3><p class="muted">Truy cập công cụ hỗ trợ và tickets</p></div></a>
-        </div>
+			<a class="card-link" href="/staff/reviews"><div class="card"><h3>Đánh giá</h3><p class="muted">Quán lý đánh giá</p></div></a>        </div>
     </section>
 
 </main>
@@ -72,4 +94,3 @@
 
 </body>
 </html>
-</html

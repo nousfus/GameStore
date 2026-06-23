@@ -10,4 +10,5 @@ public interface DeveloperProfilesDao extends JpaRepository<DeveloperProfiles, S
 //	void create(DeveloperProfiles d); 
 //	void update(DeveloperProfiles d); 
 //	void delete(String id);
+	DeveloperProfiles findByUsername(String username);
 }

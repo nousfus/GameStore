@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class GameCategoriesId implements Serializable {
 
-    private String game_id;
+    private String gameid;
     private String category_id;
 
     public GameCategoriesId() {}
@@ -17,12 +17,12 @@ public class GameCategoriesId implements Serializable {
 
         GameCategoriesId that = (GameCategoriesId) o;
 
-        return Objects.equals(game_id, that.game_id)
+        return Objects.equals(gameid, that.gameid)
             && Objects.equals(category_id, that.category_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(game_id, category_id);
+        return Objects.hash(gameid, category_id);
     }
 }

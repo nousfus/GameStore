@@ -55,7 +55,6 @@
             gap: 10px;
         }
 
-        /* BREADCRUMB */
         .breadcrumb{
             padding: 15px 80px;
             background-color: #111827;
@@ -106,6 +105,7 @@
             border-radius: 15px;
             overflow: hidden;
             background-color: #0f172a;
+            position: relative;
         }
 
         .main-image img{
@@ -139,6 +139,37 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .nav-btn{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.45);
+            color: #fff;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 5;
+            font-size: 18px;
+        }
+
+        .nav-btn:hover{ background: rgba(0,0,0,0.6); }
+
+        .nav-btn.prev{ left: 12px; }
+        .nav-btn.next{ right: 12px; }
+
+        /* Image / Video view styles */
+        .view-toggle button{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
+        .view-toggle button.active{ background:#111827; color:#22d3ee; }
+
+        .image-view{ width:100%; height:450px; border-radius:15px; overflow:hidden; background:#0f172a; }
+        .image-view img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+        .video-view{ width:100%; height:450px; border-radius:15px; overflow:hidden; background:#000; }
+        .video-view iframe{ width:100%; height:100%; border:0; }
+
+        .hidden{ display:none !important; }
 
         /* PRODUCT INFO */
         .product-info h1{
@@ -318,6 +349,45 @@
             line-height: 1.6;
         }
 
+        /* COMMENT FORM */
+        .comment-form{
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #0b1220;
+            border: 1px solid #374151;
+            border-radius: 10px;
+        }
+
+        .comment-form h3{
+            margin-bottom: 12px;
+            color: #22d3ee;
+        }
+
+        .comment-form label{
+            display: block;
+            color: #9ca3af;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .comment-form select,
+        .comment-form textarea,
+        .comment-form input[type="text"]{
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background-color: #0f172a;
+            color: #d1d5db;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .comment-form .btn{
+            width: auto;
+            padding: 10px 16px;
+        }
+
         /* FOOTER */
         footer{
             background-color: #111827;
@@ -375,7 +445,19 @@
                 grid-template-columns: 100px 1fr;
             }
         }
+		.user-menu{
+            background-color: #22d3ee;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
+        .user-menu:hover{
+            background-color: #67e8f9;
+        }
     </style>
 </head>
 
@@ -414,45 +496,63 @@
             <!-- PRODUCT IMAGES -->
             <div class="product-images">
                 <div class="main-image">
-                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop" alt="Cyber Warriors">
-                </div>
+                        <div class="view-toggle" style="position:absolute; top:12px; left:12px; z-index:8;">
+							<button id="btn-video" class="user-menu" style="margin-left:8px;">Video</button>
+                            <button id="btn-images" class="user-menu" >Ảnh</button>
+                        </div>
+
+                        <button class="nav-btn prev" aria-label="Previous image">‹</button>
+
+                        <div class="image-view">
+                            <img src="" alt="Main image" />
+                        </div>
+
+                        <div class="video-view hidden">
+                            <iframe width="100%" height="100%"
+                                    th:src="${videourl+ '?autoplay=1'}"
+                                    allow="autoplay"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+
+                        <button class="nav-btn next" aria-label="Next image">›</button>
+                    </div>
 
                 <div class="thumbnail-gallery">
                     <div class="thumbnail active">
-                        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=300&auto=format&fit=crop">
+                        <img th:src="@{/uploads/images/{file}(file=${game.thumbnail})}">
                     </div>
-                    <div class="thumbnail">
-                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=300&auto=format&fit=crop">
-                    </div>
-                    <div class="thumbnail">
-                        <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=300&auto=format&fit=crop">
-                    </div>
-                    <div class="thumbnail">
-                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=300&auto=format&fit=crop">
+                    <div class="thumbnail" th:each = "item :${listimages}">
+						<img th:src="@{/uploads/images/{file}(file=${item.image_url})}">
                     </div>
                 </div>
             </div>
 
             <!-- PRODUCT INFO -->
             <div class="product-info">
-                <h1>Cyber Warriors</h1>
+                <h1 th:text = "${game.game_name}">Cyber Warriors</h1>
 
                 <div class="product-rating">
-                    <span>★★★★★</span>
-                    <span class="rating-count">(2,450 đánh giá)</span>
+					<div>
+					    <span th:each="i : ${#numbers.sequence(1,5)}">
+					        <span th:if="${i <= stars}">★</span>
+					        <span th:if="${i > stars}">☆</span>
+					    </span>
+					</div>
+                    <span class="rating-count" th:text = "'( '+${countreviews}+' đánh giá )'">(2,450 )</span>
                 </div>
 
                 <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                    <div class="product-price">499.000đ</div>
-                    <div class="product-original-price">599.000đ</div>
-                    <div class="discount-badge">-17%</div>
+                    <div class="product-price" th:text = "${priceafterdiscount}+'đ'">499.000đ</div>
+                    <div class="product-original-price" th:text = "${game.price}+'đ'">599.000đ</div>
+                    <div class="discount-badge" th:text = "'-'+${discount}+'%'">%</div>
                 </div>
 
                 <div class="availability in-stock">
                     <div class="availability-text">✓ Còn hàng - Có sẵn để tải ngay</div>
                 </div>
 
-                <div class="product-description">
+                <div class="product-description" th:text = "${game.description}">
                     Cyber Warriors là một tựa game hành động tương lai với đồ họa tuyệt vời và gameplay ly kỳ. 
                     Tham gia cuộc chiến trong thành phố siêu đô thị, sử dụng vũ khí công nghệ cao và khả năng 
                     đặc biệt để chế ngự các kẻ thù.
@@ -462,69 +562,83 @@
                     <h3 style="margin-bottom: 15px;">Thông tin kỹ thuật</h3>
                     <div class="spec-item">
                         <div class="spec-label">Nhà phát triển:</div>
-                        <div class="spec-value">TechGames Studio</div>
+                        <div class="spec-value" th:text = "${game.developer.studio_name}">TechGames Studio</div>
                     </div>
                     <div class="spec-item">
                         <div class="spec-label">Thể loại:</div>
-                        <div class="spec-value">Action, Sci-Fi, Multiplayer</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Ngôn ngữ:</div>
-                        <div class="spec-value">Tiếng Anh, Tiếng Việt</div>
+                        <div class="spec-value" th:text = "${listCategories}">Action, Sci-Fi, Multiplayer</div>
                     </div>
                     <div class="spec-item">
                         <div class="spec-label">Ngày phát hành:</div>
-                        <div class="spec-value">12/03/2024</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Nền tảng:</div>
-                        <div class="spec-value">PC (Windows)</div>
+                        <div class="spec-value" th:text = "${game.release_date}">12/03/2024</div>
                     </div>
                     <div class="spec-item">
                         <div class="spec-label">Yêu cầu hệ thống:</div>
-                        <div class="spec-value">Windows 10 64-bit, GTX 1060, 16GB RAM</div>
+                        <div class="spec-value" th:text = "${game.ram}+'RAM '+', Storage '+${game.storage}">Windows 10 64-bit, GTX 1060, 16GB RAM</div>
                     </div>
                 </div>
 
                 <div class="product-actions">
-                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
-                    <button class="btn btn-secondary">Mua ngay</button>
+					<form action="/user/addcart" method="post">
+					    <button class="btn btn-primary">Thêm vào giỏ hàng</button>                 
+				        <select class="btn btn-primary" name="addcart">
+							<option>Chọn giỏ hàng</option>
+				            <option th:each="item,stat : ${carts}"
+				                    th:value="${item.cart_id}"
+				                    th:text="'Giỏ hàng '+${stat.index+1}">
+				            </option>
+				        </select>
+				    </form>
+					<button class="btn btn-secondary">Mua ngay</button>
                     <button class="btn btn-wishlist" title="Thêm vào danh sách ưa thích">❤</button>
                 </div>
             </div>
 
         </div>
+        </div>
 
+            <!-- ADD COMMENT FORM -->
+            <div class="comment-form">
+                <h3>Thêm đánh giá của bạn</h3>
+                <form th:action="@{/user/addComment}" action="/user/addComment" method="post">
+                    <input type="hidden" name="gameId" th:value="${game.game_id}" />
+
+                    <label for="rating">Đánh giá</label>
+                    <select id="rating" name="rating" required>
+                        <option value="">Chọn số sao</option>
+                        <option value="5">5 - Xuất sắc</option>
+                        <option value="4">4 - Rất tốt</option>
+                        <option value="3">3 - Tốt</option>
+                        <option value="2">2 - Trung bình</option>
+                        <option value="1">1 - Kém</option>
+                    </select>
+
+                    <label for="comment">Bình luận</label>
+                    <textarea id="comment" name="comment" rows="4" placeholder="Viết cảm nhận của bạn về sản phẩm..." required></textarea>
+
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                    </div>
+                </form>
+            </div>
         <!-- REVIEWS SECTION -->
         <div class="reviews-section">
             <h2>Đánh giá từ người dùng</h2>
 
-            <div class="review-item">
+            <div class="review-item" th:each = "item :${reviews}">
                 <div class="review-header">
-                    <span class="review-author">Nguyễn Văn A</span>
-                    <span class="review-date">15/06/2026</span>
+                    <span class="review-author" th:text = "${item.username}">Nguyễn Văn A</span>
+                    <span class="review-date"  th:text = "${item.created_at}">15/06/2026</span>
                 </div>
-                <div class="review-rating">★★★★★</div>
-                <div class="review-text">Game quá tuyệt vời! Đồ họa đẹp, gameplay hấp dẫn và có nhiều nội dung. Đáng đồng tiền!</div>
+                <div class="review-rating">
+					<span th:each="i : ${#numbers.sequence(1,5)}">
+				        <span th:if="${i <= item.rating}">★</span>
+				        <span th:if="${i > item.rating}">☆</span>
+				    </span>
+				</div>
+                <div class="review-text" th:text = "${item.comment}">Game quá tuyệt vời! Đồ họa đẹp, gameplay hấp dẫn và có nhiều nội dung. Đáng đồng tiền!</div>
             </div>
 
-            <div class="review-item">
-                <div class="review-header">
-                    <span class="review-author">Trần Thị B</span>
-                    <span class="review-date">10/06/2026</span>
-                </div>
-                <div class="review-rating">★★★★☆</div>
-                <div class="review-text">Khá hay nhưng có vẻ hơi khó. Tôi phải chơi ở mức độ dễ hơn. Nhưng nhìn chung vẫn hay!</div>
-            </div>
-
-            <div class="review-item">
-                <div class="review-header">
-                    <span class="review-author">Lê Minh C</span>
-                    <span class="review-date">08/06/2026</span>
-                </div>
-                <div class="review-rating">★★★★★</div>
-                <div class="review-text">Tuyệt vời! Multiplayer rất재미있다. Mình đã chơi suốt đêm không muốn tắt máy!</div>
-            </div>
         </div>
 
     </main>
@@ -533,6 +647,97 @@
     <footer>
         <p>© 2026 GameStore. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageView = document.querySelector('.image-view');
+            const imageViewImg = document.querySelector('.image-view img');
+            const videoView = document.querySelector('.video-view');
+            const videoFrame = document.querySelector('.video-view iframe');
+
+            const thumbnails = Array.from(document.querySelectorAll('.thumbnail'));
+            const prevBtn = document.querySelector('.nav-btn.prev');
+            const nextBtn = document.querySelector('.nav-btn.next');
+
+            const btnImages = document.getElementById('btn-images');
+            const btnVideo = document.getElementById('btn-video');
+
+            // build list of srcs from thumbnails
+            const srcs = thumbnails.map(t => {
+                const i = t.querySelector('img');
+                return i ? i.src.replace(/w=300/, 'w=1200') : null;
+            }).filter(Boolean);
+
+            let currentIndex = thumbnails.findIndex(t => t.classList.contains('active'));
+            if (currentIndex === -1) currentIndex = 0;
+
+            function showImageView(){
+                imageView.classList.remove('hidden');
+                videoView.classList.add('hidden');
+                btnImages.classList.add('active');
+                btnVideo.classList.remove('active');
+            }
+
+            function showVideoView(){
+                // if no video source, keep images
+                const src = (videoFrame && (videoFrame.getAttribute('src') || videoFrame.src || '').trim());
+                if (!src) { showImageView(); return; }
+                imageView.classList.add('hidden');
+                videoView.classList.remove('hidden');
+                btnImages.classList.remove('active');
+                btnVideo.classList.add('active');
+            }
+
+            function updateMain(index){
+                if (!srcs.length) return;
+                if (index < 0) index = srcs.length - 1;
+                if (index >= srcs.length) index = 0;
+                currentIndex = index;
+                imageViewImg.src = srcs[currentIndex];
+                thumbnails.forEach((t,i) => {
+                    t.classList.toggle('active', i === currentIndex);
+                });
+            }
+
+            // initialize
+			if (videoFrame && videoFrame.src) {
+			    showVideoView();
+			} else if (srcs.length > 0) {
+			    updateMain(currentIndex);
+			    showImageView();
+			}
+
+            thumbnails.forEach(function(thumb, idx) {
+                thumb.addEventListener('click', function() {
+                    updateMain(idx);
+                    showImageView();
+                });
+            });
+
+            prevBtn && prevBtn.addEventListener('click', function(){
+                if (!srcs.length) return;
+                // ensure image view shown when navigating
+                showImageView();
+                updateMain((currentIndex - 1 + srcs.length) % srcs.length);
+            });
+
+            nextBtn && nextBtn.addEventListener('click', function(){
+                if (!srcs.length) return;
+                showImageView();
+                updateMain((currentIndex + 1) % srcs.length);
+            });
+
+            // toggle buttons
+            btnImages && btnImages.addEventListener('click', function(){ showImageView(); });
+            btnVideo && btnVideo.addEventListener('click', function(){ showVideoView(); });
+
+            // keyboard support
+            document.addEventListener('keydown', function(e){
+                if (e.key === 'ArrowLeft') prevBtn && prevBtn.click();
+                if (e.key === 'ArrowRight') nextBtn && nextBtn.click();
+            });
+        });
+    </script>
 
 </body>
 </html>

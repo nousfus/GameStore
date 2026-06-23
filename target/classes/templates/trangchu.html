@@ -494,7 +494,9 @@
                 grid-template-columns: 1fr;
             }
         }
-
+        a{
+            text-decoration: none;
+        }
     </style>
 </head>
 
@@ -506,13 +508,13 @@
         <div class="logo">GameStore</div>
 
         <nav>
-            <a href="#">Store</a>
+            <a href="/user/product-list">Store</a>
             <a href="#">Library</a>
             <a href="#">Community</a>
             <a href="#">Support</a>
         </nav>	
 
-        <div class="header-right">
+        <div class="header-right" >
             <input type="text" placeholder="Search games..." class="search-box">
 	
 			<a href = "/login-register" th:if = "${username == null}">
@@ -575,7 +577,7 @@
 
         <div class="section-title">
             <h2>Popular Categories</h2>
-            <a href="#">View All</a>
+            <a href="/user/product">View All</a>
         </div>
 
         <div class="categories">
@@ -598,22 +600,23 @@
 
         <div class="section-title">
             <h2>Featured Games</h2>
-            <a href="#">Explore More</a>
+            <a href="/user/product">Explore More</a>
         </div>
 
         <div class="games">
+			
 
-            <div class="game-card">
-
+            <div class="game-card" th:each = "game :${top3game}">
+				<a href = "/user/product-detail">
                 <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
 
                 <div class="game-info">
 
-                    <h3>Cyber Warriors</h3>
+                    <h3 th:text = "${game.game_name}">Cyber Warriors</h3>
 
                     <div class="price-row">
 
-                        <div class="price">499.000đ</div>
+                        <div class="price" th:text = "${game.price}">499.000đ</div>
 
                         <button class="cart-btn">
                             Add To Cart
@@ -622,54 +625,10 @@
                     </div>
 
                 </div>
-
+				</a>
             </div>
 
-            <div class="game-card">
-
-                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="game-info">
-
-                    <h3>Legends Arena</h3>
-
-                    <div class="price-row">
-
-                        <div class="price">699.000đ</div>
-
-                        <button class="cart-btn">
-                            Add To Cart
-                        </button>
-
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="game-card">
-
-                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="game-info">
-
-                    <h3>Racing Horizon</h3>
-
-                    <div class="price-row">
-
-                        <div class="price">299.000đ</div>
-
-                        <button class="cart-btn">
-                            Add To Cart
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+			
         </div>
 
     </section>

@@ -32,10 +32,10 @@ public class CartItems {
 		this.cart_item_id = cart_item_id;
 	}
 	
-	public String getCart_id() {
+	public String getCartid() {
 		return cartId;
 	}
-	public void setCart_id(String cart_id) {
+	public void setCartid(String cart_id) {
 		this.cartId = cart_id;
 	}
 	public Game getGame() {

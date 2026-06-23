@@ -22,6 +22,19 @@
         a.card-link{color:inherit;text-decoration:none}
         footer{background-color:#111827;padding:30px;text-align:center;color:#9ca3af;margin-top:40px}
         @media(max-width:768px){header{padding:16px} .hero{height:200px;padding:16px} .container{padding:20px}}
+		.login-btn{
+		            background-color: #22d3ee;
+		            color: black;
+		            border: none;
+		            padding: 10px 20px;
+		            border-radius: 10px;
+		            font-weight: bold;
+		            cursor: pointer;
+		        }
+
+		        .login-btn:hover{
+		            background-color: #67e8f9;
+		        }
     </style>
 
 </head>
@@ -36,11 +49,19 @@
         <a href="/developer/revenue-tracking">Revenue</a>
         <a href="/developer/review-feedback">Reviews</a>
     </nav>
-
     <div class="header-right">
         <div class="muted">Signed in as <strong th:text="${username}">Developer</strong></div>
+		<a href = "/logout">
+            <button class="login-btn">
+                Logout
+            </button>
+		</a>
+		<a href = "/developer/profile">
+            <button class="login-btn">
+                Profile
+            </button>
+		</a>
     </div>
-
 </header>
 
 <div class="hero">

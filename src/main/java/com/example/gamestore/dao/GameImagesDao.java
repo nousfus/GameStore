@@ -1,4 +1,6 @@
 package com.example.gamestore.dao;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,5 +14,5 @@ public interface GameImagesDao extends JpaRepository<GameImages, String>{
 //	void update(GameImages gi); 
 //	void delete(String id);
 	@Query("SELECT g FROM GameImages g WHERE g.gameId = :id")
-	GameImages thumbnail(String id);
+	List<GameImages> findByGameid(String id);
 }

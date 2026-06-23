@@ -13,47 +13,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.gamestore.dao.CategoriesDao;
+import com.example.gamestore.dao.DeveloperProfilesDao;
 import com.example.gamestore.dao.GameCategoriesDao;
 import com.example.gamestore.dao.GameDao;
 import com.example.gamestore.dao.GameImagesDao;
-import com.example.gamestore.dao.GameRequirementsDao;
-import com.example.gamestore.dao.GameVersionsDao;
 import com.example.gamestore.entity.Game;
 import com.example.gamestore.entity.GameCategories;
 import com.example.gamestore.entity.GameImages;
-import com.example.gamestore.entity.GameRequirements;
-import com.example.gamestore.entity.GameVersions;
 
 @Controller
 public class GameAdd {
 	@Autowired
 	GameDao gamedao;
 	@Autowired
-	GameVersionsDao gameversiondao;
-	@Autowired
-	GameRequirementsDao gamerequirementdao;
-	@Autowired
 	GameImagesDao gameimagedao;
 	@Autowired
 	GameCategoriesDao gamecategorydao;
 	@Autowired
 	CategoriesDao categorydao;
-	
+	@Autowired
+	DeveloperProfilesDao developerdao;
 	@GetMapping("/game")
 	public String listgame(Model m) {
 		m.addAttribute("dsgame",gamedao.findAll());
-		m.addAttribute("dsgameversion",gameversiondao.findAll());
-		m.addAttribute("dsgamerequirement",gamerequirementdao.findAll());
 		m.addAttribute("dsgameimage",gameimagedao.findAll());
 		m.addAttribute("dsgamecategory",gamecategorydao.findAll());
 		m.addAttribute("dscategory",categorydao.findAll());
 		
 		return "game/game";
+	}
+	@RequestMapping("/game/edit/{id}")
+	public String edit(@PathVariable("id") String id, Model m) {
+		Game game = gamedao.findById(id).orElse(null);
+		m.addAttribute("gamedetail",game);
+		  if(game.getVideo_url() == null) return "";
+
+		    String id2 = "";
+
+		    if(game.getVideo_url().contains("watch?v=")) {
+		        id2 = game.getVideo_url().split("watch\\?v=")[1].split("&")[0];
+		    }
+		m.addAttribute("videourl","https://www.youtube.com/embed/"+id2);
+		return "game/temp";
 	}
 	@PostMapping("/addgame")
 	public String addGame(Model m,
@@ -61,11 +69,7 @@ public class GameAdd {
 			@RequestParam("description")String description,
 			@RequestParam("price")float price,
 			@RequestParam("category") String[] categories,
-			@RequestParam String os,
-	        @RequestParam String cpu,
 	        @RequestParam String ram,
-	        @RequestParam String gpu,
-	        @RequestParam String directx,
 	        @RequestParam String storage,
 	        @RequestParam(value = "video", required = false) MultipartFile file,
 	        @RequestParam("title")String title,
@@ -74,7 +78,6 @@ public class GameAdd {
 	        ) throws IOException {
 		String developer_id = "DEV001";										//Dev mẫu
 		//Tạo thumbnail
-		 //Images
 		String fileNameThumbnail  = null;
         if (thumbnail == null || thumbnail.length == 0 ||
     	        (thumbnail.length == 1 && thumbnail[0].isEmpty())) {
@@ -132,21 +135,6 @@ public class GameAdd {
 	        );
 	    }
 		
-		//Phiên Bản game
-		List<GameVersions> gamever = gameversiondao.findAll();
-		GameVersions gameversion = gamever.get(gameversiondao.findAll().size()-1);
-		int lastversionid = Integer.parseInt(gameversion.getVersion_id().substring(5));
-		String new_version_id = "VER00"+(lastversionid+1);
-		gameversiondao.save(new GameVersions(new_version_id,new_game_id,"1.0.0","Phiên bản đầu tiên",date));
-		
-		
-		//Cấu hình game
-		List<GameRequirements> gamere = gamerequirementdao.findAll();
-		GameRequirements gr = gamere.get(gamerequirementdao.findAll().size()-1);
-		int lastrequiremntid = Integer.parseInt(gr.getRequirement_id().substring(5));
-		String new_requirement_id = "REQ00"+(lastrequiremntid+1);
-		gamerequirementdao.save(new GameRequirements(new_requirement_id,new_game_id,"Minimum",os,cpu,ram,gpu,directx,storage));
-		
 		//Video 
 		if (file == null || file.isEmpty()) {
 	        return "redirect:/game";
@@ -166,7 +154,7 @@ public class GameAdd {
         m.addAttribute("videoPath",
                            "/videos/" + fileName);
         
-		gamedao.save(new Game(new_game_id,developer_id,game_name,description,price,date,0,fileNameThumbnail,"Active",fileName));
+		gamedao.save(new Game(new_game_id,developerdao.findById(developer_id).orElse(null),game_name,description,price,date,0,fileNameThumbnail,"Active",fileName,ram,storage));
 
         //Images
         if (images == null || images.length == 0 ||

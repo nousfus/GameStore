@@ -10,4 +10,5 @@ public interface GameCategoriesDao extends JpaRepository<GameCategories, GameCat
 //	List<GameCategories> findAll(); 
 //	void create(GameCategories gc); 
 //	void delete(String gameId, String categoryId);
+	List<GameCategories> findByGameid(String gameid);
 }

@@ -110,19 +110,25 @@
                 <th>Rating</th>
                 <th>Thumbnai</th>
                 <th>Active</th>
+				<th>Video</th>
+				<th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each = "item : ${dsgame}">
                 <td th:text = "${item.game_id}">GameId</td>
-                <td th:text = "${item.developer_id}">Developer Id</td>
                 <td th:text = "${item.game_name}">Game name</td>
                 <td th:text = "${item.description}">Description</td>
                 <td th:text = "${item.price}">price</td>
                 <td th:text = "${item.release_date}">ReleaseDate</td>
                 <td th:text = "${item.rating}">Rating</td>
-                <td th:text = "${item.thumbnail}">Thumbnai</td>
-                <td th:text = "${item.status}">Active</td>
+				<td>
+				    <img th:src="@{/uploads/images/{file}(file=${item.thumbnail})}"
+				         width="100">
+				</td>
+				<td th:text = "${item.status}">Active</td>
+				<td th:text = "${item.video_url}"></td>
+				<td><a th:href = "@{/game/edit/{id}(id=${item.game_id})}">edit</a></td>
             </tr>
         </tbody>
     </table>
@@ -144,25 +150,6 @@
                 <td th:text = "${item.version_number}">Game name</td>
                 <td th:text = "${item.update_description}">Description</td>
                 <td th:text = "${item.release_date}">price</td>
-            </tr>
-        </tbody>
-    </table>
-    <h2>Game Videos</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Video ID</th>
-                <th>Game ID</th>
-                <th>Video URL</th>
-                <th>Title</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="item : ${dsgamevideo}">
-                <td th:text="${item.video_id}"></td>
-                <td th:text="${item.game_id}"></td>
-                <td th:text="${item.video_url}"></td>
-                <td th:text="${item.title}"></td>
             </tr>
         </tbody>
     </table>
