@@ -129,7 +129,7 @@ public class TrangChuDeveloper {
    		Game abc = list.get(gamedao.findAll().size()-1);
    		int lastID = Integer.parseInt(abc.getGame_id().substring(4));
    		Date date = new Date(System.currentTimeMillis());
-		String newGameId = GameId==null? "GM00"+(lastID+1) : GameId;
+		String newGameId = GameId==null || GameId.trim().isEmpty()  ? "GM00"+(lastID+1) : GameId;
 		
 		//Tạo thumbnail
 		String fileNameThumbnail  = null;
@@ -171,26 +171,25 @@ public class TrangChuDeveloper {
  
     		
     		//Video 
+    	    String fileName = null;
     		if (file == null || file.isEmpty()) {
-    	        return "redirect:/developer/game-management";
+    	       fileName = url;
 
+    	    }else {
+    	    	  fileName = file.getOriginalFilename();
+
+    	            String uploadDir = "uploads/videos/";
+
+    	            Path path = Paths.get(uploadDir + fileName);
+
+    	            Files.copy(file.getInputStream(),
+    	                       path,
+    	                       StandardCopyOption.REPLACE_EXISTING);
+
+    	            m.addAttribute("videoPath",
+    	                               "/videos/" + fileName);
     	    }
-
-    		
-            String fileName = file.getOriginalFilename();
-
-            String uploadDir = "uploads/videos/";
-
-            Path path = Paths.get(uploadDir + fileName);
-
-            Files.copy(file.getInputStream(),
-                       path,
-                       StandardCopyOption.REPLACE_EXISTING);
-
-            m.addAttribute("videoPath",
-                               "/videos/" + fileName);
-            
-    		gamedao.save(new Game(newGameId,dev,gamename,description,price,date,0,fileNameThumbnail,"Active",fileName,ram,storage));
+            gamedao.save(new Game(newGameId,dev,gamename,description,price,date,0,fileNameThumbnail,"Unactive",fileName,ram,storage));
     	   	  //Thêm Category
 	    		for(String category : categories){
 	    	        gamecategorydao.save(
@@ -236,7 +235,6 @@ public class TrangChuDeveloper {
         			String new_game_images_id = "IMG00" +lastidimages;
         	        gameimagedao.save(new GameImages(new_game_images_id,newGameId,fileNameImages));
         	    }
-       
 		return "forward:/developer/game-management";
 	}
 	@RequestMapping("/revenue-tracking")

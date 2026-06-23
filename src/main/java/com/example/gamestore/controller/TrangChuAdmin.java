@@ -6,12 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import com.example.gamestore.dao.CartDao;
+import com.example.gamestore.dao.GameDao;
 import com.example.gamestore.dao.RolesDao;
 import com.example.gamestore.dao.UserRolesDao;
+import com.example.gamestore.entity.Game;
 import com.example.gamestore.entity.Roles;
-import com.example.gamestore.entity.UserRoles;
 import com.example.gamestore.entity.Users;
 
 import jakarta.servlet.http.HttpSession;
@@ -19,12 +21,20 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/admin")
 public class TrangChuAdmin {
+
+    private final CartDao cartDao;
 	@Autowired
 	HttpSession session;
 	@Autowired
 	UserRolesDao userroledao;
 	@Autowired
 	RolesDao roledao;
+	@Autowired
+	GameDao gamedao;
+
+    TrangChuAdmin(CartDao cartDao) {
+        this.cartDao = cartDao;
+    }
 	@RequestMapping("/home")
 	public String main(Model m) {
 		Users user = (Users) session.getAttribute("user");
@@ -45,9 +55,24 @@ public class TrangChuAdmin {
 		}
 		return "User/profile";
 	}
+
 	@RequestMapping("/content-management")
-	public String content() {
+	public String content(Model m) {
+		List<Game> list = new ArrayList<>();
+		for(Game g : gamedao.findAll()) {
+			if(g.getStatus().equals("Unactive")) {
+				list.add(g);
+			}
+		}
+		m.addAttribute("listgame",list);
 		return "Admin/content-management";
+	}
+	@RequestMapping("/games/edit/{id}")
+	public String edit (@PathVariable("id") String id) {
+		Game game = gamedao.findById(id).orElse(null);
+		game.setStatus("Active");
+		gamedao.save(game);
+		return "forward:/admin/content-management";
 	}
 	@RequestMapping("/user-management")
 	public String user() {
