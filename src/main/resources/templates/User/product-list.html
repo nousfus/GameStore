@@ -485,7 +485,8 @@
 			                </div>
 
 			                <div class="action-buttons">
-			                    <button class="cart-btn">Thêm giỏ hàng</button>
+			                    <button class="cart-btn" th:if = "${game.status=='Active'}">Thêm giỏ hàng</button>
+								<button class="cart-btn" th:if = "${game.status=='Unactive'}">Sắp ra mắt</button>
 			                    <button class="wishlist-btn">❤</button>
 			                </div>
 			            </div>

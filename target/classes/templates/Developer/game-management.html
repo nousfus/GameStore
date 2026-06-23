@@ -32,7 +32,9 @@
 	    <option value="64GB" th:selected="${gameEdit?.ram == '64GB'}">64GB</option>
       </select>
       <input name = "storage" placeholder = "Bộ nhớ"  th:value="${gameEdit?.storage}"/>
-
+	  <input type="hidden"
+	         name="oldThumbnail"
+	         th:value="${gameEdit.thumbnail}">
 	  <label>Thumbnail hiện tại</label>
 	  <div th:if="${gameEdit.thumbnail != null}">
 	      <img th:src="@{/uploads/images/{file}(file=${gameEdit.thumbnail})}"
@@ -83,11 +85,11 @@
 		</label>
       </div>
 	  
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn-primary" id="saveBtn" type = "submit">Lưu</button>
-        <button type="button" id="cancelBtn" style="display:none" onclick="resetForm()">Hủy</button>
-        <button class="" type="reset">Xóa</button>
-      </div>
+			<div style="display:flex;gap:8px;margin-top:8px">
+				<button class="btn-primary" id="saveBtn" type="submit" th:text="${gameEdit?.game_id != null} ? 'Lưu' : 'Thêm'">Lưu</button>
+				<button type="button" id="cancelBtn" th:style="${gameEdit != null} ? '' : 'display:none'" onclick="resetForm()">Hủy</button>
+				<button class="" type="reset">Xóa</button>
+			</div>
     </form>
   </div>
 
@@ -127,6 +129,5 @@
   </div>
 </main>
 <footer style="background:#111827;padding:18px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
-</script>
 </body>
 </html>

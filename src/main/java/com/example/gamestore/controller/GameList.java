@@ -140,13 +140,17 @@ public class GameList {
 		//Hiển thị thông tin game
 		Game game = gamedao.findById(id).orElse(null);
 		m.addAttribute("game",game);
+		m.addAttribute("gameStatus",game.getStatus());
 			
 		//discount
-		Discounts discount = discountdao.findByGameId(id);	
-		m.addAttribute("discount",discount.getdiscount_percent());
-		float price = game.getPrice() - ((game.getPrice()*discount.getdiscount_percent()) / 100);
-		m.addAttribute("priceafterdiscount",price);
-		
+		Discounts discount = discountdao.findByGameId(id);
+		m.addAttribute("gameDiscount",discount);
+		if(discount!=null) {
+			m.addAttribute("discount",discount.getdiscount_percent());
+			float price = game.getPrice() - ((game.getPrice()*discount.getdiscount_percent()) / 100);
+			m.addAttribute("priceafterdiscount",price);	
+		}
+
 		// Đánh giá
 		List<Reviews> reviews = reviewsdao.findByGameid(id);
 		m.addAttribute("countreviews",reviews.size());
