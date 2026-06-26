@@ -362,10 +362,30 @@
             <a href="#">News</a>
         </nav>
 
-        <div class="header-right">
-            <input type="text" placeholder="Tìm kiếm game..." class="search-box">
-            <button class="user-menu">Tài khoản</button>
-        </div>
+		<div class="header-right" >
+            <input type="text" placeholder="Search games..." class="search-box">
+	
+			<a href = "/login-register" th:if = "${username == null}">
+	            <button class="user-menu">
+	                Login
+	            </button>
+			</a>
+			<a href = "/user/logout" th:if = "${username != null}">
+	            <button class="user-menu">
+	                Logout
+	            </button>
+			</a>
+			<a href = "/user/profile" th:if = "${username != null}">
+	            <button class="user-menu">
+	                Profile
+	            </button>
+			</a>
+			<a href = "/user/cart" th:if = "${username != null}">
+	            <button class="user-menu">
+	                Cart
+	            </button>
+			</a>
+    </div>
     </header>
 
     <!-- MAIN CONTENT -->

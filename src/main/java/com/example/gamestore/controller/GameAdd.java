@@ -126,15 +126,6 @@ public class GameAdd {
 		String new_game_id = "GM00"+(lastID+1);								// Tạo game id mới
 		Date date = new Date(System.currentTimeMillis());
 		
-
-		
-		//Thêm Category
-		for(String category : categories){
-	        gamecategorydao.save(
-	            new GameCategories(new_game_id, category)
-	        );
-	    }
-		
 		//Video 
 		if (file == null || file.isEmpty()) {
 	        return "redirect:/game";
@@ -154,9 +145,7 @@ public class GameAdd {
         m.addAttribute("videoPath",
                            "/videos/" + fileName);
         
-		gamedao.save(new Game(new_game_id,developerdao.findById(developer_id).orElse(null),game_name,description,price,date,0,fileNameThumbnail,"Active",fileName,ram,storage));
-
-        //Images
+      //Images
         if (images == null || images.length == 0 ||
     	        (images.length == 1 && images[0].isEmpty())) {
     	        return "redirect:/game";
@@ -198,6 +187,76 @@ public class GameAdd {
     	    }
 
     	    m.addAttribute("imagePaths", imagePaths);
+    	    
+        Game game = new Game(new_game_id,developerdao.findById(developer_id).orElse(null),game_name,description,price,date,0,fileNameThumbnail,"Active",fileName,ram,storage);
+        String thumbnailName = game.getThumbnail(); // giữ ảnh cũ
+
+        if (thumbnail != null &&
+            thumbnail.length > 0 &&
+            !thumbnail[0].isEmpty()) {
+
+            // Xóa file cũ
+            Path oldThumb = Paths.get("uploads/images/", game.getThumbnail());
+
+            if (Files.exists(oldThumb)) {
+                Files.delete(oldThumb);
+            }
+
+            // Lưu file mới
+            MultipartFile newThumb = thumbnail[0];
+
+            thumbnailName = System.currentTimeMillis()
+                    + "_" + newThumb.getOriginalFilename()
+                    .replaceAll("\\s+", "_");
+
+            Path newThumbPath = Paths.get("uploads/images/", thumbnailName);
+
+            Files.copy(
+                    newThumb.getInputStream(),
+                    newThumbPath,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+        }
+
+        game.setThumbnail(thumbnailName);
+        String videoName = game.getVideo_url(); // giữ video cũ
+
+        if (file != null && !file.isEmpty()) {
+
+            // Xóa video cũ
+            Path oldVideo = Paths.get(
+                    "src/main/resources/static/videos/",
+                    game.getVideo_url());
+
+            if (Files.exists(oldVideo)) {
+                Files.delete(oldVideo);
+            }
+
+            // Upload video mới
+            videoName = System.currentTimeMillis()
+                    + "_" + file.getOriginalFilename();
+
+            Path newVideo = Paths.get(
+                    "src/main/resources/static/videos/",
+                    videoName);
+
+            Files.copy(
+            		file.getInputStream(),
+                    newVideo,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+        }
+
+        game.setVideo_url(videoName);
+        
+        gamedao.save(game);
+		
+		//Thêm Category
+		for(String category : categories){
+	        gamecategorydao.save(
+	            new GameCategories(new_game_id, category)
+	        );
+	    }
 		return "game/game";
 	}
 }

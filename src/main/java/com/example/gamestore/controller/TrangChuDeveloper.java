@@ -113,8 +113,8 @@ public class TrangChuDeveloper {
 			@RequestParam("description")String description,
 			@RequestParam("price")float price,
 			@RequestParam(required = false , name ="categories") String[] categories,
-	        @RequestParam String ram,
-	        @RequestParam String storage,
+	        @RequestParam ("ram")String ram,
+	        @RequestParam ("storage")String storage,
 	        @RequestParam(value = "video", required = false) MultipartFile file,
 	        @RequestParam(required = false, name = "url")String url,
 	        @RequestParam(value = "images", required = false) MultipartFile[] images,
@@ -131,110 +131,190 @@ public class TrangChuDeveloper {
    		Date date = new Date(System.currentTimeMillis());
 		String newGameId = GameId==null || GameId.trim().isEmpty()  ? "GM00"+(lastID+1) : GameId;
 		
+		boolean isEdit = gamedao.existsById(GameId);
+		Game game;
+		if(isEdit){
+		    game = gamedao.findById(GameId).orElse(null);
+		}else{
+		    game = new Game();
+		    game.setGame_id(newGameId);
+		    game.setDeveloper(dev);
+		    game.setRelease_date(date);
+		    game.setRating(0);
+		    game.setStatus("Unactive");
+		}
+		
 		//Tạo thumbnail
-		String fileNameThumbnail  = null;
-        if (thumbnail == null || thumbnail.length == 0 ||
-    	        (thumbnail.length == 1 && thumbnail[0].isEmpty())) {
-    	        return "redirect:/developer/game-management";
-    	    }
-    	    // GameImages Id
-    	    List<GameImages> list_thumbnail = gameimagedao.findAll();
-    	    GameImages gameThumbnail = list_thumbnail.get(gameimagedao.findAll().size()-1);
+		if(thumbnail != null &&
+				   thumbnail.length > 0 &&
+				   !thumbnail[0].isEmpty()) {
 
+				    if(isEdit && game.getThumbnail() != null){
 
-    	    String uploadDirImagesThumbnail = "uploads/images/";
+				        Path oldThumb = Paths.get(
+				                "uploads/images/",
+				                game.getThumbnail());
 
-    	    // Tạo thư mục nếu chưa tồn tại
-    	    Files.createDirectories(Paths.get(uploadDirImagesThumbnail));
+				        Files.deleteIfExists(oldThumb);
+				    }
 
-    	    List<String> imagePathsThumbnail = new ArrayList<>();
+				    MultipartFile thumb = thumbnail[0];
 
-    	    for (MultipartFile fileThumbnail : thumbnail) {
+				    String thumbnailName =
+				            System.currentTimeMillis()
+				            + "_"
+				            + thumb.getOriginalFilename()
+				                  .replaceAll("\\s+","_");
 
-    	        if (fileThumbnail.isEmpty()) {
-    	            continue;
-    	        }
+				    Path thumbPath =
+				            Paths.get("uploads/images/",
+				                      thumbnailName);
 
-    	        fileNameThumbnail = System.currentTimeMillis()
-    	                + "_" + fileThumbnail.getOriginalFilename()
-    	                        .replaceAll("\\s+", "_");
+				    Files.copy(
+				            thumb.getInputStream(),
+				            thumbPath,
+				            StandardCopyOption.REPLACE_EXISTING);
 
-    	        Path pathThumbnail = Paths.get(uploadDirImagesThumbnail, fileNameThumbnail);
-
-    	        Files.copy(
-    	        		fileThumbnail.getInputStream(),
-    	        		pathThumbnail,
-    	                StandardCopyOption.REPLACE_EXISTING);
-
-    	        imagePathsThumbnail.add("/uploads/images/" + fileNameThumbnail);
-    	    }
+				    game.setThumbnail(thumbnailName);
+				}
  
     		
     		//Video 
-    	    String fileName = null;
-    		if (file == null || file.isEmpty()) {
-    	       fileName = url;
+		if(file != null && !file.isEmpty()) {
 
-    	    }else {
-    	    	  fileName = file.getOriginalFilename();
+		    if(isEdit &&
+		       game.getVideo_url() != null &&
+		       !game.getVideo_url().startsWith("http")) {
 
-    	            String uploadDir = "uploads/videos/";
+		        Path oldVideo =
+		                Paths.get(
+		                "uploads/videos/",
+		                game.getVideo_url());
 
-    	            Path path = Paths.get(uploadDir + fileName);
+		        Files.deleteIfExists(oldVideo);
+		    }
 
-    	            Files.copy(file.getInputStream(),
-    	                       path,
-    	                       StandardCopyOption.REPLACE_EXISTING);
+		    String videoName =
+		            System.currentTimeMillis()
+		            + "_"
+		            + file.getOriginalFilename();
 
-    	            m.addAttribute("videoPath",
-    	                               "/videos/" + fileName);
-    	    }
-            gamedao.save(new Game(newGameId,dev,gamename,description,price,date,0,fileNameThumbnail,"Unactive",fileName,ram,storage));
-    	   	  //Thêm Category
-	    		for(String category : categories){
-	    	        gamecategorydao.save(
-	    	            new GameCategories(newGameId, category)
-	    	        );
-	    	    }
-            //Images
-            if (images == null || images.length == 0 ||
-        	        (images.length == 1 && images[0].isEmpty())) {
-    	        return "redirect:/developer/game-management";
-        	    }
-        	    // GameImages Id
-        	    List<GameImages> list_images = gameimagedao.findAll();
-        	    GameImages gameimg = list_images.get(gameimagedao.findAll().size()-1);
+		    Path videoPath =
+		            Paths.get("uploads/videos/",
+		                      videoName);
 
+		    Files.copy(
+		            file.getInputStream(),
+		            videoPath,
+		            StandardCopyOption.REPLACE_EXISTING);
 
-        	    String uploadDirImages = "uploads/images/";
+		    game.setVideo_url(videoName);
+		}
+		else if(url != null && !url.isBlank()) {
 
-        	    // Tạo thư mục nếu chưa tồn tại
-        	    Files.createDirectories(Paths.get(uploadDirImages));
+		    game.setVideo_url(url);
+		}
+		
+		//Images
+		if (images != null &&
+			    images.length > 0 &&
+			    !images[0].isEmpty()) {
 
-        	    List<String> imagePaths = new ArrayList<>();
-    			int lastidimages = Integer.parseInt(gameimg.getImage_id().substring(5));
-        	    for (MultipartFile file2 : images) {
+			    // Xóa ảnh cũ nếu đang edit
+			    if(isEdit){
 
-        	        if (file2.isEmpty()) {
-        	            continue;
-        	        }
+			        List<GameImages> oldImages =
+			                gameimagedao.findByGameid(newGameId);
 
-        	        String fileNameImages = System.currentTimeMillis()
-        	                + "_" + file2.getOriginalFilename()
-        	                        .replaceAll("\\s+", "_");
+			        for(GameImages img : oldImages){
 
-        	        Path path2 = Paths.get(uploadDirImages, fileNameImages);
+			            Path oldPath = Paths.get(
+			                    "uploads/images/",
+			                    img.getImage_url());
 
-        	        Files.copy(
-        	                file2.getInputStream(),
-        	                path2,
-        	                StandardCopyOption.REPLACE_EXISTING);
+			            Files.deleteIfExists(oldPath);
+			        }
 
-        	        imagePaths.add("/uploads/images/" + fileNameImages);
-        	        lastidimages++;
-        			String new_game_images_id = "IMG00" +lastidimages;
-        	        gameimagedao.save(new GameImages(new_game_images_id,newGameId,fileNameImages));
-        	    }
+			        gameimagedao.deleteAll(oldImages);
+			    }
+
+			    // Lấy id cuối
+			    List<GameImages> listImages = gameimagedao.findAll();
+
+			    int lastidimages = 0;
+
+			    if(!listImages.isEmpty()){
+			        GameImages lastImg =
+			                listImages.get(listImages.size()-1);
+
+			        lastidimages =
+			                Integer.parseInt(
+			                        lastImg.getImage_id()
+			                               .substring(5));
+			    }
+
+			    String uploadDirImages = "uploads/images/";
+
+			    Files.createDirectories(
+			            Paths.get(uploadDirImages));
+
+			    for (MultipartFile file2 : images) {
+
+			        if (file2.isEmpty()) {
+			            continue;
+			        }
+
+			        String fileNameImages =
+			                System.currentTimeMillis()
+			                + "_"
+			                + file2.getOriginalFilename()
+			                       .replaceAll("\\s+", "_");
+
+			        Path path2 =
+			                Paths.get(
+			                        uploadDirImages,
+			                        fileNameImages);
+
+			        Files.copy(
+			                file2.getInputStream(),
+			                path2,
+			                StandardCopyOption.REPLACE_EXISTING);
+
+			        lastidimages++;
+
+			        String newImageId =
+			                "IMG00" + lastidimages;
+
+			        gameimagedao.save(
+			            new GameImages(
+			                newImageId,
+			                newGameId,
+			                fileNameImages
+			            )
+			        );
+			    }
+			}
+		game.setGame_name(gamename);
+		game.setDescription(description);
+		game.setPrice(price);
+		game.setRam(ram);
+		game.setStorage(storage);
+		gamedao.save(game);
+		//Thêm Category
+		if(isEdit){
+		    gamecategorydao.deleteByGameid(game.getGame_id());
+		}
+		if(categories != null){
+		    for(String category : categories){
+		        gamecategorydao.save(
+		            new GameCategories(
+		                game.getGame_id(),
+		                category
+		            )
+		        );
+		    }
+		}
+            
 		return "forward:/developer/game-management";
 	}
 	@RequestMapping("/revenue-tracking")
@@ -249,5 +329,38 @@ public class TrangChuDeveloper {
 	}
 }
 
-
-// storage hiển thị số lượng và select phần (MB/GB)
+//
+//Ngoài ra bạn đang dùng:
+//
+//substring(5)
+//
+//với ID dạng:
+//
+//IMG001
+//
+//thì:
+//
+//"IMG001".substring(5)
+//
+//sẽ trả về "1".
+//
+//Nhưng nếu sau này có:
+//
+//IMG010
+//IMG100
+//
+//thì dễ lỗi format. An toàn hơn nên dùng:
+//
+//Integer.parseInt(
+//    lastImg.getImage_id()
+//           .replace("IMG", "")
+//);
+//
+//hoặc
+//
+//Integer.parseInt(
+//    lastImg.getImage_id()
+//           .substring(3)
+//);
+//
+//vì prefix "IMG" luôn dài 3 ký tự. Điều này ổn định hơn substring(5).

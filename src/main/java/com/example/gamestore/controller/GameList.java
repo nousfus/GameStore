@@ -68,6 +68,8 @@ public class GameList {
 	public String productList(
 	        @RequestParam(defaultValue = "0") int page,
 	        Model m) {
+		Users user = (Users) session.getAttribute("user");
+		m.addAttribute("username",user);
 		m.addAttribute("dscate",categorydao.findAll());
 		Pageable pageable = PageRequest.of(page, 9);
 		Page<Game> gamePage = gamedao.findAllGame(pageable);
@@ -103,7 +105,8 @@ public class GameList {
 	        @RequestParam(required = false) Double price,
 	        @RequestParam(defaultValue = "0") int page,
 	        Model m) {
-
+		Users user = (Users) session.getAttribute("user");
+		m.addAttribute("username",user);
 	    Specification<Game> spec = Specification
 	            .where(GameSpecification.hasRam(ram))
 	            .and(GameSpecification.hasStorage(storage))
@@ -196,6 +199,9 @@ public class GameList {
 							@RequestParam("rating") String rating,
 							@RequestParam("comment") String comment) {
 		Users user = (Users) session.getAttribute("user");
+		if(user==null) {
+			return "redirect:/login-register";
+		}
 		if(rating!=null) {
 			List<Reviews> list = reviewsdao.findAll();
 			Reviews reviews = list.get(reviewsdao.findAll().size()-1);
@@ -209,11 +215,15 @@ public class GameList {
 			Date date = new Date(System.currentTimeMillis());
 			reviewsdao.save(new Reviews(reviews_id,user.getUsername(),gameId,1,comment,date));
 		}
+		
 		return "forward:/user/product-detail/"+gameId;
 	}
 	@PostMapping("/user/addcart")
 	public String addcart() {
 		Users user = (Users) session.getAttribute("user");
+		if(user==null) {
+			return "redirect:/login-register";
+		}
 		Cart cart = cartDao.findByUsername(user.getUsername());
 	    Game game = (Game) session.getAttribute("game");
 

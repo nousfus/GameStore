@@ -75,6 +75,8 @@ public class TrangChu {
 			m.addAttribute("user",user);
 			List<Roles> list = userroledao.findByUsername(user.getUsername());
 			m.addAttribute("dsrole",list);
+		}else{
+			return "redirect:/login-register";
 		}
 		return "User/profile";
 	}
