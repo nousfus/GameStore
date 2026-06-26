@@ -6,346 +6,59 @@
     <title>Danh sách Sản phẩm - GameStore</title>
 
     <style>
-        *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: linear-gradient(180deg,#020617 0%, #071028 40%, #0f172a 100%);
+            color: #e6eef6;
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+            -webkit-font-smoothing: antialiased;
         }
 
-        body{
-            background-color: #0f172a;
-            color: white;
-        }
+        header { background: rgba(4,6,29,0.85); padding: 18px 56px; display:flex; align-items:center; justify-content:space-between; border-bottom: 1px solid rgba(148,163,184,0.06); position: sticky; top: 0; z-index: 20; backdrop-filter: blur(8px); }
+        .logo { color:#22d3ee; font-weight:800; font-size:20px; text-decoration:none; }
+        nav a { color:#bcd6e8; margin:0 12px; text-decoration:none; }
+        nav a:hover { color:#fff; }
+        .header-right { display:flex; gap:10px; align-items:center; }
+        .search-box { padding:10px 12px; border-radius:999px; border:none; background:#0b1220; color:#dfefff; width:220px; }
+        .user-menu { background:linear-gradient(90deg,#22d3ee,#38bdf8); color:#041017; border:none; padding:10px 14px; border-radius:999px; font-weight:700; cursor:pointer; }
 
-        /* HEADER */
-        header{
-            background-color: #111827;
-            padding: 20px 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #374151;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+        main { max-width:1200px; margin:28px auto; padding: 0 20px; display:grid; grid-template-columns: 260px 1fr; gap:20px; }
+        .sidebar { background:rgba(2,6,23,0.6); padding:18px; border-radius:14px; border:1px solid rgba(148,163,184,0.04); }
+        .sidebar h3 { color:#67e8f9; margin-bottom:12px; font-size:14px; text-transform:uppercase; letter-spacing:0.06em; }
+        .filter-group { margin-bottom:14px; }
+        .filter-group h4 { color:#c8dce9; margin-bottom:8px; }
+        .filter-group label { display:block; color:#c6d6ea; margin-bottom:8px; cursor:pointer; }
+        .filter-group input[type=range] { width:100%; }
 
-        .logo{
-            color: #22d3ee;
-            font-size: 32px;
-            font-weight: bold;
-            text-decoration: none;
-        }
+        .products-section { display:flex; flex-direction:column; gap:18px; }
+        .products-header { display:flex; justify-content:space-between; align-items:center; }
+        .products-header h2 { font-size:20px; }
+        .sort-options { background:#071026; border:1px solid rgba(148,163,184,0.04); color:#cfe7fb; padding:8px 12px; border-radius:10px; }
 
-        nav a{
-            text-decoration: none;
-            color: #d1d5db;
-            margin: 0 15px;
-            transition: 0.3s;
-        }
+        .games { display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; }
+        .game-card { background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(4,8,20,0.6)); border-radius:14px; overflow:hidden; border:1px solid rgba(148,163,184,0.04); transition: transform .18s ease, box-shadow .18s ease; }
+        .game-card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(2,6,23,0.6); border-color: rgba(34,211,238,0.16); }
+        .game-card img { width:100%; height:180px; object-fit:cover; display:block; }
+        .game-info { padding:14px; }
+        .game-title { font-weight:700; font-size:15px; color:#e6f6ff; margin-bottom:6px; }
+        .game-category { font-size:12px; color:#9fb6c9; margin-bottom:8px; }
+        .game-rating { color:#fbbf24; font-size:13px; margin-bottom:8px; }
 
-        nav a:hover{
-            color: white;
-        }
+        .price-row { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+        .price { color:#7ee3ff; font-weight:800; font-size:16px; }
 
-        .header-right{
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .action-buttons { display:flex; gap:8px; margin-top:12px; }
+        .cart-btn { flex:1; background:linear-gradient(90deg,#22d3ee,#38bdf8); color:#041017; border:none; padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:700; }
+        .wishlist-btn { background:transparent; border:1px solid rgba(148,163,184,0.06); color:#d8eefc; padding:8px 10px; border-radius:10px; cursor:pointer; }
 
-        .search-box{
-            padding: 10px 15px;
-            width: 250px;
-            border: none;
-            outline: none;
-            border-radius: 10px;
-            background-color: #1f2937;
-            color: white;
-        }
+        .pagination { display:flex; justify-content:center; gap:8px; padding-top:18px; }
+        .pagination a, .pagination button { background:#071026; color:#d9eefc; padding:8px 12px; border-radius:10px; border:1px solid rgba(148,163,184,0.04); text-decoration:none; }
+        .pagination a.active, .pagination button.active, .pagination a:hover { background:#22d3ee; color:#041017; border-color:#22d3ee; }
 
-        .user-menu{
-            background-color: #22d3ee;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        .empty-state { text-align:center; padding:36px; color:#9fb6c9; background:rgba(2,6,23,0.4); border-radius:12px; }
 
-        .user-menu:hover{
-            background-color: #67e8f9;
-        }
-
-        /* MAIN CONTENT */
-        main{
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 20px;
-            padding: 30px 80px;
-            min-height: calc(100vh - 150px);
-        }
-
-        /* SIDEBAR - FILTER */
-        .sidebar{
-            background-color: #111827;
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid #374151;
-            height: fit-content;
-        }
-
-        .sidebar h3{
-            color: #22d3ee;
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-
-        .filter-group{
-            margin-bottom: 20px;
-            border-bottom: 1px solid #374151;
-            padding-bottom: 15px;
-        }
-
-        .filter-group label{
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .filter-group label:hover{
-            color: #22d3ee;
-        }
-
-        .filter-group input[type="checkbox"]{
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .filter-group input[type="range"]{
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        /* PRODUCTS SECTION */
-        .products-section{
-            display: flex;
-            flex-direction: column;
-        }
-
-        .products-header{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .products-header h2{
-            font-size: 28px;
-        }
-
-        .sort-options{
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 10px;
-            padding: 8px 15px;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* GAME CARDS */
-        .games{
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-        }
-
-        .game-card{
-            background-color: #111827;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: 0.3s;
-            border: 1px solid #374151;
-        }
-
-        .game-card:hover{
-            transform: translateY(-8px);
-            border-color: #22d3ee;
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
-        }
-
-        .game-card img{
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
-
-        .game-info{
-            padding: 20px;
-        }
-
-        .game-title{
-            font-size: 18px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .game-rating{
-            font-size: 14px;
-            color: #fbbf24;
-            margin-bottom: 10px;
-        }
-
-        .game-category{
-            font-size: 12px;
-            color: #9ca3af;
-            margin-bottom: 12px;
-        }
-
-        .price-row{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-        }
-
-        .price{
-            color: #22d3ee;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .action-buttons{
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .cart-btn, .wishlist-btn{
-            flex: 1;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .cart-btn{
-            background-color: #22d3ee;
-            color: black;
-        }
-
-        .cart-btn:hover{
-            background-color: #67e8f9;
-        }
-
-        .wishlist-btn{
-            background-color: #374151;
-            color: white;
-        }
-
-        .wishlist-btn:hover{
-            background-color: #4b5563;
-        }
-
-        /* PAGINATION */
-        .pagination{
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #374151;
-        }
-
-        .pagination a{
-            padding: 10px 15px;
-            background-color: #1f2937;
-            color: white;
-            border: 1px solid #374151;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-			align-content : center;
-        }
-		.pagination button{
-            padding: 10px 15px;
-            background-color: #1f2937;
-            color: white;
-            border: 3px solid #374151;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .pagination button:hover, .pagination button.active, .pagination a:hover{
-            background-color: #22d3ee;
-            color: black;
-            border-color: #22d3ee;
-        }
-
-        /* FOOTER */
-        footer{
-            background-color: #111827;
-            padding: 30px;
-            text-align: center;
-            color: #9ca3af;
-            border-top: 1px solid #374151;
-            margin-top: 40px;
-        }
-
-        /* RESPONSIVE */
-        @media(max-width: 1024px){
-            main{
-                padding: 20px 40px;
-            }
-
-            .games{
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media(max-width: 768px){
-            header{
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
-            }
-
-            main{
-                grid-template-columns: 1fr;
-                padding: 20px;
-            }
-
-            .sidebar{
-                display: none;
-            }
-
-            .games{
-                grid-template-columns: 1fr;
-            }
-        }
-		a{
-			text-decoration : none;
-		}
-		.user-menu{
-            background-color: #22d3ee;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .user-menu:hover{
-            background-color: #67e8f9;
-        }
+        @media (max-width:1100px) { .games { grid-template-columns: repeat(2,1fr); } main { grid-template-columns: 1fr; } .sidebar { order:2; } }
+        @media (max-width:700px) { .games { grid-template-columns: 1fr; } .search-box { width:140px; } header { padding:12px 16px; } }
     </style>
 </head>
 
@@ -363,7 +76,14 @@
         </nav>
 
 		<div class="header-right" >
-            <input type="text" placeholder="Search games..." class="search-box">
+			<form th:action="@{/game}" method="get">
+			    <input type="text"
+			           name="keyword"
+			           placeholder="Search games..."
+			           class="search-box"
+			           th:value="${keyword}">
+			    <button type="submit" class="user-menu">Search</button>
+			</form>	
 	
 			<a href = "/login-register" th:if = "${username == null}">
 	            <button class="user-menu">
@@ -482,7 +202,7 @@
 
 			            <div class="game-info">
 			                <div class="game-title"
-			                     th:text="${game.game_name}">
+			                     th:text="${game.gameName}">
 			                </div>
 
 			                <div class="game-rating">★★★★★ (4.8)</div>

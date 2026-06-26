@@ -11,7 +11,8 @@ public class Game {
 	@ManyToOne
     @JoinColumn(name = "developer_id")
     private DeveloperProfiles developer;
-	private String game_name; 
+	@Column(name = "game_name")
+	private String GameName; 
 	private String description; 
 	private float price; 
 	private Date release_date; 
@@ -37,7 +38,7 @@ public class Game {
 		super();
 		this.game_id = game_id;
 		this.developer = developer_id;
-		this.game_name = game_name;
+		this.GameName = game_name;
 		this.description = description;
 		this.price = price;
 		this.release_date = release_date;
@@ -66,11 +67,11 @@ public class Game {
 	public void setDeveloper(DeveloperProfiles developer) {
 		this.developer = developer;
 	}
-	public String getGame_name() {
-		return game_name;
+	public String getGameName() {
+		return GameName;
 	}
-	public void setGame_name(String game_name) {
-		this.game_name = game_name;
+	public void setGameName(String game_name) {
+		this.GameName = game_name;
 	}
 	public String getDescription() {
 		return description;

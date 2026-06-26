@@ -294,7 +294,7 @@ public class TrangChuDeveloper {
 			        );
 			    }
 			}
-		game.setGame_name(gamename);
+		game.setGameName(gamename);
 		game.setDescription(description);
 		game.setPrice(price);
 		game.setRam(ram);
