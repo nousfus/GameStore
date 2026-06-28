@@ -7,8 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.gamestore.dao.OrderDetailsDao;
+import com.example.gamestore.dao.OrdersDao;
 import com.example.gamestore.dao.RolesDao;
 import com.example.gamestore.dao.UserRolesDao;
+import com.example.gamestore.entity.Orders;
 import com.example.gamestore.entity.Roles;
 import com.example.gamestore.entity.Users;
 
@@ -23,6 +26,10 @@ public class TrangChuStaff {
 	UserRolesDao userroledao;
 	@Autowired
 	RolesDao roledao;
+	@Autowired
+	OrdersDao orderdao;
+	@Autowired
+	OrderDetailsDao orderdetaildao;
 	@RequestMapping("/home")
 	public String home(Model m) {
 		Users user = (Users) session.getAttribute("user");
@@ -49,6 +56,7 @@ public class TrangChuStaff {
 	}
 	@RequestMapping("/orders")
 	public String orders() {
+		
 		return "staff/orders-management";
 	}
 	@RequestMapping("/reviews")

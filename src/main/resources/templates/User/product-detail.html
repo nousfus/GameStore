@@ -61,7 +61,19 @@
             font-size: 14px;
             border-bottom: 1px solid #374151;
         }
+		.login-btn{
+            background-color: #22d3ee;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
+        .login-btn:hover{
+            background-color: #67e8f9;
+        }
         .breadcrumb a{
             color: #22d3ee;
             text-decoration: none;
@@ -458,6 +470,15 @@
         .user-menu:hover{
             background-color: #67e8f9;
         }
+		.search-box{
+            padding: 10px 15px;
+            width: 250px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            background-color: #1f2937;
+            color: white;
+        }
     </style>
 </head>
 
@@ -474,8 +495,36 @@
             <a href="#">News</a>
         </nav>
 
-        <div class="header-right">
-            <button class="login-btn">Tài khoản</button>
+		<div class="header-right" >
+			<form th:action="@{/game}" method="get">
+			    <input type="text"
+			           name="keyword"
+			           placeholder="Search games..."
+			           class="search-box"
+			           th:value="${keyword}">
+			    <button type="submit" class="login-btn">Search</button>
+			</form>	
+	
+			<a href = "/login-register" th:if = "${username == null}">
+	            <button class="login-btn">
+	                Login
+	            </button>
+			</a>
+			<a href = "/user/logout" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Logout
+	            </button>
+			</a>
+			<a href = "/user/profile" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Profile
+	            </button>
+			</a>
+			<a href = "/user/cart" th:if = "${username != null}">
+	            <button class="login-btn">
+	                Cart
+	            </button>
+			</a>
         </div>
     </header>
 
@@ -530,7 +579,7 @@
 
             <!-- PRODUCT INFO -->
             <div class="product-info">
-                <h1 th:text = "${game.game_name}">Cyber Warriors</h1>
+                <h1 th:text = "${game.gameName}">Cyber Warriors</h1>
 
                 <div class="product-rating">
 					<div>
@@ -584,13 +633,6 @@
                 <div class="product-actions"  th:if = "${gameStatus=='Active'}">
 					<form action="/user/addcart" method="post">
 					    <button class="btn btn-primary">Thêm vào giỏ hàng</button>                 
-				        <select class="btn btn-primary" name="addcart">
-							<option>Chọn giỏ hàng</option>
-				            <option th:each="item,stat : ${carts}"
-				                    th:value="${item.cart_id}"
-				                    th:text="'Giỏ hàng '+${stat.index+1}">
-				            </option>
-				        </select>
 				    </form>
 					<button class="btn btn-secondary">Mua ngay</button>
                     <button class="btn btn-wishlist" title="Thêm vào danh sách ưa thích">❤</button>

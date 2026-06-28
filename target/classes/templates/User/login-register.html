@@ -143,6 +143,16 @@
             margin-bottom: 15px;
         }
 
+        /* Developer form (hidden until checkbox checked) */
+        .dev-form{
+            display: none;
+            padding: 12px;
+            border: 1px dashed #374151;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background-color: #0b1220;
+        }
+
         .forgot-password a{
             color: #22d3ee;
             text-decoration: none;
@@ -280,6 +290,25 @@
                             <label for="accept-terms">Tôi đồng ý với Điều khoản dịch vụ</label>
                         </div>
 
+                        <!-- Developer checkbox -->
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="is-developer" name="isDeveloper">
+                            <label for="is-developer">Developer</label>
+                        </div>
+
+                        <!-- Developer-specific fields (hidden by default) -->
+                        <div id="developer-fields" class="dev-form">
+                            <div class="form-group">
+                                <label for="dev-studio">Tên Studio / Tổ chức</label>
+                                <input type="text" id="dev-studio" name="devStudio" placeholder="Tên studio hoặc tổ chức">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dev-bio">Giới thiệu ngắn</label>
+                                <textarea id="dev-bio" name="devBio" rows="3" placeholder="Mô tả ngắn về bạn hoặc studio" style="width:100%; padding:10px; border-radius:8px; background:#0f172a; border:1px solid #374151; color:white;"></textarea>
+                            </div>
+                        </div>
+
                         <button type="submit" class="submit-btn">Đăng Ký</button>
 
                         <p class="switch-prompt" style="margin-top:12px; color:#9ca3af;">Đã có tài khoản? <a href="#" id="link-to-login" style="color:#22d3ee; text-decoration:none;">Đăng nhập</a></p>
@@ -315,6 +344,8 @@
             t.classList.remove('active-tab');
             t.style.background = '#1f2937';
             t.style.color = '#d1d5db';
+            // Update developer form visibility when showing register
+            toggleDevForm();
         }
 
         document.getElementById('tab-login').addEventListener('click', showLogin);
@@ -337,6 +368,22 @@
                 document.getElementById('login-email').focus();
             });
         }
+
+        // Toggle developer-specific fields
+        function toggleDevForm(){
+            var cb = document.getElementById('is-developer');
+            var f = document.getElementById('developer-fields');
+            if(!f || !cb) return;
+            f.style.display = cb.checked ? 'block' : 'none';
+        }
+
+        var devCb = document.getElementById('is-developer');
+        if(devCb){
+            devCb.addEventListener('change', toggleDevForm);
+        }
+
+        // Ensure correct state on page load
+        toggleDevForm();
     </script>
 
     <!-- FOOTER -->

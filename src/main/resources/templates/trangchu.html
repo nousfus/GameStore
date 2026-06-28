@@ -515,8 +515,14 @@
         </nav>	
 
         <div class="header-right" >
-            <input type="text" placeholder="Search games..." class="search-box">
-	
+			<form th:action="@{/game}" method="get">
+			    <input type="text"
+			           name="keyword"
+			           placeholder="Search games..."
+			           class="search-box"
+			           th:value="${keyword}">
+			    <button type="submit" class="login-btn">Search</button>
+			</form>	
 			<a href = "/login-register" th:if = "${username == null}">
 	            <button class="login-btn">
 	                Login
@@ -532,7 +538,7 @@
 	                Profile
 	            </button>
 			</a>
-			<a href = "/carttemp" th:if = "${username != null}">
+			<a href = "/user/cart" th:if = "${username != null}">
 	            <button class="login-btn">
 	                Cart
 	            </button>
@@ -611,7 +617,7 @@
 
                 <div class="game-info">
 
-                    <h3 th:text = "${game.game_name}">Cyber Warriors</h3>
+                    <h3 th:text = "${game.gameName}">Cyber Warriors</h3>
 
                     <div class="price-row">
 
