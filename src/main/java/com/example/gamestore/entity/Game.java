@@ -22,7 +22,13 @@ public class Game {
 	private String video_url;
 	private String ram;
 	private String storage;
+<<<<<<< HEAD
+	
+
+   	@Transient
+=======
 	@Transient
+>>>>>>> a2f6b85dd9f35cf62c8dddbeac4eb793a88b40bd
 	private String categories;
 
 	public String getCategories() {
@@ -46,8 +52,8 @@ public class Game {
 		this.thumbnail = thumbnail;
 		this.status = status;
 		this.video_url = video_url;
-//		this.ram = ram;
-//		this.storage = storage;
+		this.ram = ram;
+		this.storage = storage;
 	}
 	public String getVideo_url() {
 		return video_url;
