@@ -19,14 +19,23 @@ public class OrderDetails {
     private String game_id;
 	private float price; 
 	private float discount_amount; 
+	private int quantity;
 	public OrderDetails() { }
-	public OrderDetails(String order_detail_id, Orders order, String game, float price, float discount_amount) {
+	public OrderDetails(String order_detail_id, Orders order, String game, float price, float discount_amount, int quantity) {
 		super();
 		this.order_detail_id = order_detail_id;
 		this.order = order;
 		this.game_id = game;
 		this.price = price;
 		this.discount_amount = discount_amount;
+		this.quantity = quantity;
+	}
+	
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 	public String getOrder_detail_id() {
 		return order_detail_id;

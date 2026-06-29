@@ -158,7 +158,7 @@
         <div class="grid-2">
           <div class="field">
             <label for="gamename">Tên game</label>
-            <input id="gamename" name="gamename" placeholder="Tên game" th:value="${gameEdit?.game_name}" />
+            <input id="gamename" name="gamename" placeholder="Tên game" th:value="${gameEdit?.gameName}" />
           </div>
           <div class="field">
             <label for="price">Giá</label>
@@ -278,7 +278,7 @@
           <tbody>
             <tr th:each="game : ${listgame}">
               <td th:text="${game.game_id}">101</td>
-              <td th:text="${game.game_name}">Cyber Warriors</td>
+              <td th:text="${game.gameName}">Cyber Warriors</td>
               <td th:text="${game.price}">499000</td>
               <td th:text="${game.release_date}">499000</td>
               <td class="thumb-cell">

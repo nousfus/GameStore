@@ -275,6 +275,7 @@ public class GameList {
 		}else {
 			a.setQuantity(quantity);
 			cartitemdao.save(a);
+			session.setAttribute("quantity", quantity);
 		}
 		return "forward:/user/cartitem/"+cartid;
 	}
@@ -318,7 +319,7 @@ public class GameList {
 			if(discount!=null) {
 				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
 			}else {discountamount = 0;}
-			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
+			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount,Integer.parseInt((String)session.getAttribute("quantity")));orderdetaildao.save(odd);	
 		}
 		
 		//Payments

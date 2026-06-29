@@ -6,10 +6,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +28,7 @@ import com.example.gamestore.entity.DeveloperProfiles;
 import com.example.gamestore.entity.Game;
 import com.example.gamestore.entity.GameCategories;
 import com.example.gamestore.entity.GameImages;
+import com.example.gamestore.entity.OrderDetails;
 import com.example.gamestore.entity.Roles;
 import com.example.gamestore.entity.Users;
 
@@ -48,6 +53,10 @@ public class TrangChuDeveloper {
 	GameCategoriesDao gamecategorydao;
 	@Autowired
 	GameImagesDao gameimagedao;
+	@Autowired
+	OrdersDao orderdao;
+	@Autowired
+	OrderDetailsDao orderdetaildao;
 	@RequestMapping("/home")
 	public String home(Model m) {
 		Users user = (Users) session.getAttribute("user");
@@ -318,8 +327,77 @@ public class TrangChuDeveloper {
 		return "forward:/developer/game-management";
 	}
 	@RequestMapping("/revenue-tracking")
-	public String revenue(Model m) {
+	public String revenue(
+	        Model m,
+	        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+	        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+
+		if(startDate == null){
+		    startDate = LocalDate.now().minusDays(14);
+		}
+
+		if(endDate == null){
+		    endDate = LocalDate.now();
+		}
+
+		Users user = (Users) session.getAttribute("user");
+		DeveloperProfiles dev =
+		        developerdao.findByUsername(user.getUsername());
+
+		List<Object[]> data =
+		        orderdetaildao.revenueByDate(
+		                dev.getDeveloperid(),
+		                startDate,
+		                endDate);
+
+		Map<LocalDate, Double> revenueMap = new HashMap<>();
+
+		for (Object[] row : data) {
+		    LocalDate date = (LocalDate) row[0];
+		    Double revenue = ((Number) row[1]).doubleValue();
+
+		    revenueMap.put(date, revenue);
+		}
 		
+		List<LocalDate> dates = new ArrayList<>();
+		List<Double> revenues = new ArrayList<>();
+
+		for(LocalDate d = startDate;
+		    !d.isAfter(endDate);
+		    d = d.plusDays(1)){
+
+		    dates.add(d);
+		    revenues.add(revenueMap.getOrDefault(d,0.0));
+		}
+
+		m.addAttribute("dates",dates);
+		m.addAttribute("revenues",revenues);
+		m.addAttribute("startDate",startDate);
+		m.addAttribute("endDate",endDate);
+		
+		List<List<Object>> revenue = new ArrayList<>();
+		int luotMua = 0;
+		double tongDoanhThu = 0;
+		for(Game g : gamedao.findByDeveloper_Developerid(dev.getDeveloperid())) {
+			List<Object> abc = new ArrayList<>();
+			double total = 0;
+			List<OrderDetails> list = orderdetaildao.findByGameId(g.getGame_id());
+			for(OrderDetails d : list) {
+				total += (d.getOrder().getTotal_amount() * 70 ) / 100; // Lấy 70% tổng sản phẩm của game
+				tongDoanhThu += total;
+				luotMua++;
+			}
+			abc.add(g.getGameName());
+			abc.add(total);
+			abc.add(list.size());
+			revenue.add(abc);
+		}
+
+		m.addAttribute("revenue",revenue);
+		m.addAttribute("luotMua",luotMua);
+		m.addAttribute("tongDoanhThu",tongDoanhThu);
+
+
 		return "Developer/revenue-tracking";
 	}
 	@RequestMapping("/review-feedback")
@@ -364,3 +442,15 @@ public class TrangChuDeveloper {
 //);
 //
 //vì prefix "IMG" luôn dài 3 ký tự. Điều này ổn định hơn substring(5).
+
+
+//<rect x="70" y="204" width="24" height="16" rx="1" />200 000
+//<rect x="110" y="184" width="24" height="36" rx="1" />400 000
+//<rect x="150" y="164" width="24" height="56" rx="1" />600 000
+//<rect x="190" y="144" width="24" height="76" rx="1" />800 000
+//<rect x="230" y="124" width="24" height="96" rx="1" />1 000 000
+//<rect x="270" y="104" width="24" height="116" rx="1" />1 200 000
+//<rect x="310" y="84" width="24" height="136" rx="1" />1 400 000
+//<rect x="350" y="64" width="24" height="156" rx="1" />1 600 000
+//<rect x="390" y="44" width="24" height="176" rx="1" />1 800 000
+//<rect x="430" y="24" width="24" height="196" rx="1" />2 000 000

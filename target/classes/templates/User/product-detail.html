@@ -327,6 +327,15 @@
             margin-bottom: 25px;
         }
 
+        .report-message{
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #6ee7b7;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
         .review-item{
             background-color: #111827;
             padding: 20px;
@@ -359,6 +368,41 @@
         .review-text{
             color: #d1d5db;
             line-height: 1.6;
+        }
+
+        .review-actions{
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .report-form{
+            display: inline-block;
+        }
+
+        .report-btn{
+            background: transparent;
+            color: #f87171;
+            border: 1px solid #f87171;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .report-btn:hover{
+            background: #f87171;
+            color: #fff;
+        }
+
+        .report-message{
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #6ee7b7;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
         }
 
         /* COMMENT FORM */
@@ -674,6 +718,8 @@
         <div class="reviews-section">
             <h2>Đánh giá từ người dùng</h2>
 
+            <div class="report-message" th:if="${reportMessage}" th:text="${reportMessage}"></div>
+
             <div class="review-item" th:each = "item :${reviews}">
                 <div class="review-header">
                     <span class="review-author" th:text = "${item.username}">Nguyễn Văn A</span>
@@ -681,11 +727,18 @@
                 </div>
                 <div class="review-rating">
 					<span th:each="i : ${#numbers.sequence(1,5)}">
-				        <span th:if="${i <= item.rating}">★</span>
-				        <span th:if="${i > item.rating}">☆</span>
-				    </span>
+					    <span th:if="${i <= item.rating}">★</span>
+					    <span th:if="${i > item.rating}">☆</span>
+					</span>
 				</div>
                 <div class="review-text" th:text = "${item.comment}">Game quá tuyệt vời! Đồ họa đẹp, gameplay hấp dẫn và có nhiều nội dung. Đáng đồng tiền!</div>
+                <div class="review-actions">
+                    <form class="report-form" th:action="@{/user/reportComment}" method="post">
+                        <input type="hidden" name="reviewId" th:value="${item.review_id}" />
+                        <input type="hidden" name="reason" value="" />
+                        <button type="button" class="report-btn" onclick="submitReviewReport(this)">Báo cáo</button>
+                    </form>
+                </div>
             </div>
 
         </div>
@@ -698,6 +751,24 @@
     </footer>
 
     <script>
+        function submitReviewReport(button) {
+            const reason = prompt('Nhập lý do báo cáo bình luận này:', '');
+            if (reason === null) {
+                return;
+            }
+            if (!reason.trim()) {
+                alert('Vui lòng nhập lý do báo cáo.');
+                return;
+            }
+
+            const form = button.closest('form');
+            const reasonInput = form.querySelector('input[name="reason"]');
+            if (reasonInput) {
+                reasonInput.value = reason.trim();
+            }
+            form.submit();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const imageView = document.querySelector('.image-view');
             const imageViewImg = document.querySelector('.image-view img');
