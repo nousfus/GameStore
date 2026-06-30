@@ -1,5 +1,10 @@
 package com.example.gamestore.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.gamestore.dao.CartDao;
 import com.example.gamestore.dao.CartItemsDao;
@@ -128,20 +134,55 @@ public class TrangChu {
 			m.addAttribute("user",user);
 			List<Roles> list = userroledao.findByUsername(user.getUsername());
 			m.addAttribute("dsrole",list);
+			m.addAttribute("userEdit", user);
 		}else{
 			return "redirect:/login-register";
 		}
 		return "User/profile";
 	}
-	@PostMapping("/user-edit")
+	@PostMapping("/user/profile")
 	public String editprofile(Model m,
+			@RequestParam(value = "avatar", required = false) MultipartFile[] avatar,
 			@RequestParam("fullname") String fullname,
-			@RequestParam("email") String email) {
+			@RequestParam("email") String email) throws IOException {
 		Users user = (Users) session.getAttribute("user");
 		user.setFullname(fullname);
 		user.setEmail(email);
+		m.addAttribute("userEdit",user);
+		if(avatar != null &&
+				avatar.length > 0 &&
+				   !avatar[0].isEmpty()) {
+
+				    if(user.getAvatar() != null){
+
+				        Path oldThumb = Paths.get(
+				                "uploads/images/",
+				                user.getAvatar());
+
+				        Files.deleteIfExists(oldThumb);
+				    }
+
+				    MultipartFile thumb = avatar[0];
+
+				    String thumbnailName =
+				            System.currentTimeMillis()
+				            + "_"
+				            + thumb.getOriginalFilename()
+				                  .replaceAll("\\s+","_");
+
+				    Path thumbPath =
+				            Paths.get("uploads/images/",
+				                      thumbnailName);
+
+				    Files.copy(
+				            thumb.getInputStream(),
+				            thumbPath,
+				            StandardCopyOption.REPLACE_EXISTING);
+
+				    user.setAvatar(thumbnailName);
+				}
 		userdao.save(user);
-		return "User/profile";
+		return "redirect:/user/profile";
 	}
 	@PostMapping("/user/role")
 	public String role(Model m, @RequestParam("role") String role) {
