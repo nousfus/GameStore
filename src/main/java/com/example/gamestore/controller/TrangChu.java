@@ -91,7 +91,7 @@ public class TrangChu {
 		        }
 		    }
 
-		    game.setCategories(String.join(" | ", names));
+//		    game.setCategories(String.join(" | ", names));
 		}
 	    Pageable pageable2 = PageRequest.of(page, size);
 

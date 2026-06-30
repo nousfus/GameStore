@@ -88,7 +88,7 @@ public class GameList {
 		        }
 		    }
 
-		    game.setCategories(String.join(" | ", names));
+		   m.addAttribute("categories",names);
 		}
 		
 	    m.addAttribute("gamePage", gamePage);
@@ -129,8 +129,7 @@ public class GameList {
 		            names.add(c.getCategory_name());
 		        }
 		    }
-
-		    game.setCategories(String.join(" | ", names));
+		    m.addAttribute("categories",names);
 		}
 	    
 	    m.addAttribute("gamePage", gamePage);
@@ -205,13 +204,13 @@ public class GameList {
 		if(rating!=null) {
 			List<Reviews> list = reviewsdao.findAll();
 			Reviews reviews = list.get(reviewsdao.findAll().size()-1);
-			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getreview_id().substring(4)))+1); 
+			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getReview_id().substring(4)))+1); 
 			Date date = new Date(System.currentTimeMillis());
 			reviewsdao.save(new Reviews(reviews_id,user.getUsername(),gameId,Integer.parseInt(rating),comment,date));
 		}else {
 			List<Reviews> list = reviewsdao.findAll();
 			Reviews reviews = list.get(reviewsdao.findAll().size()-1);
-			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getreview_id().substring(4)))+1); 
+			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getReview_id().substring(4)))+1); 
 			Date date = new Date(System.currentTimeMillis());
 			reviewsdao.save(new Reviews(reviews_id,user.getUsername(),gameId,1,comment,date));
 		}

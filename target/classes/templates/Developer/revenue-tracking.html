@@ -205,7 +205,7 @@
   <div class="card">
     <div class="grid">
       <div class="metric">Doanh thu tổng<br><strong style="color:#22d3ee;font-size:20px" th:text = "${tongDoanhThu}">8.765.000đ</strong></div>
-      <div class="metric">Doanh thu tháng này<br><strong style="color:#22d3ee;font-size:20px">1.234.000đ</strong></div>
+      <div class="metric">Doanh thu tháng này<br><strong style="color:#22d3ee;font-size:20px" th:text = "${doangThuThangNay}">1.234.000đ</strong></div>
       <div class="metric">Lượt mua<br><strong style="color:#22d3ee;font-size:20px" th:text = "${luotMua}">1.024</strong></div>
     </div>
     <div class="chart">
@@ -346,12 +346,9 @@
         </g>
       </svg>
       <div class="chart-labels">
-        <span>Cao nhất: 1.420.000đ</span>
-        <span>Thấp nhất: 520.000đ</span>
-        <span>Trung bình: 970.000đ</span>
-        <span>Tổng: 6.790.000đ</span>
-        <span>Tuần trước: 6.050.000đ</span>
-        <span>Thay đổi: +12.4%</span>
+        <span th:text = "'Cao nhất: '+${lonNhat}">Cao nhất: 1.420.000đ</span>
+        <span th:text = "'Thấp nhất: '+${nhoNhat}">Thấp nhất: 520.000đ</span>
+        <span th:text = "'Trung bình: '+${trungBinh}">Trung bình: 970.000đ</span>
       </div>
     </div>
   </div>

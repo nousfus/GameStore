@@ -22,22 +22,7 @@ public class Game {
 	private String video_url;
 	private String ram;
 	private String storage;
-<<<<<<< HEAD
-	
 
-   	@Transient
-=======
-	@Transient
->>>>>>> a2f6b85dd9f35cf62c8dddbeac4eb793a88b40bd
-	private String categories;
-
-	public String getCategories() {
-	    return categories;
-	}
-
-	public void setCategories(String categories) {
-	    this.categories = categories;
-	}
 	public Game() { }
 	public Game(String game_id, DeveloperProfiles developer_id, String game_name, String description, float price, Date release_date,
 			int rating, String thumbnail, String status, String video_url, String ram, String storage) {

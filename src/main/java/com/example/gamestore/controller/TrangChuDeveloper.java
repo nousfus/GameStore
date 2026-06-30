@@ -351,7 +351,7 @@ public class TrangChuDeveloper {
 		                endDate);
 
 		Map<LocalDate, Double> revenueMap = new HashMap<>();
-
+		
 		for (Object[] row : data) {
 		    LocalDate date = (LocalDate) row[0];
 		    Double revenue = ((Number) row[1]).doubleValue();
@@ -361,7 +361,7 @@ public class TrangChuDeveloper {
 		
 		List<LocalDate> dates = new ArrayList<>();
 		List<Double> revenues = new ArrayList<>();
-
+	
 		for(LocalDate d = startDate;
 		    !d.isAfter(endDate);
 		    d = d.plusDays(1)){
@@ -369,7 +369,37 @@ public class TrangChuDeveloper {
 		    dates.add(d);
 		    revenues.add(revenueMap.getOrDefault(d,0.0));
 		}
+		double lonNhat = Double.MIN_VALUE;
+		double nhoNhat = Double.MAX_VALUE;
+		double tong = 0;
+		int dem = 0;
 
+		for (Double revenue : revenues) {
+
+		    if (revenue == 0)
+		        continue;
+
+		    tong += revenue;
+		    dem++;
+
+		    if (revenue > lonNhat) {
+		        lonNhat = revenue;
+		    }
+
+		    if (revenue < nhoNhat) {
+		        nhoNhat = revenue;
+		    }
+		}
+
+		double trungBinh = dem == 0 ? 0 : tong / dem;
+
+		if (dem == 0) {
+		    lonNhat = 0;
+		    nhoNhat = 0;
+		}
+		m.addAttribute("lonNhat",lonNhat);
+		m.addAttribute("nhoNhat",nhoNhat);
+		m.addAttribute("trungBinh",trungBinh);
 		m.addAttribute("dates",dates);
 		m.addAttribute("revenues",revenues);
 		m.addAttribute("startDate",startDate);
@@ -378,6 +408,7 @@ public class TrangChuDeveloper {
 		List<List<Object>> revenue = new ArrayList<>();
 		int luotMua = 0;
 		double tongDoanhThu = 0;
+		double doangThuThangNay =0;
 		for(Game g : gamedao.findByDeveloper_Developerid(dev.getDeveloperid())) {
 			List<Object> abc = new ArrayList<>();
 			double total = 0;
@@ -386,16 +417,21 @@ public class TrangChuDeveloper {
 				total += (d.getOrder().getTotal_amount() * 70 ) / 100; // Lấy 70% tổng sản phẩm của game
 				tongDoanhThu += total;
 				luotMua++;
-			}
+				Date date = new Date(System.currentTimeMillis());
+				if(d.getOrder().getOrder_date().getMonth() == date.getMonth()) {
+					doangThuThangNay += total;		
+				}
 			abc.add(g.getGameName());
 			abc.add(total);
 			abc.add(list.size());
 			revenue.add(abc);
+			}
 		}
 
 		m.addAttribute("revenue",revenue);
 		m.addAttribute("luotMua",luotMua);
 		m.addAttribute("tongDoanhThu",tongDoanhThu);
+		m.addAttribute("doangThuThangNay",doangThuThangNay);
 
 
 		return "Developer/revenue-tracking";
