@@ -1,10 +1,202 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi"  xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Thống kê Doanh thu - Developer</title>
-  <style>*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}body{background:#0f172a;color:#fff}header{background:#111827;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #374151}.logo{color:#22d3ee;font-weight:bold}.container{padding:28px}.card{background:#111827;padding:18px;border-radius:10px;border:1px solid #374151;margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{padding:16px;border-radius:8px;background:#0f172a;border:1px solid #374151}.chart{height:300px;background:linear-gradient(180deg,#0f172a,#0b1220);border-radius:8px;border:1px solid #374151}</style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #fff;
+    }
+
+    header {
+      background: #111827;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #374151;
+    }
+
+    .logo {
+      color: #22d3ee;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 28px;
+    }
+
+    .card {
+      background: #111827;
+      padding: 18px;
+      border-radius: 10px;
+      border: 1px solid #374151;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 16px;
+      border-radius: 8px;
+      background: #0f172a;
+      border: 1px solid #374151;
+    }
+
+    .chart {
+      padding: 10px;
+      margin-top: 18px;
+      background: linear-gradient(180deg, #0f172a, #0b1220);
+      border-radius: 12px;
+      border: 1px solid #374151;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .date-range {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    .date-range label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      gap: 6px;
+      min-width: 180px;
+    }
+
+    .date-range input {
+      width: 100%;
+      max-width: 220px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: #fff;
+    }
+
+    .date-range button {
+      background: #2563eb;
+      border: none;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .date-range button:hover {
+      background: #1d4ed8;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #e5e7eb;
+      gap: 12px;
+    }
+
+    .chart-header span:first-child {
+      font-size: 1rem;
+      color: #9ca3af;
+    }
+
+    .chart-subtitle {
+      display: block;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-top: 6px;
+    }
+
+    .chart-header span:last-child {
+      background: #1d4ed8;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
+
+   .chart-svg{
+    width:1400px;
+    height:260px;
+    display:block;
+}
+
+    .chart-labels {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 12px;
+      color: #9ca3af;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .chart-labels span {
+      display: block;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+    }
+
+    .detail-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid #374151;
+    }
+
+    .detail-table thead {
+      background: #111827;
+      color: #9ca3af;
+    }
+
+    .detail-table th,
+    .detail-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #1f2937;
+      color: #e5e7eb;
+    }
+
+    .detail-table th {
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .detail-table tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .detail-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+  </style>
 </head>
 <body>
 <header><div class="logo">GameStore Developer</div></header>
@@ -12,24 +204,204 @@
   <h1 style="margin-bottom:12px">Theo dõi Thống kê Doanh thu</h1>
   <div class="card">
     <div class="grid">
-      <div class="metric">Doanh thu tổng<br><strong style="color:#22d3ee;font-size:20px">8.765.000đ</strong></div>
-      <div class="metric">Doanh thu tháng này<br><strong style="color:#22d3ee;font-size:20px">1.234.000đ</strong></div>
-      <div class="metric">Lượt mua<br><strong style="color:#22d3ee;font-size:20px">1.024</strong></div>
+      <div class="metric">Doanh thu tổng<br><strong style="color:#22d3ee;font-size:20px" th:text = "${tongDoanhThu}">8.765.000đ</strong></div>
+      <div class="metric">Doanh thu tháng này<br><strong style="color:#22d3ee;font-size:20px" th:text = "${doangThuThangNay}">1.234.000đ</strong></div>
+      <div class="metric">Lượt mua<br><strong style="color:#22d3ee;font-size:20px" th:text = "${luotMua}">1.024</strong></div>
     </div>
-    <div class="chart">[Biểu đồ doanh thu theo ngày/tháng - placeholder]</div>
+    <div class="chart">
+      <div class="chart-header">
+        <div>
+          <span>Biểu đồ doanh thu</span>
+          <span class="chart-subtitle" id="chartSubtitle">Từ 20/6 đến 4/7</span>
+        </div>
+        <span>+12.4%</span>
+      </div>
+      <div class="date-range">
+		<form method="get" th:action="@{/developer/revenue-tracking}">
+	        <label>
+          Ngày bắt đầu
+          <input type="date" id="startDate" name = "startDate" value="2026-06-20" />
+        </label>
+        <label>
+          Ngày kết thúc
+          <input type="date" id="endDate" name = "endDate" value="2026-07-04" />
+        </label>
+        <button id="updateRange">Xem doanh thu</button>
+		</form>
+      <div style="overflow-x:auto;">
+    <svg class="chart-svg" viewBox="0 0 1400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Biểu đồ doanh thu">
+        <defs>
+          <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#2563eb" />
+          </linearGradient>
+        </defs>
+       <g fill="none" stroke="#334155" stroke-width="1">
+          <line x1="50" y1="220" x2="2000" y2="220"/>
+          <line x1="50" y1="200" x2="2000" y2="200"/>
+          <line x1="50" y1="180" x2="2000" y2="180"/>
+          <line x1="50" y1="160" x2="2000" y2="160"/>
+          <line x1="50" y1="140" x2="2000" y2="140"/>
+          <line x1="50" y1="120" x2="2000" y2="120"/>
+          <line x1="50" y1="100" x2="2000" y2="100"/>
+          <line x1="50" y1="80"  x2="2000" y2="80"/>
+          <line x1="50" y1="60"  x2="2000" y2="60"/>
+          <line x1="50" y1="40"  x2="2000" y2="40"/>
+          <line x1="50" y1="20"  x2="2000" y2="20"/>
+      </g>
+
+        <g fill="url(#barGradient)">
+        <th:block th:each="money, stat : ${revenues}">
+
+            <rect
+                th:x="${70 + stat.index * 40}"
+                th:with="
+                    h=${money * 200.0 / 2000000},
+                    y=${220 - h}"
+                th:y="${y}"
+                th:height="${h}"
+                width="24"
+                rx="2">
+
+                <title
+                    th:text="'Ngày: '
+                        + ${#temporals.format(dates[stat.index],'dd/MM/yyyy')}
+                        + '&#10;Doanh thu: '
+                        + ${#numbers.formatDecimal(money,0,'COMMA',0,'POINT')}
+                        + ' đ'">
+                </title>
+
+            </rect>
+
+        </th:block>
+    </g>
+        <g stroke="#334155" stroke-width="1">
+          <line x1="50" y1="20" x2="50" y2="220"/>
+      </g>
+        <g fill="#94a3b8" font-size="12" text-anchor="end">
+          <text x="44" y="224">0đ</text>
+
+          <text x="44" y="204">200k</text>
+          <text x="44" y="184">400k</text>
+          <text x="44" y="164">600k</text>
+          <text x="44" y="144">800k</text>
+
+          <text x="44" y="124">1tr</text>
+          <text x="44" y="104">1.2tr</text>
+          <text x="44" y="84">1.4tr</text>
+          <text x="44" y="64">1.6tr</text>
+          <text x="44" y="44">1.8tr</text>
+
+          <text x="44" y="24">2tr</text>
+      </g>
+		<g fill="#cbd5e1"
+		   font-size="12"
+		   text-anchor="middle">
+
+		    <th:block th:each="d, stat:${dates}">
+
+		        <text
+		            th:x="${82+stat.index*40}"
+		            y="250"
+		            th:text="${#temporals.format(d,'dd/MM')}">
+		        </text>
+
+		    </th:block>
+
+		</g>
+        <g stroke="#475569" stroke-width="1">
+          <line x1="50" y1="220" x2="2000" y2="220" />
+          <line x1="70" y1="220" x2="70" y2="226" />
+          <line x1="110" y1="220" x2="110" y2="226" />
+          <line x1="150" y1="220" x2="150" y2="226" />
+          <line x1="190" y1="220" x2="190" y2="226" />
+          <line x1="230" y1="220" x2="230" y2="226" />
+          <line x1="270" y1="220" x2="270" y2="226" />
+          <line x1="310" y1="220" x2="310" y2="226" />
+          <line x1="350" y1="220" x2="350" y2="226" />
+          <line x1="390" y1="220" x2="390" y2="226" />
+          <line x1="430" y1="220" x2="430" y2="226" />
+          <line x1="470" y1="220" x2="470" y2="226" />
+          <line x1="510" y1="220" x2="510" y2="226" />
+          <line x1="550" y1="220" x2="550" y2="226" />
+          <line x1="590" y1="220" x2="590" y2="226" />
+          <line x1="630" y1="220" x2="630" y2="226" />
+          <line x1="670" y1="220" x2="670" y2="226" />
+          <line x1="710" y1="220" x2="710" y2="226" />
+          <line x1="750" y1="220" x2="750" y2="226" />
+          <line x1="790" y1="220" x2="790" y2="226" />
+          <line x1="830" y1="220" x2="830" y2="226" />
+          <line x1="870" y1="220" x2="870" y2="226" />
+          <line x1="910" y1="220" x2="910" y2="226" />
+          <line x1="950" y1="220" x2="950" y2="226" />
+          <line x1="990" y1="220" x2="990" y2="226" />
+          <line x1="1030" y1="220" x2="1030" y2="226" />
+          <line x1="1070" y1="220" x2="1070" y2="226" />
+          <line x1="1110" y1="220" x2="1110" y2="226" />
+          <line x1="1150" y1="220" x2="1150" y2="226" />
+          <line x1="1190" y1="220" x2="1190" y2="226" />
+          <line x1="1230" y1="220" x2="1230" y2="226" />
+          <line x1="1270" y1="220" x2="1270" y2="226" />
+          <line x1="1310" y1="220" x2="1310" y2="226" />
+        </g>
+      </svg>
+      <div class="chart-labels">
+        <span th:text = "'Cao nhất: '+${lonNhat}">Cao nhất: 1.420.000đ</span>
+        <span th:text = "'Thấp nhất: '+${nhoNhat}">Thấp nhất: 520.000đ</span>
+        <span th:text = "'Trung bình: '+${trungBinh}">Trung bình: 970.000đ</span>
+      </div>
+    </div>
   </div>
 
   <div class="card">
     <h3>Chi tiết theo game</h3>
-    <table style="width:100%;border-collapse:collapse;color:#d1d5db">
-      <thead><tr style="color:#9ca3af"><th>Game</th><th>Doanh thu</th><th>Đơn hàng</th></tr></thead>
+    <table class="detail-table">
+      <thead>
+        <tr>
+          <th>Game</th>
+          <th>Doanh thu</th>
+          <th>Lượt mua</th>
+        </tr>
+      </thead>
       <tbody>
-        <tr><td>Cyber Warriors</td><td>3.200.000đ</td><td>320</td></tr>
-        <tr><td>Legends Arena</td><td>2.100.000đ</td><td>210</td></tr>
+        <tr th:each = "item : ${revenue}">
+          <td th:text = "${item[0]}">Cyber Warriors</td>
+          <td th:text = "${item[1]}">3.200.000đ</td>
+          <td th:text = "${item[2]}">320</td>
+        </tr>
       </tbody>
     </table>
   </div>
 </main>
 <footer style="background:#111827;padding:18px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
+<script>
+  const startDateInput = document.getElementById('startDate');
+  const endDateInput = document.getElementById('endDate');
+  const chartSubtitle = document.getElementById('chartSubtitle');
+  const updateRange = document.getElementById('updateRange');
+
+  function formatShortDate(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return `${date.getDate()}/${date.getMonth() + 1}`;
+  }
+
+  updateRange.addEventListener('click', () => {
+    const start = startDateInput.value;
+    const end = endDateInput.value;
+
+    if (!start || !end) {
+      alert('Vui lòng chọn ngày bắt đầu và ngày kết thúc.');
+      return;
+    }
+
+    if (new Date(start) > new Date(end)) {
+      alert('Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.');
+      return;
+    }
+
+    chartSubtitle.textContent = `Từ ${formatShortDate(start)} đến ${formatShortDate(end)}`;
+  });
+</script>
 </body>
 </html>

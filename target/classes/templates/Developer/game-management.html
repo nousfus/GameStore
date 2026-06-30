@@ -4,130 +4,314 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Quản lý Game - Developer</title>
-  <style>*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}body{background:#0f172a;color:#fff}header{background:#111827;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #374151}.logo{color:#22d3ee;font-weight:bold}.container{padding:28px}.card{background:#111827;padding:18px;border-radius:10px;border:1px solid #374151;margin-bottom:16px}input,select,textarea{width:100%;padding:10px;border-radius:6px;background:#0f172a;border:1px solid #374151;color:#fff;margin-bottom:8px}button{padding:10px 14px;border-radius:8px;border:none;cursor:pointer}.btn-primary{background:#22d3ee;color:#000}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px;border-bottom:1px solid #374151;text-align:left;color:#d1d5db}</style>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      background: linear-gradient(135deg, #020617, #0f172a 45%, #111827);
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(17, 24, 39, 0.95);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #374151;
+      backdrop-filter: blur(8px);
+    }
+    .logo { color: #22d3ee; font-weight: 700; font-size: 1.15rem; }
+    .container { padding: 28px; max-width: 1400px; margin: 0 auto; }
+    .page-title { font-size: 1.8rem; margin-bottom: 8px; }
+    .page-subtitle { color: #94a3b8; margin-bottom: 20px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+    .summary-card {
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid #374151;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(2, 6, 23, 0.25);
+    }
+    .summary-card .label { color: #94a3b8; font-size: 0.95rem; margin-bottom: 8px; }
+    .summary-card .value { font-size: 1.3rem; font-weight: 700; color: #22d3ee; }
+    .card {
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid #374151;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.3);
+      margin-bottom: 18px;
+    }
+    .card h3 { margin-bottom: 12px; color: #f8fafc; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    label { color: #cbd5e1; font-size: 0.95rem; }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #fff;
+      outline: none;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: #22d3ee; }
+    .file-box {
+      border: 1px dashed #334155;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      margin-bottom: 12px;
+    }
+    .media-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .media-preview img, .media-preview video {
+      border-radius: 10px;
+      border: 1px solid #374151;
+      max-width: 180px;
+      max-height: 120px;
+      object-fit: cover;
+      background: #111827;
+    }
+    .checkbox-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .checkbox-item {
+      background: rgba(255,255,255,0.03);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #334155;
+      color: #d1d5db;
+      font-size: 0.9rem;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    .btn-primary { background: #22d3ee; color: #08131c; }
+    .btn-secondary { background: #475569; color: #fff; }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .table-wrap { overflow-x: auto; }
+    .table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    .table th, .table td { padding: 12px 10px; border-bottom: 1px solid #374151; text-align: left; color: #d1d5db; vertical-align: middle; }
+    .table thead { color: #9ca3af; }
+    .table tbody tr:hover { background: rgba(255,255,255,0.03); }
+    .status-chip {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      background: rgba(74, 222, 128, 0.14);
+      color: #86efac;
+      border: 1px solid rgba(74,222,128,0.25);
+    }
+    .thumb-cell img { width: 90px; height: 60px; object-fit: cover; border-radius: 10px; border: 1px solid #374151; }
+    footer { padding: 18px; text-align: center; color: #94a3b8; margin-top: 20px; }
+    @media (max-width: 900px) { .summary-grid, .grid-2 { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-<header><div class="logo">GameStore Developer</div></header>
-<main class="container">
-  <h1 style="margin-bottom:12px">Quản lý Game</h1>
+  <header>
+    <div class="logo">GameStore Developer</div>
+  </header>
 
-  <div class="card">
-    <h3 style="margin-bottom:8px">Tạo / Cập nhật Game</h3>
-    <form id="devGameForm" action="/developer/create-game" method="post" enctype="multipart/form-data">
-		<input id="gamename" name="GameId" placeholder="GameId" th:value="${gameEdit?.game_id}" hidden />
-      <input id="gamename" name="gamename" placeholder="Tên game" th:value="${gameEdit?.game_name}" />
-      <textarea id="description" name="description" placeholder="Mô tả"  th:text="${gameEdit?.description}"></textarea>
-      <input id="price" type="number" name="price" placeholder="Giá"  th:value="${gameEdit?.price}" />
+  <main class="container">
+    <h1 class="page-title">Quản lý Game</h1>
+    <p class="page-subtitle">Tạo mới, chỉnh sửa và theo dõi các tựa game của bạn một cách chuyên nghiệp.</p>
 
-      <h4 style="margin-top:8px;margin-bottom:6px">Cấu hình</h4>
-      <select id="ram" name="ram">
-		<option value="">RAM</option>
-	    <option value="4GB" th:selected="${gameEdit?.ram == '4GB'}">4GB</option>
-	    <option value="8GB" th:selected="${gameEdit?.ram == '8GB'}">8GB</option>
-	    <option value="12GB" th:selected="${gameEdit?.ram == '12GB'}">12GB</option>
-	    <option value="16GB" th:selected="${gameEdit?.ram == '16GB'}">16GB</option>
-	    <option value="24GB" th:selected="${gameEdit?.ram == '24GB'}">24GB</option>
-	    <option value="32GB" th:selected="${gameEdit?.ram == '32GB'}">32GB</option>
-	    <option value="48GB" th:selected="${gameEdit?.ram == '48GB'}">48GB</option>
-	    <option value="64GB" th:selected="${gameEdit?.ram == '64GB'}">64GB</option>
-      </select>
-      <input name = "storage" placeholder = "Bộ nhớ"  th:value="${gameEdit?.storage}"/>
-	  <input type="hidden"
-	         name="oldThumbnail"
-	         th:value="${gameEdit.thumbnail}">
-	  <label>Thumbnail hiện tại</label>
-	  <div th:if="${gameEdit.thumbnail != null}">
-	      <img th:src="@{/uploads/images/{file}(file=${gameEdit.thumbnail})}"
-	           width="150">
-	  </div>
-
-	  <input type="file" name="thumbnail" accept="image/*">
-	  
-	  <label>Video hiện tại</label>
-	
-	<div th:if="${gameEdit.video_url != null and gameEdit.video_url.startsWith('http')}">
-		      <a th:href="${gameEdit.video_url}" target="_blank">
-	          Xem video
-	      </a>
-	  </div>
-
-	  <div th:unless="${gameEdit.video_url != null and gameEdit.video_url.startsWith('http')}">
-	      <video width="400" controls>
-	          <source th:src="@{'/videos/' + ${gameEdit.video_url}}">
-	      </video>
-	  </div>
-	  
-	  <input type="file" name="video" accept="video/*">
-
-	  <p>Hoặc nhập đường dẫn</p>
-
-	  <input type="text"
-	         name="url"
-	         th:value="${gameEdit.video_url}">
-		
-	<p>Thêm hình ảnh</p>		 
-	  <div th:if="${gameImages != null}">
-	      <img th:each="img : ${gameImages}"
-	           th:src="@{/uploads/images/{file}(file=${img.image_url})}"
-	           width="120"
-	           style="margin:5px">
-	  </div>
-
-	  <input type="file"
-	         name="images"
-	         accept="image/*"
-	         multiple>
-
-      <label style="color:#9ca3af;font-size:13px;margin-top:6px;display:block">Thể loại</label>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-        <label style="font-size:13px;color:#d1d5db" th:each = "item :${listcate}">
-			<input type="checkbox" th:text = "${item.category_name}" name = "categories" th:value = "${item.category_id}" th:checked="${selectedCategories != null and selectedCategories.contains(item.category_id)}">
-		</label>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="label">Tổng số game</div>
+        <div class="value" th:text="${#lists.size(listgame)}">0</div>
       </div>
-	  
-			<div style="display:flex;gap:8px;margin-top:8px">
-				<button class="btn-primary" id="saveBtn" type="submit" th:text="${gameEdit?.game_id != null} ? 'Lưu' : 'Thêm'">Lưu</button>
-				<button type="button" id="cancelBtn" th:style="${gameEdit != null} ? '' : 'display:none'" onclick="resetForm()">Hủy</button>
-				<button class="" type="reset">Xóa</button>
-			</div>
-    </form>
-  </div>
+      <div class="summary-card">
+        <div class="label">Đang hoạt động</div>
+        <div class="value">18</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Chờ cập nhật</div>
+        <div class="value">4</div>
+      </div>
+    </div>
 
-  <div class="card">
-    <h3 style="margin-bottom:8px">Danh sách Game</h3>
-    <table class="table">
-      <thead>
-		<tr>
-			<th>Id</th>
-			<th>Tên</th>
-			<th>Giá</th>
-			<th>Ngày ra mắt</th>
-			<th>Thumbnail</th>
-			<th>Trạng thái</th>
-			<th>Hành động</th>
-		</tr>
-	</thead>
-      <tbody>
-        <tr th:each = "game :${listgame}">
-          <td th:text = "${game.game_id}">101</td>
-          <td th:text = "${game.game_name}">Cyber Warriors</td>
-          <td th:text = "${game.price}">499000</td>
-		  <td th:text = "${game.release_date}">499000</td>
-		  <td>		  
-			<img th:src="@{/uploads/images/{file}(file=${game.thumbnail})}" width="100">
-			</td>
-			<td th:text = "${game.status}">499000</td>
-          <td>
-			<a th:href="@{/developer/game-management/edit/{id}(id=${game.game_id})}">
-			       <button type="button">Chỉnh sửa</button>
-			   </a>            
-			<button>Xóa</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</main>
-<footer style="background:#111827;padding:18px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
+    <div class="card">
+      <h3>Tạo / Cập nhật Game</h3>
+      <form id="devGameForm" action="/developer/create-game" method="post" enctype="multipart/form-data">
+        <div class="field">
+          <input id="gameIdInput" name="GameId" placeholder="GameId" th:value="${gameEdit?.game_id}" hidden />
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="gamename">Tên game</label>
+            <input id="gamename" name="gamename" placeholder="Tên game" th:value="${gameEdit?.gameName}" />
+          </div>
+          <div class="field">
+            <label for="price">Giá</label>
+            <input id="price" type="number" name="price" placeholder="Giá" th:value="${gameEdit?.price}" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="description">Mô tả</label>
+          <textarea id="description" name="description" placeholder="Mô tả" th:text="${gameEdit?.description}"></textarea>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="ram">RAM</label>
+            <select id="ram" name="ram">
+              <option value="">RAM</option>
+              <option value="4GB" th:selected="${gameEdit?.ram == '4GB'}">4GB</option>
+              <option value="8GB" th:selected="${gameEdit?.ram == '8GB'}">8GB</option>
+              <option value="12GB" th:selected="${gameEdit?.ram == '12GB'}">12GB</option>
+              <option value="16GB" th:selected="${gameEdit?.ram == '16GB'}">16GB</option>
+              <option value="24GB" th:selected="${gameEdit?.ram == '24GB'}">24GB</option>
+              <option value="32GB" th:selected="${gameEdit?.ram == '32GB'}">32GB</option>
+              <option value="48GB" th:selected="${gameEdit?.ram == '48GB'}">48GB</option>
+              <option value="64GB" th:selected="${gameEdit?.ram == '64GB'}">64GB</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="storage">Bộ nhớ</label>
+            <input id="storage" name="storage" placeholder="Bộ nhớ" th:value="${gameEdit?.storage}" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Thumbnail hiện tại</label>
+          <div class="file-box">
+            <input type="hidden" name="oldThumbnail" th:value="${gameEdit.thumbnail}">
+            <div th:if="${gameEdit.thumbnail != null}" class="media-preview">
+              <img th:src="@{/uploads/images/{file}(file=${gameEdit.thumbnail})}" alt="Thumbnail hiện tại" />
+            </div>
+            <div style="margin-top:10px">
+              <label>Chọn thumbnail mới</label>
+              <input type="file" name="thumbnail" accept="image/*" />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Video hiện tại</label>
+          <div class="file-box">
+            <div th:if="${gameEdit.video_url != null and gameEdit.video_url.startsWith('http')}">
+              <a th:href="${gameEdit.video_url}" target="_blank" style="color:#67e8f9">Xem video</a>
+            </div>
+            <div th:unless="${gameEdit.video_url != null and gameEdit.video_url.startsWith('http')}">
+              <div class="media-preview">
+                <video width="400" controls>
+                  <source th:src="@{'/videos/' + ${gameEdit.video_url}}" />
+                </video>
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <label>Chọn video mới</label>
+              <input type="file" name="video" accept="video/*" />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Hoặc nhập đường dẫn video</label>
+          <input type="text" name="url" th:value="${gameEdit.video_url}" />
+        </div>
+
+        <div class="field">
+          <label>Thêm hình ảnh</label>
+          <div class="file-box">
+            <div th:if="${gameImages != null}" class="media-preview">
+              <img th:each="img : ${gameImages}" th:src="@{/uploads/images/{file}(file=${img.image_url})}" alt="Hình ảnh game" />
+            </div>
+            <div style="margin-top:10px">
+              <input type="file" name="images" accept="image/*" multiple />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Thêm file game</label>
+          <div class="file-box">
+            <div th:if="${gameEdit.filegame != null}" class="media-preview">
+                  <span th:text="${gameEdit.filegame}"></span>           
+            </div>
+            <div style="margin-top:10px">
+              <input type="file" name="gameFile" th:value="${gameEdit.filegame}"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Thể loại</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item" th:each="item : ${listcate}">
+              <input type="checkbox" th:text="${item.category_name}" name="categories" th:value="${item.category_id}" th:checked="${selectedCategories != null and selectedCategories.contains(item.category_id)}" />
+            </label>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" id="saveBtn" type="submit" th:text="${gameEdit?.game_id != null} ? 'Lưu' : 'Thêm'">Lưu</button>
+          <button type="button" id="cancelBtn" class="btn-secondary" th:style="${gameEdit != null} ? '' : 'display:none'" onclick="resetForm()">Hủy</button>
+          <button class="btn-danger" type="reset">Xóa</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>Danh sách Game</h3>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Tên</th>
+              <th>Giá</th>
+              <th>Ngày ra mắt</th>
+              <th>Thumbnail</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="game : ${listgame}">
+              <td th:text="${game.game_id}">101</td>
+              <td th:text="${game.gameName}">Cyber Warriors</td>
+              <td th:text="${game.price}">499000</td>
+              <td th:text="${game.release_date}">499000</td>
+              <td class="thumb-cell">
+                <img th:src="@{/uploads/images/{file}(file=${game.thumbnail})}" alt="Thumbnail game" />
+              </td>
+              <td><span class="status-chip" th:text="${game.status}">Active</span></td>
+              <td>
+                <div class="actions" style="margin-top:0">
+                  <a th:href="@{/developer/game-management/edit/{id}(id=${game.game_id})}">
+                    <button type="button" class="btn-secondary">Chỉnh sửa</button>
+                  </a>
+                  <button class="btn-danger">Xóa</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>© 2026 GameStore</footer>
 </body>
 </html>

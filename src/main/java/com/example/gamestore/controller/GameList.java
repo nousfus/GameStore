@@ -68,6 +68,8 @@ public class GameList {
 	public String productList(
 	        @RequestParam(defaultValue = "0") int page,
 	        Model m) {
+		Users user = (Users) session.getAttribute("user");
+		m.addAttribute("username",user);
 		m.addAttribute("dscate",categorydao.findAll());
 		Pageable pageable = PageRequest.of(page, 9);
 		Page<Game> gamePage = gamedao.findAllGame(pageable);
@@ -86,7 +88,7 @@ public class GameList {
 		        }
 		    }
 
-		    game.setCategories(String.join(" | ", names));
+		   m.addAttribute("categories",names);
 		}
 		
 	    m.addAttribute("gamePage", gamePage);
@@ -103,7 +105,8 @@ public class GameList {
 	        @RequestParam(required = false) Double price,
 	        @RequestParam(defaultValue = "0") int page,
 	        Model m) {
-
+		Users user = (Users) session.getAttribute("user");
+		m.addAttribute("username",user);
 	    Specification<Game> spec = Specification
 	            .where(GameSpecification.hasRam(ram))
 	            .and(GameSpecification.hasStorage(storage))
@@ -126,8 +129,7 @@ public class GameList {
 		            names.add(c.getCategory_name());
 		        }
 		    }
-
-		    game.setCategories(String.join(" | ", names));
+		    m.addAttribute("categories",names);
 		}
 	    
 	    m.addAttribute("gamePage", gamePage);
@@ -187,11 +189,6 @@ public class GameList {
 		        id2 = game.getVideo_url().split("watch\\?v=")[1].split("&")[0];
 		    }
 		m.addAttribute("videourl","https://www.youtube.com/embed/"+id2);
-		
-		// Hiển thị giỏ hàng
-	    Users user = (Users) session.getAttribute("user");
-	    List<Cart> carts = cartDao.findByUsername(user.getUsername());
-	    m.addAttribute("carts", carts);
 	    
 	    session.setAttribute("game",game);
 		return "User/product-detail";
@@ -201,29 +198,36 @@ public class GameList {
 							@RequestParam("rating") String rating,
 							@RequestParam("comment") String comment) {
 		Users user = (Users) session.getAttribute("user");
+		if(user==null) {
+			return "redirect:/login-register";
+		}
 		if(rating!=null) {
 			List<Reviews> list = reviewsdao.findAll();
 			Reviews reviews = list.get(reviewsdao.findAll().size()-1);
-			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getreview_id().substring(4)))+1); 
+			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getReview_id().substring(4)))+1); 
 			Date date = new Date(System.currentTimeMillis());
 			reviewsdao.save(new Reviews(reviews_id,user.getUsername(),gameId,Integer.parseInt(rating),comment,date));
 		}else {
 			List<Reviews> list = reviewsdao.findAll();
 			Reviews reviews = list.get(reviewsdao.findAll().size()-1);
-			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getreview_id().substring(4)))+1); 
+			String reviews_id = "RV00" + ((Integer.parseInt(reviews.getReview_id().substring(4)))+1); 
 			Date date = new Date(System.currentTimeMillis());
 			reviewsdao.save(new Reviews(reviews_id,user.getUsername(),gameId,1,comment,date));
 		}
+		
 		return "forward:/user/product-detail/"+gameId;
 	}
 	@PostMapping("/user/addcart")
-	public String addcart(
-	        @RequestParam("addcart") String cartid) {
-
+	public String addcart() {
+		Users user = (Users) session.getAttribute("user");
+		if(user==null) {
+			return "redirect:/login-register";
+		}
+		Cart cart = cartDao.findByUsername(user.getUsername());
 	    Game game = (Game) session.getAttribute("game");
 
 	    CartItems cartItem =
-	            cartitemdao.findByCartIdAndGame(cartid, game);
+	            cartitemdao.findByCartIdAndGame(cart.getCart_id(), game);
 
 	    if (cartItem != null) {
 
@@ -251,14 +255,8 @@ public class GameList {
 
 	            newId = "CI001";
 	        }
-
-	        CartItems newItem = new CartItems(
-	                newId,
-	                cartid,
-	                game,
-	                1
-	        );
-
+	        
+	        CartItems newItem = new CartItems(newId,cart.getCart_id(),game,1);
 	        cartitemdao.save(newItem);
 	    }
 
@@ -276,6 +274,7 @@ public class GameList {
 		}else {
 			a.setQuantity(quantity);
 			cartitemdao.save(a);
+			session.setAttribute("quantity", quantity);
 		}
 		return "forward:/user/cartitem/"+cartid;
 	}
@@ -319,7 +318,7 @@ public class GameList {
 			if(discount!=null) {
 				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
 			}else {discountamount = 0;}
-			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
+			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount,Integer.parseInt((String)session.getAttribute("quantity")));orderdetaildao.save(odd);	
 		}
 		
 		//Payments

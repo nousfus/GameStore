@@ -81,7 +81,7 @@ public class ThanhToan {
 			if(discount!=null) {
 				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
 			}else {discountamount = 0;}
-			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
+			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount,Integer.parseInt((String)session.getAttribute("quantity")));orderdetaildao.save(odd);	
 			
 		}
 
@@ -104,6 +104,7 @@ public class ThanhToan {
 		cartdao.delete(cartdao.findById(neededCart_id).orElse(null));		// Xóa cart
 		session.removeAttribute("cartid");
 		session.removeAttribute("total");
+		session.removeAttribute("quantity");
 		return "forward:/user/cart";
 	}
 }

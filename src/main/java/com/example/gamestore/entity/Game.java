@@ -11,7 +11,8 @@ public class Game {
 	@ManyToOne
     @JoinColumn(name = "developer_id")
     private DeveloperProfiles developer;
-	private String game_name; 
+	@Column(name = "game_name")
+	private String GameName; 
 	private String description; 
 	private float price; 
 	private Date release_date; 
@@ -21,25 +22,15 @@ public class Game {
 	private String video_url;
 	private String ram;
 	private String storage;
-	
+	private String filegame;
 
-   	@Transient
-	private String categories;
-
-	public String getCategories() {
-	    return categories;
-	}
-
-	public void setCategories(String categories) {
-	    this.categories = categories;
-	}
 	public Game() { }
 	public Game(String game_id, DeveloperProfiles developer_id, String game_name, String description, float price, Date release_date,
-			int rating, String thumbnail, String status, String video_url, String ram, String storage) {
+			int rating, String thumbnail, String status, String video_url, String ram, String storage,String fileGame) {
 		super();
 		this.game_id = game_id;
 		this.developer = developer_id;
-		this.game_name = game_name;
+		this.GameName = game_name;
 		this.description = description;
 		this.price = price;
 		this.release_date = release_date;
@@ -49,6 +40,14 @@ public class Game {
 		this.video_url = video_url;
 		this.ram = ram;
 		this.storage = storage;
+		this.filegame = fileGame;
+	}
+	
+	public String getFilegame() {
+		return filegame;
+	}
+	public void setFilegame(String fileGame) {
+		this.filegame = fileGame;
 	}
 	public String getVideo_url() {
 		return video_url;
@@ -68,11 +67,11 @@ public class Game {
 	public void setDeveloper(DeveloperProfiles developer) {
 		this.developer = developer;
 	}
-	public String getGame_name() {
-		return game_name;
+	public String getGameName() {
+		return GameName;
 	}
-	public void setGame_name(String game_name) {
-		this.game_name = game_name;
+	public void setGameName(String game_name) {
+		this.GameName = game_name;
 	}
 	public String getDescription() {
 		return description;
