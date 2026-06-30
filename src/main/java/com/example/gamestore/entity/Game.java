@@ -1,7 +1,14 @@
 package com.example.gamestore.entity;
 
 import java.sql.Date;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "Game")
@@ -22,13 +29,7 @@ public class Game {
 	private String video_url;
 	private String ram;
 	private String storage;
-<<<<<<< HEAD
-	
-
-   	@Transient
-=======
 	@Transient
->>>>>>> a2f6b85dd9f35cf62c8dddbeac4eb793a88b40bd
 	private String categories;
 
 	public String getCategories() {
