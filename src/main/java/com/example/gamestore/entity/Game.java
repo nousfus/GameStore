@@ -29,6 +29,7 @@ public class Game {
 	private String video_url;
 	private String ram;
 	private String storage;
+<<<<<<< HEAD
 	@Transient
 	private String categories;
 
@@ -39,9 +40,13 @@ public class Game {
 	public void setCategories(String categories) {
 	    this.categories = categories;
 	}
+=======
+	private String filegame;
+
+>>>>>>> 257b079af9500d4ab4c060635a037d8981c996e9
 	public Game() { }
 	public Game(String game_id, DeveloperProfiles developer_id, String game_name, String description, float price, Date release_date,
-			int rating, String thumbnail, String status, String video_url, String ram, String storage) {
+			int rating, String thumbnail, String status, String video_url, String ram, String storage,String fileGame) {
 		super();
 		this.game_id = game_id;
 		this.developer = developer_id;
@@ -55,6 +60,14 @@ public class Game {
 		this.video_url = video_url;
 		this.ram = ram;
 		this.storage = storage;
+		this.filegame = fileGame;
+	}
+	
+	public String getFilegame() {
+		return filegame;
+	}
+	public void setFilegame(String fileGame) {
+		this.filegame = fileGame;
 	}
 	public String getVideo_url() {
 		return video_url;

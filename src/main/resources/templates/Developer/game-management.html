@@ -244,6 +244,18 @@
         </div>
 
         <div class="field">
+          <label>Thêm file game</label>
+          <div class="file-box">
+            <div th:if="${gameEdit.filegame != null}" class="media-preview">
+                  <span th:text="${gameEdit.filegame}"></span>           
+            </div>
+            <div style="margin-top:10px">
+              <input type="file" name="gameFile" th:value="${gameEdit.filegame}"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
           <label>Thể loại</label>
           <div class="checkbox-group">
             <label class="checkbox-item" th:each="item : ${listcate}">

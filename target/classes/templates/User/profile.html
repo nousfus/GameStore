@@ -465,14 +465,13 @@
 
                 <div class="profile-hero">
                     <div class="avatar-block">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop" alt="Avatar" class="profile-picture">
-                        <div>
-                            <span class="role-badge" th:text="${rolepicked}">User</span>
+							<img th:src="@{/uploads/images/{file}(file=${userEdit.Avatar})}" alt="Thumbnail hiện tại" style = "width : 100px"/>                
+						<div>
                             <h2 class="section-title">Hồ sơ Cá nhân</h2>
                             <p class="section-subtitle">Cập nhật thông tin để trải nghiệm GameStore tốt hơn.</p>
                         </div>
                     </div>
-
+	
                     <div class="profile-stats">
                         <div class="stat-card">
                             <span class="stat-label">Email</span>
@@ -486,12 +485,10 @@
                 </div>
 
                 <div class="form-card">
+					<form action = "/user/profile" method = "post"  enctype="multipart/form-data">
                     <div style="display:flex; justify-content:flex-end; margin-bottom: 12px;">
-                        <input type="file" class="upload-input" accept="image/*">
-                        <button class="upload-btn" onclick="document.querySelector('.upload-input').click()">Thay đổi ảnh</button>
+                        <input type = "file" accept="image/*" name = "avatar" /><button class="upload-btn" disabled>Thay đổi ảnh</button>
                     </div>
-
-                    <form>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fullname">Họ và Tên</label>
