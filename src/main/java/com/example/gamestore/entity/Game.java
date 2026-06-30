@@ -29,7 +29,6 @@ public class Game {
 	private String video_url;
 	private String ram;
 	private String storage;
-<<<<<<< HEAD
 	@Transient
 	private String categories;
 
@@ -40,10 +39,9 @@ public class Game {
 	public void setCategories(String categories) {
 	    this.categories = categories;
 	}
-=======
+
 	private String filegame;
 
->>>>>>> 257b079af9500d4ab4c060635a037d8981c996e9
 	public Game() { }
 	public Game(String game_id, DeveloperProfiles developer_id, String game_name, String description, float price, Date release_date,
 			int rating, String thumbnail, String status, String video_url, String ram, String storage,String fileGame) {
