@@ -472,7 +472,7 @@
                             <p class="section-subtitle">Cập nhật thông tin để trải nghiệm GameStore tốt hơn.</p>
                         </div>
                     </div>
-
+	
                     <div class="profile-stats">
                         <div class="stat-card">
                             <span class="stat-label">Email</span>
@@ -486,12 +486,11 @@
                 </div>
 
                 <div class="form-card">
+					<form action = "@{/user-edit}" method = "post">
                     <div style="display:flex; justify-content:flex-end; margin-bottom: 12px;">
                         <input type="file" class="upload-input" accept="image/*">
                         <button class="upload-btn" onclick="document.querySelector('.upload-input').click()">Thay đổi ảnh</button>
                     </div>
-
-                    <form>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fullname">Họ và Tên</label>

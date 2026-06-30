@@ -127,7 +127,8 @@ public class TrangChuDeveloper {
 	        @RequestParam(value = "video", required = false) MultipartFile file,
 	        @RequestParam(required = false, name = "url")String url,
 	        @RequestParam(value = "images", required = false) MultipartFile[] images,
-	        @RequestParam(value = "thumbnail", required = false) MultipartFile[] thumbnail) throws IOException {
+	        @RequestParam(value = "thumbnail", required = false) MultipartFile[] thumbnail,
+	        @RequestParam(value="gameFile", required=false) MultipartFile gameFile) throws IOException {
 		
 		Users user = (Users) session.getAttribute("user");
 		DeveloperProfiles dev = developerdao.findByUsername(user.getUsername());
@@ -303,6 +304,42 @@ public class TrangChuDeveloper {
 			        );
 			    }
 			}
+		
+		//FIle game
+		// Upload Game File
+		if (gameFile != null && !gameFile.isEmpty()) {
+
+		    // Nếu edit thì xóa file cũ
+		    if (isEdit &&
+		        game.getFilegame() != null &&
+		        !game.getFilegame().isBlank()) {
+
+		        Path oldGameFile = Paths.get(
+		                "uploads/games/",
+		                game.getFilegame());
+
+		        Files.deleteIfExists(oldGameFile);
+		    }
+
+		    Files.createDirectories(Paths.get("uploads/games"));
+
+		    String gameFileName =
+		            System.currentTimeMillis()
+		            + "_"
+		            + gameFile.getOriginalFilename()
+		                      .replaceAll("\\s+","_");
+
+		    Path gamePath = Paths.get(
+		            "uploads/games/",
+		            gameFileName);
+
+		    Files.copy(
+		            gameFile.getInputStream(),
+		            gamePath,
+		            StandardCopyOption.REPLACE_EXISTING);
+
+		    game.setFilegame(gameFileName);
+		}
 		game.setGameName(gamename);
 		game.setDescription(description);
 		game.setPrice(price);

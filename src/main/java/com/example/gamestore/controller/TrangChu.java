@@ -133,6 +133,16 @@ public class TrangChu {
 		}
 		return "User/profile";
 	}
+	@PostMapping("/user-edit")
+	public String editprofile(Model m,
+			@RequestParam("fullname") String fullname,
+			@RequestParam("email") String email) {
+		Users user = (Users) session.getAttribute("user");
+		user.setFullname(fullname);
+		user.setEmail(email);
+		userdao.save(user);
+		return "User/profile";
+	}
 	@PostMapping("/user/role")
 	public String role(Model m, @RequestParam("role") String role) {
 		Users user = (Users) session.getAttribute("user");
