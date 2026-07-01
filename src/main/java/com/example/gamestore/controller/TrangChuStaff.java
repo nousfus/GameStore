@@ -44,7 +44,7 @@ public class TrangChuStaff {
 		if(user!=null) {
 			m.addAttribute("rolepicked",session.getAttribute("rolepicked"));
 			m.addAttribute("username",user.getUsername());
-			m.addAttribute("user",user);
+			m.addAttribute("userEdit",user);
 			List<Roles> list = userroledao.findByUsername(user.getUsername());
 			m.addAttribute("dsrole",list);
 		}
