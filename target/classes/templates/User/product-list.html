@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách Sản phẩm - GameStore</title>
+
+    <style>
+		a{text-decoration:none;}
+		
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: linear-gradient(180deg,#020617 0%, #071028 40%, #0f172a 100%);
+            color: #e6eef6;
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header { background: rgba(4,6,29,0.85); padding: 18px 56px; display:flex; align-items:center; justify-content:space-between; border-bottom: 1px solid rgba(148,163,184,0.06); position: sticky; top: 0; z-index: 20; backdrop-filter: blur(8px); }
+        .logo { color:#22d3ee; font-weight:800; font-size:20px; text-decoration:none; }
+        nav a { color:#bcd6e8; margin:0 12px; text-decoration:none; }
+        nav a:hover { color:#fff; }
+        .header-right { display:flex; gap:10px; align-items:center; }
+        .search-box { padding:10px 12px; border-radius:999px; border:none; background:#0b1220; color:#dfefff; width:220px; }
+        .user-menu { background:linear-gradient(90deg,#22d3ee,#38bdf8); color:#041017; border:none; padding:10px 14px; border-radius:999px; font-weight:700; cursor:pointer; }
+
+        main { max-width:1200px; margin:28px auto; padding: 0 20px; display:grid; grid-template-columns: 260px 1fr; gap:20px; }
+        .sidebar { background:rgba(2,6,23,0.6); padding:18px; border-radius:14px; border:1px solid rgba(148,163,184,0.04); }
+        .sidebar h3 { color:#67e8f9; margin-bottom:12px; font-size:14px; text-transform:uppercase; letter-spacing:0.06em; }
+        .filter-group { margin-bottom:14px; }
+        .filter-group h4 { color:#c8dce9; margin-bottom:8px; }
+        .filter-group label { display:block; color:#c6d6ea; margin-bottom:8px; cursor:pointer; }
+        .filter-group input[type=range] { width:100%; }
+
+        .products-section { display:flex; flex-direction:column; gap:18px; }
+        .products-header { display:flex; justify-content:space-between; align-items:center; }
+        .products-header h2 { font-size:20px; }
+        .sort-options { background:#071026; border:1px solid rgba(148,163,184,0.04); color:#cfe7fb; padding:8px 12px; border-radius:10px; }
+
+        .games { display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; }
+        .game-card { background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(4,8,20,0.6)); border-radius:14px; overflow:hidden; border:1px solid rgba(148,163,184,0.04); transition: transform .18s ease, box-shadow .18s ease; }
+        .game-card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(2,6,23,0.6); border-color: rgba(34,211,238,0.16); }
+        .game-card img { width:100%; height:180px; object-fit:cover; display:block; }
+        .game-info { padding:14px; }
+        .game-title { font-weight:700; font-size:15px; color:#e6f6ff; margin-bottom:6px; }
+        .game-category { font-size:12px; color:#9fb6c9; margin-bottom:8px; }
+        .game-rating { color:#fbbf24; font-size:13px; margin-bottom:8px; }
+
+        .price-row { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+        .price { color:#7ee3ff; font-weight:800; font-size:16px; }
+
+        .action-buttons { display:flex; gap:8px; margin-top:12px; }
+        .cart-btn { flex:1; background:linear-gradient(90deg,#22d3ee,#38bdf8); color:#041017; border:none; padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:700; }
+		.download-btn { flex:1; background:linear-gradient(90deg,#22d3ee,#38bdf8); color:green; border:none; padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:700; }
+		.wishlist-btn { background:transparent; border:1px solid rgba(148,163,184,0.06); color:#d8eefc; padding:8px 10px; border-radius:10px; cursor:pointer; }
+
+        .pagination { display:flex; justify-content:center; gap:8px; padding-top:18px; }
+        .pagination a, .pagination button { background:#071026; color:#d9eefc; padding:8px 12px; border-radius:10px; border:1px solid rgba(148,163,184,0.04); text-decoration:none; }
+        .pagination a.active, .pagination button.active, .pagination a:hover { background:#22d3ee; color:#041017; border-color:#22d3ee; }
+
+        .empty-state { text-align:center; padding:36px; color:#9fb6c9; background:rgba(2,6,23,0.4); border-radius:12px; }
+
+        @media (max-width:1100px) { .games { grid-template-columns: repeat(2,1fr); } main { grid-template-columns: 1fr; } .sidebar { order:2; } }
+        @media (max-width:700px) { .games { grid-template-columns: 1fr; } .search-box { width:140px; } header { padding:12px 16px; } }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">GameStore</a>
+
+        <nav>
+            <a href="/">Store</a>
+            <a href="/user/product-list">Library</a>
+            <a href="#">Community</a>
+            <a href="#">News</a>
+        </nav>
+
+		<div class="header-right" >
+			<form th:action="@{/game}" method="get">
+			    <input type="text"
+			           name="keyword"
+			           placeholder="Search games..."
+			           class="search-box"
+			           th:value="${keyword}">
+			    <button type="submit" class="user-menu">Search</button>
+			</form>	
+	
+			<a href = "/login-register" th:if = "${username == null}">
+	            <button class="user-menu">
+	                Login
+	            </button>
+			</a>
+			<a href = "/user/logout" th:if = "${username != null}">
+	            <button class="user-menu">
+	                Logout
+	            </button>
+			</a>
+			<a href = "/user/profile" th:if = "${username != null}">
+	            <button class="user-menu">
+	                Profile
+	            </button>
+			</a>
+			<a href = "/user/cart" th:if = "${username != null}">
+	            <button class="user-menu">
+	                Cart
+	            </button>
+			</a>
+    </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- SIDEBAR - FILTER -->
+        <aside class="sidebar">
+			<form action="/user/product-list/filter" method="get">
+            <div class="filter-group">
+				<button type="submit" class="user-menu">Lọc</button><br/><br/>
+                <h3>Thể loại</h3>
+                <label th:each = "item :${dscate}">
+					<input type="checkbox" th:text = "${item.category_name}" name = "categories" th:value = "${item.category_id}"> 
+				</label>
+
+            </div>
+
+            <div class="filter-group">
+                <h4>Giá</h4>
+                <label>Từ: <strong>0đ</strong> - Tới: <strong>1.000.000đ</strong></label>
+                <input type="range" min="0" max="1000000" value="1000000" name = "price">
+            </div>
+
+            <div class="filter-group">
+                <h4>RAM</h4>
+                <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
+                    <option value="">Chọn RAM</option>
+                    <option value="4gb">4GB</option>
+                    <option value="8gb">8GB</option>
+                    <option value="12gb">12GB</option>
+                    <option value="16gb">16GB</option>
+                    <option value="24gb">24GB</option>
+                    <option value="32gb">32GB</option>
+                    <option value="48gb">48GB</option>
+                    <option value="64gb">64GB</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <h4>Dung lượng lưu trữ</h4>
+                <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
+                    <option value="">Chọn Storage</option>
+                    <option value="128gb">128GB</option>
+                    <option value="256gb">256GB</option>
+                    <option value="512gb">512GB</option>
+                    <option value="1tb">1TB</option>
+                    <option value="2tb">2TB</option>
+                    <option value="4tb">4TB</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <h3>Đánh giá</h3>
+				<select id="rating" name="rating">
+                    <option value="">Chọn số sao</option>
+                    <option value="5">5 - Xuất sắc</option>
+                    <option value="4">4 - Rất tốt</option>
+                    <option value="3">3 - Tốt</option>
+                    <option value="2">2 - Trung bình</option>
+                    <option value="1">1 - Kém</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <h3>Trạng thái</h3>
+                <label><input type="checkbox"> Mới nhất</label>
+                <label><input type="checkbox"> Giảm giá</label>
+                <label><input type="checkbox"> Best seller</label>
+            </div>
+			</form>
+        </aside>
+
+        <!-- PRODUCTS -->
+        <section class="products-section">
+
+            <div class="products-header">
+                <h2>Danh sách Sản phẩm</h2>
+                <select class="sort-options">
+                    <option>Sắp xếp theo</option>
+                    <option>Mới nhất</option>
+                    <option>Giá thấp đến cao</option>
+                    <option>Giá cao đến thấp</option>
+                    <option>Đánh giá cao nhất</option>
+                </select>
+            </div>
+
+			<div class="games">
+
+			    <div class="game-card"
+			         th:each="game : ${gamePage.content}">
+
+			        <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}">
+			            <img th:src="@{/images/{file}(file=${game.thumbnail})}">
+
+			            <div class="game-info">
+			                <div class="game-title"
+			                     th:text="${game.gameName}">
+			                </div>
+
+			                <div class="game-rating">★★★★★ (4.8)</div>
+			                <div class="game-category" th:text = "${categories}">
+			                    Action | Sci-Fi
+			                </div>
+			                <div class="price-row">
+			                    <div class="price"
+			                         th:text="${game.price}">
+			                    </div>
+			                </div>
+
+			                <div class="action-buttons">				
+								<!-- Đã mua -->
+								<button class="download-btn"
+								        th:if="${username != null && gamePaidId.contains(game.game_id)}">
+								    <a th:href="@{/games/{file}(file=${game.filegame})}">Tải về</a>
+								</button>
+
+								<!-- Đã thêm vào giỏ -->
+								<button class="download-btn"
+								        th:if="${username != null
+								               && !gamePaidId.contains(game.game_id)
+								               && listgame.contains(game.game_id)}">
+								    Đã thêm
+								</button>
+
+								<!-- Chưa mua, chưa thêm -->
+								<form th:if="${game.status=='Active'
+								             && (username == null
+								                 || (!gamePaidId.contains(game.game_id)
+								                     && !listgame.contains(game.game_id)))}"
+								      th:action="@{/user/addcart/{id}(id=${game.game_id})}"
+								      method="post">
+
+								    <button class="cart-btn" type="submit">
+								        Thêm giỏ hàng
+								    </button>
+								</form>
+								<button class="cart-btn" th:if = "${game.status=='Unactive'}">Sắp ra mắt</button>
+			                    <button class="wishlist-btn">❤</button>	
+			                </div>
+			            </div>
+			        </a>
+
+			    </div>
+
+			</div>
+            <!-- PAGINATION -->
+            <div class="pagination">
+                <a th:if="${!gamePage.first}" th:href="@{/user/product-list(page=${currentPage-1})}"><button>&lt;</button></a>
+                <a th:each="i : ${#numbers.sequence(0, gamePage.totalPages-1)}" th:href="@{/user/product-list(page=${i})}" th:text="${i+1}"><button class="active">1</button></a>
+                <a th:if="${!gamePage.first}" th:href="@{/user/product-list(page=${currentPage+1})}"><button>&gt;</button></a>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 GameStore. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

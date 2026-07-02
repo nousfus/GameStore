@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập / Đăng ký - GameStore</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background-color: #0f172a;
+            color: white;
+        }
+
+        /* HEADER */
+        header{
+            background-color: #111827;
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #374151;
+            position: sticky;
+            top: 0;
+        }
+
+        .logo{
+            color: #22d3ee;
+            font-size: 32px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        nav a{
+            text-decoration: none;
+            color: #d1d5db;
+            margin: 0 15px;
+            transition: 0.3s;
+        }
+
+        nav a:hover{
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+        main{
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .auth-container{
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background-color: #111827;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #374151;
+        }
+
+        .auth-section h2{
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #22d3ee;
+        }
+
+        .form-group{
+            margin-bottom: 20px;
+        }
+
+        .form-group label{
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input{
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #374151;
+            border-radius: 10px;
+            background-color: #1f2937;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus{
+            border-color: #22d3ee;
+            background-color: #0f172a;
+        }
+
+        .form-group input::placeholder{
+            color: #6b7280;
+        }
+
+        .submit-btn{
+            width: 100%;
+            padding: 14px;
+            background-color: #22d3ee;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+
+        .submit-btn:hover{
+            background-color: #67e8f9;
+        }
+
+        .form-group.checkbox{
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .form-group.checkbox input{
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .form-group.checkbox label{
+            margin: 0;
+        }
+
+        .forgot-password{
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        /* Developer form (hidden until checkbox checked) */
+        .dev-form{
+            display: none;
+            padding: 12px;
+            border: 1px dashed #374151;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background-color: #0b1220;
+        }
+
+        .forgot-password a{
+            color: #22d3ee;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover{
+            text-decoration: underline;
+        }
+
+        .divider{
+            border-top: 1px solid #374151;
+            margin: 30px 0;
+        }
+
+        /* FOOTER */
+        footer{
+            background-color: #111827;
+            padding: 30px;
+            text-align: center;
+            color: #9ca3af;
+            border-top: 1px solid #374151;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 768px){
+            header{
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .auth-container{
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 30px;
+            }
+
+            main{
+                padding: 20px 10px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">GameStore</a>
+
+        <nav>
+            <a href="/">Store</a>
+            <a href="/user/product-list">Library</a>
+            <a href="#">Community</a>
+            <a href="#">News</a>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="auth-container">
+
+            <!-- TABS -->
+            <div class="tabs-header" style="display:flex; gap:10px; margin-bottom:20px;">
+                <button id="tab-login" class="tab-btn active-tab" style="flex:1; padding:12px; border-radius:8px; border:none; background:#22d3ee; color:black; font-weight:bold;">Đăng Nhập</button>
+                <button id="tab-register" class="tab-btn" style="flex:1; padding:12px; border-radius:8px; border:none; background:#1f2937; color:#d1d5db; font-weight:bold;">Đăng Ký</button>
+            </div>
+
+            <!-- PANEL: LOGIN -->
+            <div id="panel-login" class="tab-panel" style="display:block;">
+                <div class="auth-section login" style="padding:0;">
+                    <h2>Đăng Nhập</h2>
+
+                    <form method="POST" action="/user/login">
+                        <div class="form-group">
+                            <label for="login-email">Email hoặc Tên đăng nhập</label>
+                            <input type="text" id="login-email" name="username" placeholder="Nhập email hoặc tên đăng nhập" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login-password">Mật khẩu</label>
+                            <input type="password" id="login-password" name="password" placeholder="Nhập mật khẩu" required>
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Ghi nhớ tôi</label>
+                        </div>
+
+                        <div class="forgot-password">
+                            <a href="#">Quên mật khẩu?</a>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Đăng Nhập</button>
+
+                        <p class="switch-prompt" style="margin-top:12px; color:#9ca3af;">Chưa có tài khoản? <a href="#" id="link-to-register" style="color:#22d3ee; text-decoration:none;">Đăng ký</a></p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- PANEL: REGISTER -->
+            <div id="panel-register" class="tab-panel" style="display:none;">
+                <div class="auth-section register" style="padding:0;">
+                    <h2>Đăng Ký</h2>
+
+                    <form method="POST" th:action="@{/user/register}">
+                        <div class="form-group">
+                            <label for="reg-fullname">Họ và Tên</label>
+                            <input type="text" id="reg-fullname" name="fullName" placeholder="Nhập họ và tên" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-email">Email</label>
+                            <input type="email" id="reg-email" name="email" placeholder="Nhập email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-username">Tên đăng nhập</label>
+                            <input type="text" id="reg-username" name="username" placeholder="Nhập tên đăng nhập" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-password">Mật khẩu</label>
+                            <input type="password" id="reg-password" name="password" placeholder="Nhập mật khẩu" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-confirm">Xác nhận mật khẩu</label>
+                            <input type="password" id="reg-confirm" name="confirmPassword" placeholder="Xác nhận mật khẩu" required>
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="accept-terms" name="acceptTerms" required>
+                            <label for="accept-terms">Tôi đồng ý với Điều khoản dịch vụ</label>
+                        </div>
+
+                        <!-- Developer checkbox -->
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="is-developer" name="isDeveloper">
+                            <label for="is-developer">Developer</label>
+                        </div>
+
+                        <!-- Developer-specific fields (hidden by default) -->
+                        <div id="developer-fields" class="dev-form">
+                            <div class="form-group">
+                                <label for="dev-studio">Tên Studio / Tổ chức</label>
+                                <input type="text" id="dev-studio" name="devStudio" placeholder="Tên studio hoặc tổ chức">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dev-bio">Giới thiệu ngắn</label>
+                                <textarea id="dev-bio" name="devBio" rows="3" placeholder="Mô tả ngắn về bạn hoặc studio" style="width:100%; padding:10px; border-radius:8px; background:#0f172a; border:1px solid #374151; color:white;"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Đăng Ký</button>
+
+                        <p class="switch-prompt" style="margin-top:12px; color:#9ca3af;">Đã có tài khoản? <a href="#" id="link-to-login" style="color:#22d3ee; text-decoration:none;">Đăng nhập</a></p>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function showLogin(){
+            document.getElementById('panel-login').style.display = 'block';
+            document.getElementById('panel-register').style.display = 'none';
+            var t = document.getElementById('tab-login');
+            var r = document.getElementById('tab-register');
+            t.classList.add('active-tab');
+            t.style.background = '#22d3ee';
+            t.style.color = 'black';
+            r.classList.remove('active-tab');
+            r.style.background = '#1f2937';
+            r.style.color = '#d1d5db';
+        }
+
+        function showRegister(){
+            document.getElementById('panel-login').style.display = 'none';
+            document.getElementById('panel-register').style.display = 'block';
+            var t = document.getElementById('tab-login');
+            var r = document.getElementById('tab-register');
+            r.classList.add('active-tab');
+            r.style.background = '#22d3ee';
+            r.style.color = 'black';
+            t.classList.remove('active-tab');
+            t.style.background = '#1f2937';
+            t.style.color = '#d1d5db';
+            // Update developer form visibility when showing register
+            toggleDevForm();
+        }
+
+        document.getElementById('tab-login').addEventListener('click', showLogin);
+        document.getElementById('tab-register').addEventListener('click', showRegister);
+
+        var linkToRegister = document.getElementById('link-to-register');
+        if(linkToRegister){
+            linkToRegister.addEventListener('click', function(e){
+                e.preventDefault();
+                showRegister();
+                document.getElementById('reg-fullname').focus();
+            });
+        }
+
+        var linkToLogin = document.getElementById('link-to-login');
+        if(linkToLogin){
+            linkToLogin.addEventListener('click', function(e){
+                e.preventDefault();
+                showLogin();
+                document.getElementById('login-email').focus();
+            });
+        }
+
+        // Toggle developer-specific fields
+        function toggleDevForm(){
+            var cb = document.getElementById('is-developer');
+            var f = document.getElementById('developer-fields');
+            if(!f || !cb) return;
+            f.style.display = cb.checked ? 'block' : 'none';
+        }
+
+        var devCb = document.getElementById('is-developer');
+        if(devCb){
+            devCb.addEventListener('change', toggleDevForm);
+        }
+
+        // Ensure correct state on page load
+        toggleDevForm();
+    </script>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 GameStore. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
