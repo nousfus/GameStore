@@ -35,4 +35,5 @@ public interface OrderDetailsDao extends JpaRepository<OrderDetails, String>{
 	            @Param("developerId") String developerId,
 	            @Param("startDate") LocalDate startDate,
 	            @Param("endDate") LocalDate endDate);
+
 }

@@ -72,7 +72,6 @@ public class GameList {
 	GameImagesDao gameimagedao;
 	@Autowired
 	MinioService minioService;
-	
 	@GetMapping("/user/product-list")
 	public String productList(
 	        @RequestParam(defaultValue = "0") int page,
@@ -99,10 +98,26 @@ public class GameList {
 
 		   m.addAttribute("categories",names);
 		}
+		if(user!=null) {
+			List<String> gamePaidId = new ArrayList<>();
+			for(OrderDetails d : orderdetaildao.findAll()) {
+				if(d.getOrder().getUsername().equals(user.getUsername()) && d.getOrder().getStatus().equals("Paid")) {
+					gamePaidId.add(d.getGame_id());
+				}
+			}
+			m.addAttribute("gamePaidId",gamePaidId);
+			Cart cart = cartDao.findByUsername(user.getUsername());
+			List<CartItems> cartitemlist = cartitemdao.findByCartId(cart.getCart_id());
+			List<String> listgame = new ArrayList<>();
+			for(CartItems c : cartitemlist) {
+				listgame.add(c.getGame().getGame_id());
+			}
+			m.addAttribute("listgame",listgame);
+		}
 		
 	    m.addAttribute("gamePage", gamePage);
 	    m.addAttribute("currentPage", page);
-	    
+		m.addAttribute("OrderDetail",orderdetaildao);
 
 	    return "user/product-list";
 	}
@@ -144,6 +159,7 @@ public class GameList {
 	    m.addAttribute("gamePage", gamePage);
 	    m.addAttribute("currentPage", page);
 	    m.addAttribute("dscate",categorydao.findAll());
+	    
 	    return "user/product-list";
 	}
 	@RequestMapping("/user/product-detail/{id}")								// Trang chi tiết sản phẩm
@@ -237,30 +253,19 @@ public class GameList {
 		
 		return "forward:/user/product-detail/"+gameId;
 	}
-	@PostMapping("/user/addcart")
-	public String addcart() {
+	@PostMapping("/user/addcart/{id}")
+	public String addcart(@PathVariable("id") String gameid) {
 		Users user = (Users) session.getAttribute("user");
 		if(user==null) {
 			return "redirect:/login-register";
 		}
 		Cart cart = cartDao.findByUsername(user.getUsername());
-	    Game game = (Game) session.getAttribute("game");
+	    Game game = gamedao.findById(gameid).orElse(null);
 
-	    CartItems cartItem =
-	            cartitemdao.findByCartIdAndGame(cart.getCart_id(), game);
-
-	    if (cartItem != null) {
-
-	        cartItem.setQuantity(
-	                cartItem.getQuantity() + 1);
-
-	        cartitemdao.save(cartItem);
-
-	    } else {
 
 	        String newId;
 
-	        List<CartItems> list = cartitemdao.findAll();
+	        List<CartItems> list = cartitemdao.findByCartId(cart.getCart_id());
 
 	        if (!list.isEmpty()) {
 
@@ -276,27 +281,10 @@ public class GameList {
 	            newId = "CI001";
 	        }
 	        
-	        CartItems newItem = new CartItems(newId,cart.getCart_id(),game,1);
+	        CartItems newItem = new CartItems(newId,cart.getCart_id(),game);
 	        cartitemdao.save(newItem);
-	    }
-
-	    session.removeAttribute("game");
 
 	    return "redirect:/user/product-list";
-	}
-	@GetMapping("/update")
-	public String update(Model m,@RequestParam(value = "quantity") int quantity,
-									@RequestParam("cartItemId") String cartitemid
-									,@RequestParam("cartid") String cartid) {
-		CartItems a = cartitemdao.findById(cartitemid).orElse(null);
-		if(a.getQuantity()==0) {
-			cartitemdao.delete(a);
-		}else {
-			a.setQuantity(quantity);
-			cartitemdao.save(a);
-			session.setAttribute("quantity", quantity);
-		}
-		return "forward:/user/cartitem/"+cartid;
 	}
 	@PostMapping("/delete/{abc}")
 	public String dleete(@PathVariable("abc")String id) {
@@ -322,7 +310,7 @@ public class GameList {
 		for(CartItems c : cartitemdao.findAll()) {
 			if(c.getCartid().equals(neededCart_id)) {
 				game = gamedao.findById(c.getGame().getGame_id()).orElse(null);
-				total += game.getPrice() * c.getQuantity();
+				total += game.getPrice();
 			}
 		}
 		Orders order = new Orders(neworderid,tempusername,date,total,"Pending");orderdao.save(order);	//tạo order
@@ -338,7 +326,7 @@ public class GameList {
 			if(discount!=null) {
 				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
 			}else {discountamount = 0;}
-			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount,Integer.parseInt((String)session.getAttribute("quantity")));orderdetaildao.save(odd);	
+			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
 		}
 		
 		//Payments

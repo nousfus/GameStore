@@ -6,6 +6,8 @@
     <title>Danh sách Sản phẩm - GameStore</title>
 
     <style>
+		a{text-decoration:none;}
+		
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background: linear-gradient(180deg,#020617 0%, #071028 40%, #0f172a 100%);
@@ -49,7 +51,8 @@
 
         .action-buttons { display:flex; gap:8px; margin-top:12px; }
         .cart-btn { flex:1; background:linear-gradient(90deg,#22d3ee,#38bdf8); color:#041017; border:none; padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:700; }
-        .wishlist-btn { background:transparent; border:1px solid rgba(148,163,184,0.06); color:#d8eefc; padding:8px 10px; border-radius:10px; cursor:pointer; }
+		.download-btn { flex:1; background:linear-gradient(90deg,#22d3ee,#38bdf8); color:green; border:none; padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:700; }
+		.wishlist-btn { background:transparent; border:1px solid rgba(148,163,184,0.06); color:#d8eefc; padding:8px 10px; border-radius:10px; cursor:pointer; }
 
         .pagination { display:flex; justify-content:center; gap:8px; padding-top:18px; }
         .pagination a, .pagination button { background:#071026; color:#d9eefc; padding:8px 12px; border-radius:10px; border:1px solid rgba(148,163,184,0.04); text-decoration:none; }
@@ -215,12 +218,35 @@
 			                    </div>
 			                </div>
 
-			                <div class="action-buttons">
-								<form action="/user/addcart" method="post">
-			                   		 <button class="cart-btn" th:if = "${game.status=='Active'}" type = "submit">Thêm giỏ hàng</button>
+			                <div class="action-buttons">				
+								<!-- Đã mua -->
+								<button class="download-btn"
+								        th:if="${username != null && gamePaidId.contains(game.game_id)}">
+								    <a th:href="@{/games/{file}(file=${game.filegame})}">Tải về</a>
+								</button>
+
+								<!-- Đã thêm vào giỏ -->
+								<button class="download-btn"
+								        th:if="${username != null
+								               && !gamePaidId.contains(game.game_id)
+								               && listgame.contains(game.game_id)}">
+								    Đã thêm
+								</button>
+
+								<!-- Chưa mua, chưa thêm -->
+								<form th:if="${game.status=='Active'
+								             && (username == null
+								                 || (!gamePaidId.contains(game.game_id)
+								                     && !listgame.contains(game.game_id)))}"
+								      th:action="@{/user/addcart/{id}(id=${game.game_id})}"
+								      method="post">
+
+								    <button class="cart-btn" type="submit">
+								        Thêm giỏ hàng
+								    </button>
 								</form>
 								<button class="cart-btn" th:if = "${game.status=='Unactive'}">Sắp ra mắt</button>
-			                    <button class="wishlist-btn">❤</button>
+			                    <button class="wishlist-btn">❤</button>	
 			                </div>
 			            </div>
 			        </a>

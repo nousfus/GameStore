@@ -16,14 +16,12 @@ public class CartItems {
    @ManyToOne
     @JoinColumn(name = "game_id")
     private Game game;
-	private int quantity; 
 	public CartItems() { }
-	public CartItems(String cart_item_id, String cart_id, Game game, int quantity) {
+	public CartItems(String cart_item_id, String cart_id, Game game) {
 		super();
 		this.cart_item_id = cart_item_id;
 		this.cartId = cart_id;
 		this.game = game;
-		this.quantity = quantity;
 	}
 	public String getCart_item_id() {
 		return cart_item_id;
@@ -43,12 +41,6 @@ public class CartItems {
 	}
 	public void setGame(Game game) {
 		this.game = game;
-	}
-	public int getQuantity() {
-		return quantity;
-	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
 	}
 	
 }

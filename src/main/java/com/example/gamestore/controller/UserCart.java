@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.gamestore.dao.CartDao;
 import com.example.gamestore.dao.CartItemsDao;
@@ -40,7 +41,7 @@ public class UserCart {
 			float total = 0;
 			float discount = 0;
 			for(CartItems c : list0) {
-				total += c.getGame().getPrice() * c.getQuantity();
+				total += c.getGame().getPrice();
 				for(Discounts d : discountdao.findAll()) {
 					if(c.getGame().getGame_id().equals(d.getgame_id())) {
 						discount += ((c.getGame().getPrice()* d.getdiscount_percent()) / 100 );
@@ -65,7 +66,7 @@ public class UserCart {
 		int total = 0;
 		float discount = 0;
 		for(CartItems c : list) {
-			total += c.getGame().getPrice() * c.getQuantity();
+			total += c.getGame().getPrice();
 			for(Discounts d : discountdao.findAll()) {
 				if(c.getGame().getGame_id().equals(d.getgame_id())) {
 					discount += ((c.getGame().getPrice()* d.getdiscount_percent()) / 100 );
@@ -76,6 +77,15 @@ public class UserCart {
 		m.addAttribute("total",total);
 		session.setAttribute("total", total);
 	    return "forward:/user/cart";
+	}
+	@RequestMapping("/delete/{id}")
+	public String delete(@PathVariable("id") String cartitemid) {
+		System.out.println(cartitemid);
+		CartItems c = cartitemdao.findById(cartitemid).orElse(null);
+		if(c!=null) {
+			cartitemdao.delete(c);
+		}
+		return "redirect:/user/cart";
 	}
 	@RequestMapping("/thanhtoan")
 	public String thanhtoan(Model m) {
