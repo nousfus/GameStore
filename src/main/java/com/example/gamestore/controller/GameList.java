@@ -1,15 +1,19 @@
 package com.example.gamestore.controller;
 
 
+import java.io.InputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.gamestore.dao.*;
 import com.example.gamestore.entity.Cart;
@@ -32,7 +37,10 @@ import com.example.gamestore.entity.Payments;
 import com.example.gamestore.entity.Reviews;
 import com.example.gamestore.entity.Users;
 import com.example.gamestore.service.GameSpecification;
+import com.example.gamestore.service.MinioService;
+import com.google.common.net.HttpHeaders;
 
+import io.minio.MinioClient;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -62,7 +70,8 @@ public class GameList {
 	GameCategoriesDao gamecategorydao;
 	@Autowired
 	GameImagesDao gameimagedao;
-	
+	@Autowired
+	MinioService minioService;
 	
 	@GetMapping("/user/product-list")
 	public String productList(
@@ -138,7 +147,7 @@ public class GameList {
 	    return "user/product-list";
 	}
 	@RequestMapping("/user/product-detail/{id}")								// Trang chi tiết sản phẩm
-	public String detail(@PathVariable("id") String id,Model m) {
+	public String detail(@PathVariable("id") String id,Model m) throws Exception {
 		//Hiển thị thông tin game
 		Game game = gamedao.findById(id).orElse(null);
 		m.addAttribute("game",game);
@@ -182,13 +191,24 @@ public class GameList {
 		
 		//Hiển thị video game
 		  if(game.getVideo_url() == null) return "";
+		    if (game.getVideo_url().contains("watch?v=")) {
 
-		    String id2 = "";
+		        String VideoId = game.getVideo_url()
+		                .split("watch\\?v=")[1]
+		                .split("&")[0];
 
-		    if(game.getVideo_url().contains("watch?v=")) {
-		        id2 = game.getVideo_url().split("watch\\?v=")[1].split("&")[0];
+		        m.addAttribute("youtube", true);
+		        m.addAttribute("videourl",
+		                "https://www.youtube.com/embed/" + VideoId);
+
+		    }else {
+
+		        m.addAttribute("youtube", false);
+		        m.addAttribute("videourl",
+		                "/videos/" + game.getVideo_url());
+
 		    }
-		m.addAttribute("videourl","https://www.youtube.com/embed/"+id2);
+
 	    
 	    session.setAttribute("game",game);
 		return "User/product-detail";
@@ -340,4 +360,42 @@ public class GameList {
 		}
 		return "forward:/user/product-list";
 	}
+	@GetMapping("/images/{fileName}")
+	public ResponseEntity<InputStreamResource> image(
+	        @PathVariable String fileName) throws Exception {
+
+	    InputStream inputStream =
+	            minioService.getFile("images", fileName);
+
+	    return ResponseEntity.ok()
+	            .contentType(MediaType.IMAGE_JPEG)
+	            .body(new InputStreamResource(inputStream));
+
+	}
+	@GetMapping("/videos/{fileName:.+}")
+	public ResponseEntity<InputStreamResource> video(
+	        @PathVariable String fileName) throws Exception {
+	    InputStream inputStream = minioService.getFile("videos", fileName);
+
+	    return ResponseEntity.ok()
+	            .contentType(MediaType.parseMediaType("video/mp4"))
+	            .body(new InputStreamResource(inputStream));
+	}
+	@GetMapping("/games/{fileName}")
+	public ResponseEntity<InputStreamResource> download(
+	        @PathVariable String fileName) throws Exception {
+
+	    InputStream inputStream =
+	            minioService.getFile("games", fileName);
+
+	    return ResponseEntity.ok()
+	            .header(HttpHeaders.CONTENT_DISPOSITION,
+	                    "attachment; filename=\"" + fileName + "\"")
+	            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+	            .body(new InputStreamResource(inputStream));
+
+	}
 }
+//<a th:href="@{/games/{file}(file=${game.gameFile})}">
+//Download
+//</a>

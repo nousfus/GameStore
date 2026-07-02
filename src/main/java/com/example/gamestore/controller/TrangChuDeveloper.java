@@ -1,6 +1,6 @@
 package com.example.gamestore.controller;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,9 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +35,12 @@ import com.example.gamestore.entity.GameImages;
 import com.example.gamestore.entity.OrderDetails;
 import com.example.gamestore.entity.Roles;
 import com.example.gamestore.entity.Users;
+import com.example.gamestore.service.MinioService;
+import com.google.common.net.HttpHeaders;
 
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -57,6 +66,10 @@ public class TrangChuDeveloper {
 	OrdersDao orderdao;
 	@Autowired
 	OrderDetailsDao orderdetaildao;
+	@Autowired
+	private MinioClient minioClient;
+	@Autowired
+	MinioService minioService;
 	@RequestMapping("/home")
 	public String home(Model m) {
 		Users user = (Users) session.getAttribute("user");
@@ -127,8 +140,8 @@ public class TrangChuDeveloper {
 	        @RequestParam(value = "video", required = false) MultipartFile file,
 	        @RequestParam(required = false, name = "url")String url,
 	        @RequestParam(value = "images", required = false) MultipartFile[] images,
-	        @RequestParam(value = "thumbnail", required = false) MultipartFile[] thumbnail,
-	        @RequestParam(value="gameFile", required=false) MultipartFile gameFile) throws IOException {
+	        @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
+	        @RequestParam(value="gameFile", required=false) MultipartFile gameFile) throws Exception {
 		
 		Users user = (Users) session.getAttribute("user");
 		DeveloperProfiles dev = developerdao.findByUsername(user.getUsername());
@@ -155,38 +168,13 @@ public class TrangChuDeveloper {
 		}
 		
 		//Tạo thumbnail
-		if(thumbnail != null &&
-				   thumbnail.length > 0 &&
-				   !thumbnail[0].isEmpty()) {
+		if(thumbnail != null && !thumbnail.isEmpty()) {
 
-				    if(isEdit && game.getThumbnail() != null){
-
-				        Path oldThumb = Paths.get(
-				                "uploads/images/",
-				                game.getThumbnail());
-
-				        Files.deleteIfExists(oldThumb);
-				    }
-
-				    MultipartFile thumb = thumbnail[0];
-
-				    String thumbnailName =
-				            System.currentTimeMillis()
-				            + "_"
-				            + thumb.getOriginalFilename()
-				                  .replaceAll("\\s+","_");
-
-				    Path thumbPath =
-				            Paths.get("uploads/images/",
-				                      thumbnailName);
-
-				    Files.copy(
-				            thumb.getInputStream(),
-				            thumbPath,
-				            StandardCopyOption.REPLACE_EXISTING);
-
-				    game.setThumbnail(thumbnailName);
-				}
+			if (isEdit && game.getThumbnail() != null && !game.getThumbnail().isBlank()) {
+				minioService.delete("images", game.getThumbnail());
+			}
+		    	
+		}
  
     		
     		//Video 
@@ -194,37 +182,36 @@ public class TrangChuDeveloper {
 
 		    if(isEdit &&
 		       game.getVideo_url() != null &&
-		       !game.getVideo_url().startsWith("http")) {
+		       !game.getVideo_url().startsWith("http") && !game.getVideo_url().isBlank()) {
 
-		        Path oldVideo =
-		                Paths.get(
-		                "uploads/videos/",
-		                game.getVideo_url());
-
-		        Files.deleteIfExists(oldVideo);
+		    	minioService.delete("videos", game.getVideo_url());
 		    }
 
-		    String videoName =
-		            System.currentTimeMillis()
-		            + "_"
-		            + file.getOriginalFilename();
-
-		    Path videoPath =
-		            Paths.get("uploads/videos/",
-		                      videoName);
-
-		    Files.copy(
-		            file.getInputStream(),
-		            videoPath,
-		            StandardCopyOption.REPLACE_EXISTING);
-
-		    game.setVideo_url(videoName);
+		    game.setVideo_url(minioService.upload(file, "videos"));
 		}
 		else if(url != null && !url.isBlank()) {
 
 		    game.setVideo_url(url);
 		}
 		
+		//FIle game
+		// Upload Game File
+		if (gameFile != null && !gameFile.isEmpty()) {
+
+		    // Nếu edit thì xóa file cũ
+		    if (isEdit &&
+		        game.getFilegame() != null &&
+		        !game.getFilegame().isBlank()) {
+		    	minioService.delete("games", game.getFilegame());
+		    }
+		    game.setFilegame(minioService.upload(gameFile, "games"));
+		}
+		game.setGameName(gamename);
+		game.setDescription(description);
+		game.setPrice(price);
+		game.setRam(ram);
+		game.setStorage(storage);
+		gamedao.save(game);
 		//Images
 		if (images != null &&
 			    images.length > 0 &&
@@ -238,11 +225,7 @@ public class TrangChuDeveloper {
 
 			        for(GameImages img : oldImages){
 
-			            Path oldPath = Paths.get(
-			                    "uploads/images/",
-			                    img.getImage_url());
-
-			            Files.deleteIfExists(oldPath);
+			        	minioService.delete("images", img.getImage_url());
 			        }
 
 			        gameimagedao.deleteAll(oldImages);
@@ -263,89 +246,24 @@ public class TrangChuDeveloper {
 			                               .substring(5));
 			    }
 
-			    String uploadDirImages = "uploads/images/";
-
-			    Files.createDirectories(
-			            Paths.get(uploadDirImages));
-
 			    for (MultipartFile file2 : images) {
 
 			        if (file2.isEmpty()) {
 			            continue;
 			        }
 
-			        String fileNameImages =
-			                System.currentTimeMillis()
-			                + "_"
-			                + file2.getOriginalFilename()
-			                       .replaceAll("\\s+", "_");
-
-			        Path path2 =
-			                Paths.get(
-			                        uploadDirImages,
-			                        fileNameImages);
-
-			        Files.copy(
-			                file2.getInputStream(),
-			                path2,
-			                StandardCopyOption.REPLACE_EXISTING);
+			        GameImages gi = new  GameImages();
 
 			        lastidimages++;
 
 			        String newImageId =
 			                "IMG00" + lastidimages;
-
-			        gameimagedao.save(
-			            new GameImages(
-			                newImageId,
-			                newGameId,
-			                fileNameImages
-			            )
-			        );
+			        gi.setImage_url(minioService.upload(file2, "images"));
+			        gi.setGame_id(newGameId);
+			        gi.setImage_id(newImageId);
+			        gameimagedao.save(gi);
 			    }
 			}
-		
-		//FIle game
-		// Upload Game File
-		if (gameFile != null && !gameFile.isEmpty()) {
-
-		    // Nếu edit thì xóa file cũ
-		    if (isEdit &&
-		        game.getFilegame() != null &&
-		        !game.getFilegame().isBlank()) {
-
-		        Path oldGameFile = Paths.get(
-		                "uploads/games/",
-		                game.getFilegame());
-
-		        Files.deleteIfExists(oldGameFile);
-		    }
-
-		    Files.createDirectories(Paths.get("uploads/games"));
-
-		    String gameFileName =
-		            System.currentTimeMillis()
-		            + "_"
-		            + gameFile.getOriginalFilename()
-		                      .replaceAll("\\s+","_");
-
-		    Path gamePath = Paths.get(
-		            "uploads/games/",
-		            gameFileName);
-
-		    Files.copy(
-		            gameFile.getInputStream(),
-		            gamePath,
-		            StandardCopyOption.REPLACE_EXISTING);
-
-		    game.setFilegame(gameFileName);
-		}
-		game.setGameName(gamename);
-		game.setDescription(description);
-		game.setPrice(price);
-		game.setRam(ram);
-		game.setStorage(storage);
-		gamedao.save(game);
 		//Thêm Category
 		if(isEdit){
 		    gamecategorydao.deleteByGameid(game.getGame_id());
@@ -478,6 +396,7 @@ public class TrangChuDeveloper {
 		
 		return "Developer/review-feedback";
 	}
+	
 }
 
 //
