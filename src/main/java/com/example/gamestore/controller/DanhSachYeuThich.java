@@ -9,7 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.gamestore.dao.WishListDao;
+import com.example.gamestore.entity.Users;
 import com.example.gamestore.entity.WishList;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class DanhSachYeuThich {
@@ -17,40 +20,57 @@ public class DanhSachYeuThich {
     @Autowired
     private WishListDao wishListDao;
 
- // HIỂN THỊ DANH SÁCH YÊU THÍCH + SẮP XẾP + PHÂN TRANG
+    // HIỂN THỊ DANH SÁCH YÊU THÍCH
     @GetMapping("/user/wishlist")
     public String wishlist(
             @RequestParam(defaultValue = "newest") String sort,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(required = false) String message,
+            HttpSession session,
             Model model) {
 
-    	// Lấy toàn bộ danh sách Wishlist từ Database
-        List<WishList> danhSachWishlist = wishListDao.findAll();
+        // Lấy user đang đăng nhập
+        Users user = (Users) session.getAttribute("user");
 
-        // Sắp xếp bộ lọc
+        // Chưa đăng nhập
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // Chỉ lấy wishlist của user hiện tại
+        List<WishList> danhSachWishlist = wishListDao.findByUsername(user.getUsername());
+
+        // Sắp xếp
         switch (sort) {
-            case "newest":
-                danhSachWishlist.sort(Comparator.comparing(WishList::getadded_at).reversed());
-                break;
             case "oldest":
                 danhSachWishlist.sort(Comparator.comparing(WishList::getadded_at));
                 break;
+
+            default:
+                danhSachWishlist.sort(
+                        Comparator.comparing(WishList::getadded_at).reversed());
+                break;
         }
-        
+
         // Phân trang
         int itemsPerPage = 9;
         int totalPages = (int) Math.ceil((double) danhSachWishlist.size() / itemsPerPage);
 
-        if (page < 1) page = 1;
-        if (page > totalPages && totalPages > 0) page = totalPages;
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+
+        if (page < 1)
+            page = 1;
+
+        if (page > totalPages)
+            page = totalPages;
 
         int start = (page - 1) * itemsPerPage;
         int end = Math.min(start + itemsPerPage, danhSachWishlist.size());
 
         List<WishList> pageData = danhSachWishlist.subList(start, end);
 
-        // Đẩy dữ liệu sang HTML
         model.addAttribute("wishlistList", pageData);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
@@ -60,7 +80,7 @@ public class DanhSachYeuThich {
         return "User/wishlist";
     }
 
-    // XÓA KHỎI DANH SÁCH YÊU THÍCH
+    // XÓA DANH SÁCH YÊU THÍCH
     @PostMapping("/user/wishlist/delete")
     public String delete(@RequestParam("id") String id) {
         wishListDao.deleteById(id);
@@ -70,7 +90,7 @@ public class DanhSachYeuThich {
     // THÊM VÀO GIỎ HÀNG
     @PostMapping("/user/wishlist/addcart")
     public String addCart(@RequestParam("id") String id) {
-        // Thêm game vào bảng Cart
+        // TODO: Thêm game vào Cart
         return "redirect:/user/wishlist?message=Đã+thêm+vào+giỏ+hàng";
     }
 }

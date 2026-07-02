@@ -600,6 +600,25 @@
                             <img src="" alt="Main image" />
                         </div>
 
+<<<<<<< HEAD
+                        <div class="video-view hidden">
+                            <iframe width="100%" height="100%"
+                                    th:src="${videourl+ '?autoplay=1'}"
+                                    allow="autoplay"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+
+                        <button class="nav-btn next" aria-label="Next image">›</button>
+                    </div>
+
+                <div class="thumbnail-gallery">
+                    <div class="thumbnail active">
+                        <img th:src="@{/uploads/images/{file}(file=${game.thumbnail})}">
+                    </div>
+                    <div class="thumbnail" th:each = "item :${listimages}">
+						<img th:src="@{/uploads/images/{file}(file=${item.image_url})}">
+=======
 						<div class="video-view hidden">
 
 						    <iframe
@@ -633,6 +652,7 @@
                     </div>
                     <div class="thumbnail" th:each = "item :${listimages}">
 						<img th:src="@{/images/{file}(file=${item.image_url})}">
+>>>>>>> 560060a4395b000157388fc6ed3fcc1fb5971e26
                     </div>
                 </div>
             </div>
@@ -789,8 +809,12 @@
             const imageView = document.querySelector('.image-view');
             const imageViewImg = document.querySelector('.image-view img');
             const videoView = document.querySelector('.video-view');
+<<<<<<< HEAD
+            const videoFrame = document.querySelector('.video-view iframe');
+=======
 			const videoFrame = document.querySelector('.video-view iframe');
 			const videoPlayer = document.querySelector('.video-view video');
+>>>>>>> 560060a4395b000157388fc6ed3fcc1fb5971e26
 
             const thumbnails = Array.from(document.querySelectorAll('.thumbnail'));
             const prevBtn = document.querySelector('.nav-btn.prev');
@@ -815,6 +839,17 @@
                 btnVideo.classList.remove('active');
             }
 
+<<<<<<< HEAD
+            function showVideoView(){
+                // if no video source, keep images
+                const src = (videoFrame && (videoFrame.getAttribute('src') || videoFrame.src || '').trim());
+                if (!src) { showImageView(); return; }
+                imageView.classList.add('hidden');
+                videoView.classList.remove('hidden');
+                btnImages.classList.remove('active');
+                btnVideo.classList.add('active');
+            }
+=======
 			function showVideoView() {
 
 			    const hasYoutube =
@@ -842,6 +877,7 @@
 			        videoPlayer.play().catch(console.error);
 			    }
 			}
+>>>>>>> 560060a4395b000157388fc6ed3fcc1fb5971e26
 
             function updateMain(index){
                 if (!srcs.length) return;
@@ -855,7 +891,11 @@
             }
 
             // initialize
+<<<<<<< HEAD
+			if (videoFrame && videoFrame.src) {
+=======
 			if ((videoFrame && videoFrame.src) || videoPlayer) {
+>>>>>>> 560060a4395b000157388fc6ed3fcc1fb5971e26
 			    showVideoView();
 			} else if (srcs.length > 0) {
 			    updateMain(currentIndex);
