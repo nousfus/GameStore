@@ -198,7 +198,7 @@
 			         th:each="game : ${gamePage.content}">
 
 			        <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}">
-			            <img th:src="@{/uploads/images/{file}(file=${game.thumbnail})}">
+			            <img th:src="@{/images/{file}(file=${game.thumbnail})}">
 
 			            <div class="game-info">
 			                <div class="game-title"

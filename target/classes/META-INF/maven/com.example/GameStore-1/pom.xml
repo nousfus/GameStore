@@ -20,6 +20,15 @@
     </properties>
 
     <dependencies>
+<<<<<<< HEAD
+=======
+    <!--MinIo-->
+    	<dependency>
+		    <groupId>io.minio</groupId>
+		    <artifactId>minio</artifactId>
+		    <version>8.5.17</version>
+		</dependency>
+>>>>>>> 560060a4395b000157388fc6ed3fcc1fb5971e26
 			  <!-- Mail -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
@@ -58,5 +67,13 @@
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+<<<<<<< HEAD
+=======
+
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+>>>>>>> 560060a4395b000157388fc6ed3fcc1fb5971e26
     </dependencies>
 </project>
