@@ -25,6 +25,7 @@ import com.example.gamestore.dao.CartItemsDao;
 import com.example.gamestore.dao.CategoriesDao;
 import com.example.gamestore.dao.GameCategoriesDao;
 import com.example.gamestore.dao.GameDao;
+import com.example.gamestore.dao.OrdersDao;
 import com.example.gamestore.dao.RolesDao;
 import com.example.gamestore.dao.UserDao;
 import com.example.gamestore.dao.UserRolesDao;
@@ -33,6 +34,7 @@ import com.example.gamestore.entity.CartItems;
 import com.example.gamestore.entity.Categories;
 import com.example.gamestore.entity.Game;
 import com.example.gamestore.entity.GameCategories;
+import com.example.gamestore.entity.Orders;
 import com.example.gamestore.entity.Roles;
 import com.example.gamestore.entity.Users;
 
@@ -58,6 +60,8 @@ public class TrangChu {
 	GameDao gamedao;
 	@Autowired
 	GameCategoriesDao gamecategorydao;
+	@Autowired
+	OrdersDao orderdao;
 	@RequestMapping("/")
 	public String abc(Model m) {
 		Users user = (Users) session.getAttribute("user");

@@ -22,7 +22,7 @@ public class Game {
 	private String GameName; 
 	private String description; 
 	private float price; 
-	private Date release_date; 
+	private Date release_date;  
 	private int rating; 
 	private String thumbnail; 
 	private String status; 

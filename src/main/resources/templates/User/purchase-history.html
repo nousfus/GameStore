@@ -6,6 +6,9 @@
     <title>Lịch sử Mua hàng - GameStore</title>
 
     <style>
+		a{
+			text-decoration : none;
+		}
         *{
             margin: 0;
             padding: 0;
@@ -488,6 +491,7 @@
                 <a href="/user/change-password"><button class="menu-item">Đổi mật khẩu</button></a>
                 <a href="/user/history-purchase"><button class="menu-item active">Lịch sử mua hàng</button></a>
                 <a href="/user/notifications"><button class="menu-item">Quản lý thông báo</button></a>
+				<a href = "/user/wishlist" class="menu-item">Danh sách ưa thích</a>
             </aside>
 
             <!-- CONTENT -->
@@ -556,11 +560,11 @@
 
                 <div class="order-items">
                     <div class="items-list">
-						<h4>Sản phẩm (2 game)</h4>
+						<h4>Sản phẩm</h4>
                         <div class="item-preview" th:each = "itemsDetail :${orderdetaildao.findByOrderID(item.order_id)}">
-                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=300&auto=format&fit=crop">
+                            <img  th:src="@{/images/{file}(file=${itemsDetail.game.thumbnail})}">
                             <div class="item-details">
-                                <div class="item-name" th:text = "${itemsDetail.game.game_name}">Shadow Strike</div>
+                                <div class="item-name" th:text = "${itemsDetail.game.gameName}">Shadow Strike</div>
                                 <div class="item-price" th:text = "${itemsDetail.price}">799.000đ</div>
                             </div>
                         </div>

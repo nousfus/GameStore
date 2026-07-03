@@ -26,7 +26,7 @@ public class History_purchase {
 	OrderDetailsDao orderdetaildao;
 	@Autowired
 	OrdersDao orderdao;
-	@RequestMapping("/history")
+	@RequestMapping("user/history")
 	public String history(Model m,@RequestParam(required = false) String status) {
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {

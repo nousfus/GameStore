@@ -10,4 +10,5 @@ public interface PaymentsDao extends JpaRepository<Payments, String>{
 //	void create(Payments p); 
 //	void update(Payments p); 
 //	void delete(String id);
+	Payments findByOrderid(String orderid);
 }

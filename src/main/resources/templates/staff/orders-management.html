@@ -121,39 +121,39 @@
     <div class="summary-grid">
       <div class="summary-card">
         <div class="label">Tổng đơn hàng</div>
-        <div class="value">128</div>
+        <div class="value" th:text = "${TongDonHang}">128</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Tổng đơn hàng hôm nay</div>
+        <div class="value" th:text = "${TongDonHomNay}">24</div>
       </div>
       <div class="summary-card">
         <div class="label">Chờ xử lý</div>
-        <div class="value">24</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">Đang giao</div>
-        <div class="value">15</div>
+        <div class="value" th:text = "${ChoXuLy}">15</div>
       </div>
       <div class="summary-card">
         <div class="label">Hoàn tất</div>
-        <div class="value">89</div>
+        <div class="value" th:text = "${DaThanhToan}">89</div>
       </div>
     </div>
 
     <div class="panel">
       <div class="toolbar">
         <div class="date-filter">
-          <label>
-            Từ ngày
-            <input type="date" id="startDate" value="2026-06-20" />
-          </label>
-          <label>
-            Đến ngày
-            <input type="date" id="endDate" value="2026-06-27" />
-          </label>
-          <button class="btn" id="applyFilter">Lọc</button>
-          <button class="btn secondary" id="resetFilter">Đặt lại</button>
+          <form method="get" action="/staff/orders" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;width:100%;">
+	            <label>
+	            Từ ngày
+	            <input type="date" id="startDate" value="${?startDate}" name = "startDate"/>
+	          </label>
+	          <label>
+	            Đến ngày
+	            <input type="date" id="endDate" value="${?endDate}" name = "endDate"/>
+	          </label>
+	          <button class="btn" id="applyFilter" type = "submit">Lọc</button>
+          </form>
         </div>
         <div class="filter-group">
           <span class="status-badge status-pending">Đang chờ</span>
-          <span class="status-badge status-processing">Đang xử lý</span>
           <span class="status-badge status-complete">Hoàn tất</span>
         </div>
       </div>
@@ -171,42 +171,21 @@
             </tr>
           </thead>
           <tbody id="orderTableBody">
-            <tr data-date="2026-06-20">
-              <td>#ORD-2026-001234</td>
-              <td>Nguyễn A</td>
-              <td>499.000đ</td>
-              <td>20/06/2026</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
+            <tr data-date="2026-06-20" th:each = "item :${listorder}">
+              <td th:text = "${item.order_id}">#ORD-2026-001234</td>
+              <td th:text = "${item.username}">Nguyễn A</td>
+              <td th:text = "${item.total_amount}">499.000đ</td>
+              <td th:text = "${item.order_date}">20/06/2026</td>
+              <td th:if ="${item.status == 'Pending'}"><span class="status-badge status-pending" th:text = "${item.status}">Pending</span></td>
+			  <td th:if ="${item.status == 'Paid'}"><span class="status-badge status-complete" th:text = "${item.status}">Completed</span></td>
               <td>
                 <div class="actions">
-                  <button class="btn">Xem</button>
+				<form th:action = "@{/staff/orders-detail/{id}(id =${item.order_id})}">
+                  <button type = "submit" class="btn">Xem</button>
+				 </form>
+				 <form th:action = "@{/staff/orders-update/{id}(id =${item.order_id})}" method = "post"  th:if ="${item.status == 'Pending'}" >
                   <button class="btn secondary">Cập nhật</button>
-                </div>
-              </td>
-            </tr>
-            <tr data-date="2026-06-22">
-              <td>#ORD-2026-001235</td>
-              <td>Trần B</td>
-              <td>1.250.000đ</td>
-              <td>22/06/2026</td>
-              <td><span class="status-badge status-processing">Processing</span></td>
-              <td>
-                <div class="actions">
-                  <button class="btn">Xem</button>
-                  <button class="btn secondary">Cập nhật</button>
-                </div>
-              </td>
-            </tr>
-            <tr data-date="2026-06-27">
-              <td>#ORD-2026-001236</td>
-              <td>Lê C</td>
-              <td>799.000đ</td>
-              <td>27/06/2026</td>
-              <td><span class="status-badge status-complete">Completed</span></td>
-              <td>
-                <div class="actions">
-                  <button class="btn">Xem</button>
-                  <button class="btn secondary">Cập nhật</button>
+				  </form>
                 </div>
               </td>
             </tr>

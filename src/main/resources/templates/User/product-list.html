@@ -134,7 +134,7 @@
 
             <div class="filter-group">
                 <h4>RAM</h4>
-                <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
+                <select name = "ram" style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
                     <option value="">Chọn RAM</option>
                     <option value="4gb">4GB</option>
                     <option value="8gb">8GB</option>
@@ -149,7 +149,7 @@
 
             <div class="filter-group">
                 <h4>Dung lượng lưu trữ</h4>
-                <select style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
+                <select name = "storage" style="width: 100%; padding: 8px; border-radius: 5px; background-color: #0f172a; color: white; border: 1px solid #374151;">
                     <option value="">Chọn Storage</option>
                     <option value="128gb">128GB</option>
                     <option value="256gb">256GB</option>
@@ -171,30 +171,23 @@
                     <option value="1">1 - Kém</option>
                 </select>
             </div>
-
-            <div class="filter-group">
-                <h3>Trạng thái</h3>
-                <label><input type="checkbox"> Mới nhất</label>
-                <label><input type="checkbox"> Giảm giá</label>
-                <label><input type="checkbox"> Best seller</label>
-            </div>
-			</form>
         </aside>
-
+ 
         <!-- PRODUCTS -->
         <section class="products-section">
 
             <div class="products-header">
                 <h2>Danh sách Sản phẩm</h2>
-                <select class="sort-options">
-                    <option>Sắp xếp theo</option>
-                    <option>Mới nhất</option>
-                    <option>Giá thấp đến cao</option>
-                    <option>Giá cao đến thấp</option>
-                    <option>Đánh giá cao nhất</option>
-                </select>
+				<select class="sort-options" name="sort">
+				    <option value="">Sắp xếp theo</option>
+				    <option value="newest">Mới nhất</option>
+				    <option value="oldest">Cũ nhất</option>
+				    <option value="priceAsc">Giá thấp đến cao</option>
+				    <option value="priceDesc">Giá cao đến thấp</option>
+				    <option value="rating">Đánh giá cao nhất</option>
+				</select>
             </div>
-
+			</form>
 			<div class="games">
 
 			    <div class="game-card"

@@ -150,6 +150,9 @@ background-color: #111827;
             height: 100%;
             object-fit: cover;
         }
+		a{
+			text-decoration : none;
+		}
 
         .wishlist-badge{
             position: absolute;
@@ -615,397 +618,51 @@ grid-template-columns: 1fr 1fr; /* Chuyển thành 2 hàng, mỗi hàng 2 cột 
                         data-category="Action"
 					    data-price="499000"
 					    data-rating="4.1"
-					    data-date="2025-08-20">
+					    data-date="2025-08-20" th:each = "item : ${wishlistList}">
                 <div class="item-image">
-<img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/367500/capsule_616x353.jpg?t=1768870344">
+				<img  th:src="@{/images/{file}(file=${item.game.thumbnail})}">
                     <div class="wishlist-badge">♥ YÊU THÍCH</div>
                 </div>
                 <div class="item-info">
-                    <div class="item-title">Dragon's Dogma</div>
-                    <div class="item-rating">★★★★☆ (4.1)</div>
+                    <div class="item-title" th:text = "${item.game.gameName}">Dragon's Dogma</div>
+					<div class = "item-rating">
+					    <span th:each="i : ${#numbers.sequence(1,5)}">
+					        <span th:if="${i <= item.game.rating}">★</span>
+					        <span th:if="${i > item.game.rating}">☆</span>
+					    </span>
+					</div>
                     <div class="item-category">Action | Sci-Fi</div>
-                    <div class="item-date">Ngày thêm: 20/08/2025</div>
-                    <div class="item-price">499.000đ</div>
+                    <div class="item-date" th:text="${'Ngày thêm :'+item.added_at}">Ngày thêm: 20/08/2025</div>
+                    <div class="item-price" th:text = "${item.game.price}">499.000đ</div>
                     <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
+						<!-- Đã mua -->
+						<button class="action-btn cart-btn"
+						        th:if="${username != null && gamePaidId.contains(item.game.game_id)}">
+						    <a th:href="@{/games/{file}(file=${item.game.filegame})}">Tải về</a>
+						</button>
 
-            <div class="wishlist-item"
-                 data-category="RPG"
-			     data-price="699000"
-			     data-rating="4.5"
-			     data-date="2025-08-19">
-                <div class="item-image">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2622380/800a6d64a1685c303bf985f084fbf5c08ac2ae5c/capsule_616x353.jpg?t=1773099036">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Elden Ring Nightreign</div>
-                    <div class="item-rating">★★★★☆ (4.5)</div>
-                    <div class="item-category">RPG | Multiplayer</div>
-                    <div class="item-date">Ngày thêm: 19/08/2025</div>
-                    <div class="item-price">699.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
+						<!-- Đã thêm vào giỏ -->
+						<button class="action-btn cart-btn"
+						        th:if="${username != null
+						               && !gamePaidId.contains(item.game.game_id)
+						               && listgame.contains(item.game.game_id)}">
+						    Đã thêm vào giỏ
+						</button>
+						<form th:if="${item.game.status=='Active'
+						             && (username == null
+						                 || (!gamePaidId.contains(item.game.game_id)
+						                     && !listgame.contains(item.game.game_id)))}"
+						      th:action="@{/user/addcart/{id}(id=${item.game.game_id})}"
+						      method="post">
 
-            <div class="wishlist-item" 
-                 data-category="Action"
-			     data-price="299000"
-			     data-rating="4.9"
-			     data-date="2025-08-15">
-                <div class="item-image">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1849250/69a18167dab37d9a74c52f9e63dd0cb8f35fba9f/capsule_616x353.jpg?t=1779987212">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">EA Sports WRC</div>
-                    <div class="item-rating">★★★★★ (4.9)</div>
-                    <div class="item-category">Action | Sports</div>
-                    <div class="item-date">Ngày thêm: 15/08/2025</div>
-                    <div class="item-price">299.000đ</div>
-                    <div class="item-actions">
-<button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
+						    <button class="action-btn cart-btn" type="submit">
+						        Thêm vào giỏ hàng
+						    </button>
+						</form>
+                        <button class="action-btn remove-btn"><a th:href="@{/user/wishlist/delete/{file}(file=${item.game.filegame})}">Xóa</a></button>
                     </div>
                 </div>
             </div>
-
-            <div class="wishlist-item" 
-                 data-category="Action"
-			     data-price="799000"
-			     data-rating="5.0"
-			     data-date="2025-08-14">
-                <div class="item-image">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/582660/d1a0d36c7b5120d166a339b9914ebce53ce8a5f4/capsule_616x353_alt_assets_27.jpg?t=1773974827">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Black Desert</div>
-                    <div class="item-rating">★★★★★ (5.0)</div>
-                    <div class="item-category">Action | Thriller</div>
-                    <div class="item-date">Ngày thêm: 14/08/2025</div>
-                    <div class="item-price">799.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="wishlist-item" 
-                 data-category="Strategy"
-			     data-price="599000"
-			     data-rating="4.7"
-			     data-date="2025-08-12">
-                <div class="item-image">
-                    <img src="https://i.ytimg.com/vi/QD6IMoVgmBc/maxresdefault.jpg">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Age of Empires</div>
-                    <div class="item-rating">★★★★★ (4.7)</div>
-                    <div class="item-category">Strategy | Multiplayer</div>
-                    <div class="item-date">Ngày thêm: 12/08/2025</div>
-                    <div class="item-price">599.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="wishlist-item" 
-                 data-category="RPG"
-			     data-price="449000"
-			     data-rating="4.4"
-			     data-date="2025-08-11">
-                <div class="item-image">
-                    <img src="https://codakid.com/wp-content/uploads/2020/07/Minecraft-Adventure-Mode-01.jpg">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Minecraft</div>
-                    <div class="item-rating">★★★★☆ (4.4)</div>
-                    <div class="item-category">RPG | Adventure</div>
-                    <div class="item-date">Ngày thêm: 11/08/2025</div>
-                    <div class="item-price">449.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn" >Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="wishlist-item" 
-                 data-category="Adventure"
-			     data-price="399000"
-			     data-rating="4.3"
-			     data-date="2025-08-09">
-                <div class="item-image">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2420110/capsule_616x353.jpg?t=1776465869">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Horizon Forbidden West</div>
-                    <div class="item-rating">★★★★☆ (4.3)</div>
-                    <div class="item-category"> Adventure | Sci-Fi </div>
-                    <div class="item-date">Ngày thêm: 09/08/2025</div>
-                    <div class="item-price">399.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="wishlist-item"  
-            	 data-category="Adventure"
-			     data-price="349000"
-			     data-rating="4.8"
-			     data-date="2025-08-08">
-                <div class="item-image">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1627570/capsule_616x353.jpg?t=1757545827">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">The Plucky Squire</div>
-                    <div class="item-rating">★★★★★ (4.8)</div>
-                    <div class="item-category">Adventure | Puzzle</div>
-                    <div class="item-date">Ngày thêm: 08/08/2025</div>
-                    <div class="item-price">349.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="Adventure"
-			     data-price="349000"
-			     data-rating="4.2"
-			     data-date="2025-08-05">
-                 <div class="item-image">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlopLOEcV_tKojYn1_nEHRtJ4yeV5z1w2bjg&s">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Little Nightmares</div>
-                    <div class="item-rating">★★★★☆ (4.2)</div>
-                    <div class="item-category">Adventure | Puzzle | Horror</div>
-                    <div class="item-date">Ngày thêm: 05/08/2025</div>
-                    <div class="item-price">349.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="Adventure"
-			     data-price="380000"
-			     data-rating="4.6"
-			     data-date="2025-07-25">
-                <div class="item-image">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-XoiKwdAafSZex2S0Z9pnoDDIw-arwhQy3g&s">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Poppy Playtime</div>
-                    <div class="item-rating">★★★★☆ (4.6)</div>
-                    <div class="item-category">Adventure | Puzzle | Horror</div>
-                    <div class="item-date">Ngày thêm: 25/07/2025</div>
-                    <div class="item-price">380.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="RPG "
-			     data-price="350000"
-			     data-rating="4.4"
-			     data-date="2025-07-02">
-                <div class="item-image">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkeLlFQDTHsYjSHtbBsInAYl2aIF54Qz_8zQ&s">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Stardew Valley</div>
-                    <div class="item-rating">★★★★☆ (4.4)</div>
-                    <div class="item-category">RPG | Adventure</div>
-                    <div class="item-date">Ngày thêm: 02/07/2025</div>
-                    <div class="item-price">350.000đ</div>
-                    <div class="item-actions">
-<button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="Strategy"
-			     data-price="256000"
-			     data-rating="4.0"
-			     data-date="2025-06-08">
-                <div class="item-image">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1605220/header.jpg?t=1733479296">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Dune: Spice Wars</div>
-                    <div class="item-rating">★★★★☆ (4.0)</div>
-                    <div class="item-category">Strategy | Multiplayer</div>
-                    <div class="item-date">Ngày thêm: 08/06/2025</div>
-                    <div class="item-price">256.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="Strategy"
-			     data-price="400000"
-			     data-rating="4.3"
-			     data-date="2025-07-13">
-                <div class="item-image">
-                    <img src="https://cdn1.epicgames.com/spt-assets/0216de634f9f493dbd1aca4901405292/northgard-1kd6n.jpg">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Northgard</div>
-                    <div class="item-rating">★★★★☆ (4.3)</div>
-                    <div class="item-category">Strategy | Multiplayer</div>
-                    <div class="item-date">Ngày thêm: 13/07/2025</div>
-                    <div class="item-price">400.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="Adventure"
-			     data-price="239000"
-			     data-rating="4.2"
-			     data-date="2025-07-04">
-                <div class="item-image">
-                    <img src="https://clearrivergames.com/templates/yootheme/cache/65/keyart%2016_9-6582823d.jpeg">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Layers of Fear</div>
-<div class="item-rating">★★★★☆ (4.2)</div>
-                    <div class="item-category">Adventure | Horror</div>
-                    <div class="item-date">Ngày thêm: 04/07/2025</div>
-                    <div class="item-price">239.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="RPG"
-			     data-price="267000"
-			     data-rating="4.5"
-			     data-date="2025-08-21">
-                <div class="item-image">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1621690/6c48cd5936a869e796c0cf817f3851f327131d21/capsule_616x353.jpg?t=1782408107">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Core Keeper</div>
-                    <div class="item-rating">★★★★☆ (4.5)</div>
-                    <div class="item-category">RPG | Adventure</div>
-                    <div class="item-date">Ngày thêm: 21/08/2025</div>
-                    <div class="item-price">267.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-             
-            <div class="wishlist-item"  
-            	 data-category="RPG"
-			     data-price="278000"
-			     data-rating="4.7"
-			     data-date="2025-06-24">
-                <div class="item-image">
-                    <img src="https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_4/H2x1_NSwitch_RPGMakerMv_image1600w.jpg">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">RPG Maker MV</div>
-                    <div class="item-rating">★★★★☆ (4.7)</div>
-                    <div class="item-category">RPG | Adventure</div>
-                    <div class="item-date">Ngày thêm: 24/06/2025</div>
-                    <div class="item-price">278.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="Adventure"
-			     data-price="240000"
-			     data-rating="4.2"
-data-date="2025-07-23">
-                <div class="item-image">
-                    <img src="https://cdn1.epicgames.com/spt-assets/3cb7b27265f544c1826264534fb8bbd0/evil-nun-the-broken-mask-168aw.jpg">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">Evil nun The Broken Mask</div>
-                    <div class="item-rating">★★★★☆ (4.2)</div>
-                    <div class="item-category">Adventure | Horror</div>
-                    <div class="item-date">Ngày thêm: 23/07/2025</div>
-                    <div class="item-price">240.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="wishlist-item"  
-            	 data-category="Action"
-			     data-price="200000"
-			     data-rating="4.5"
-			     data-date="2025-07-15">
-                <div class="item-image">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc2xsgEi8Boun41FHRE2uWrEOT40FHgMXMng&s">
-                    <div class="wishlist-badge">♥ YÊU THÍCH</div>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">GRID Legends</div>
-                    <div class="item-rating">★★★★☆ (4.5)</div>
-                    <div class="item-category">Action | Sports</div>
-                    <div class="item-date">Ngày thêm: 15/07/2025</div>
-                    <div class="item-price">200.000đ</div>
-                    <div class="item-actions">
-                        <button class="action-btn cart-btn">Thêm vào giỏ hàng</button>
-                        <button class="action-btn remove-btn">Xóa</button>
-                    </div>
-                </div>
-            </div> 
                 
         </div>
 

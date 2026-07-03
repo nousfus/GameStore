@@ -58,4 +58,36 @@ public class GameSpecification {
             return root.get("game_id").in(subquery);
         };
     }
+    public static Specification<Game> sortBy(String sort) {
+        return (root, query, cb) -> {
+
+            if (sort == null || sort.isEmpty()) {
+                return cb.conjunction();
+            }
+
+            switch (sort) {
+                case "newest":
+                    query.orderBy(cb.desc(root.get("release_date")));
+                    break;
+
+                case "oldest":
+                    query.orderBy(cb.asc(root.get("release_date")));
+                    break;
+
+                case "priceAsc":
+                    query.orderBy(cb.asc(root.get("price")));
+                    break;
+ 
+                case "priceDesc":
+                    query.orderBy(cb.desc(root.get("price")));
+                    break;
+
+                case "rating":
+                    query.orderBy(cb.desc(root.get("rating")));
+                    break;
+            }
+
+            return cb.conjunction();
+        };
+    }
 }

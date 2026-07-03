@@ -36,15 +36,15 @@
         <div style="display:flex;justify-content:space-between;align-items:center">
             <div>
                 <div style="color:#9ca3af">Mã đơn</div>
-                <div style="font-weight:bold;font-size:18px">#ORD-2026-001234</div>
+                <div style="font-weight:bold;font-size:18px" th:text = "${order.order_id}">#ORD-2026-001234</div>
             </div>
             <div>
                 <div style="color:#9ca3af">Ngày mua</div>
-                <div>15/06/2026</div>
+                <div th:text = "${order.order_date}">15/06/2026</div>
             </div>
             <div>
                 <div style="color:#9ca3af">Trạng thái</div>
-                <div><span class="status-badge status-pending">Đang chờ xử lý</span></div>
+                <div><span class="status-badge status-pending" th:text = "${order.status}">Đang chờ xử lý</span></div>
             </div>
             <div class="actions">
                 <button class="btn btn-primary">Cập nhật trạng thái</button>
@@ -56,14 +56,13 @@
     <div class="grid">
         <div class="card">
             <h3 style="margin-bottom:8px">Người mua</h3>
-            <p><strong>Nguyễn Văn A</strong></p>
-            <p>Email: a@example.com</p>
+            <p><strong th:text = "${order.username}">Nguyễn Văn A</strong></p>
         </div>
         <div class="card">
-            <h3 style="margin-bottom:8px">Thanh toán & Vận chuyển</h3>
-            <p>Phương thức thanh toán: MOMO</p>
-            <p>Mã giảm giá: SUMMER21</p>
-            <p>Tổng tiền: <strong style="color:#22d3ee">1.298.000đ</strong></p>
+            <h3 style="margin-bottom:8px">Thanh toán</h3>
+			<p>Mã thanh toán : <strong th:text = "${payment.transaction_code}"></strong></p>
+            <p>Phương thức thanh toán: <strong th:text = "${payment.payment_method}"></strong></p>
+            <p>Tổng tiền: <strong style="color:#22d3ee" th:text = "${order.total_amount}">1.298.000đ</strong></p>
         </div>
     </div>
 
@@ -71,36 +70,19 @@
         <h3 style="margin-bottom:12px">Sản phẩm</h3>
         <table>
             <thead>
-                <tr><th>Sản phẩm</th><th>Đơn giá</th><th>Số lượng</th><th>Tổng</th></tr>
+                <tr><th>Sản phẩm</th><th>Đơn giá</th></tr>
             </thead>
             <tbody>
-                <tr>
+                <tr th:each = "item : ${orderdetail}">
                     <td>
                         <div style="display:flex;gap:10px;align-items:center">
-                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=80&auto=format&fit=crop" style="width:64px;height:40px;object-fit:cover;border-radius:6px">
+                            <img th:src="@{/images/{file}(file=${item.game.thumbnail})}" style="width:64px;height:40px;object-fit:cover;border-radius:6px">
                             <div>
-                                <div style="font-weight:bold">Shadow Strike</div>
-                                <div style="color:#9ca3af;font-size:13px">Action | Thriller</div>
+                                <div style="font-weight:bold" th:text = "${item.game.gameName}">Shadow Strike</div>
                             </div>
                         </div>
                     </td>
-                    <td>799.000đ</td>
-                    <td>1</td>
-                    <td>799.000đ</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="display:flex;gap:10px;align-items:center">
-                            <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=80&auto=format&fit=crop" style="width:64px;height:40px;object-fit:cover;border-radius:6px">
-                            <div>
-                                <div style="font-weight:bold">Galaxy Mission</div>
-                                <div style="color:#9ca3af;font-size:13px">Sci-Fi | Adventure</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>499.000đ</td>
-                    <td>1</td>
-                    <td>499.000đ</td>
+                    <td th:text = "${item.game.price}">799.000đ</td>
                 </tr>
             </tbody>
         </table>

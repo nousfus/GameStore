@@ -65,10 +65,10 @@
             <tbody>
                 <tr th:each="game : ${listgame}" class="user-row">
                     <td th:text="${game.game_id}">101</td>
-                    <td th:text="${game.game_name}">Tên game</td>
+                    <td th:text="${game.gameName}">Tên game</td>
                     <td th:text="${game.price}">0</td>
                     <td>
-                        <img th:if="${game.thumbnail != null}" th:src="@{/uploads/images/{file}(file=${game.thumbnail})}" class="game-thumb">
+                        <img th:if="${game.thumbnail != null}" th:src="@{/images/{file}(file=${game.thumbnail})}" class="game-thumb">
                     </td>
                     <td>
                         <span th:if="${game.status=='Active'}" class="badge badge-role">Active</span>
@@ -77,7 +77,7 @@
                     <td>
                         <div class="row-actions">
                             <a th:href="@{/admin/games/edit/{id}(id=${game.game_id})}"><button class="action-btn action-approve" type="button">Phê duyệt</button></a>
-                            <a th:href="@{/admin/games/manage/{id}(id=${game.game_id})}"><button class="action-btn action-edit" type="button">Sửa</button></a>
+                            <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}"><button class="action-btn action-edit" type="button">Xem</button></a>
                             <form method="post" th:action="@{/admin/games/delete}" style="display:inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa game này?')">
                                 <input type="hidden" name="id" th:value="${game.game_id}" />
                                 <button type="submit" class="action-btn action-delete">Xóa</button>

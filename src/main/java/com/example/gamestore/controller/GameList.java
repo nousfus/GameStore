@@ -102,7 +102,7 @@ public class GameList {
 			List<String> gamePaidId = new ArrayList<>();
 			for(OrderDetails d : orderdetaildao.findAll()) {
 				if(d.getOrder().getUsername().equals(user.getUsername()) && d.getOrder().getStatus().equals("Paid")) {
-					gamePaidId.add(d.getGame_id());
+					gamePaidId.add(d.getGame().getGame_id());
 				}
 			}
 			m.addAttribute("gamePaidId",gamePaidId);
@@ -127,18 +127,36 @@ public class GameList {
 	        @RequestParam(required = false) String ram,
 	        @RequestParam(required = false) String storage,
 	        @RequestParam(required = false) Double price,
+	        @RequestParam(required =false) String sort,
 	        @RequestParam(defaultValue = "0") int page,
 	        Model m) {
 		Users user = (Users) session.getAttribute("user");
-		m.addAttribute("username",user);
+		if(user!=null) {
+			List<String> gamePaidId = new ArrayList<>();
+			for(OrderDetails d : orderdetaildao.findAll()) {
+				if(d.getOrder().getUsername().equals(user.getUsername()) && d.getOrder().getStatus().equals("Paid")) {
+					gamePaidId.add(d.getGame().getGame_id());
+				}
+			}
+			m.addAttribute("gamePaidId",gamePaidId);
+			Cart cart = cartDao.findByUsername(user.getUsername());
+			List<CartItems> cartitemlist = cartitemdao.findByCartId(cart.getCart_id());
+			List<String> listgame = new ArrayList<>();
+			for(CartItems c : cartitemlist) {
+				listgame.add(c.getGame().getGame_id());
+			}
+			m.addAttribute("listgame",listgame);
+			m.addAttribute("username",user);
+		}
 	    Specification<Game> spec = Specification
 	            .where(GameSpecification.hasRam(ram))
 	            .and(GameSpecification.hasStorage(storage))
 	            .and(GameSpecification.priceLessThan(price))
-	            .and(GameSpecification.hasCategory(categories));
+	            .and(GameSpecification.hasCategory(categories))
+	            .and(GameSpecification.sortBy(sort));
 
 	    Pageable pageable = PageRequest.of(page, 9);
-	    Page<Game> gamePage = gamedao.findAll(spec, pageable);
+	    Page<Game> gamePage = gamedao.findAll(spec, pageable); 
 	    
 	    for(Game game : gamePage.getContent()) {
 
@@ -181,10 +199,7 @@ public class GameList {
 		// Đánh giá
 		List<Reviews> reviews = reviewsdao.findByGameid(id);
 		m.addAttribute("countreviews",reviews.size());
-		double star = reviews.stream()
-		        .mapToInt(Reviews::getRating)
-		        .average()
-		        .orElse(0.0);
+		double star = reviews.stream().mapToInt(Reviews::getRating).average().orElse(0.0);
 
 		m.addAttribute("stars", star);
 		m.addAttribute("reviews",reviews);
@@ -326,7 +341,7 @@ public class GameList {
 			if(discount!=null) {
 				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
 			}else {discountamount = 0;}
-			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame().getGame_id(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
+			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
 		}
 		
 		//Payments

@@ -16,7 +16,7 @@ public interface OrderDetailsDao extends JpaRepository<OrderDetails, String>{
 //	void delete(String id);
 	@Query("select o from OrderDetails o where o.order.order_id = :id")
 	List<OrderDetails> findByOrderID(@Param("id") String id);
-	@Query("select o from OrderDetails o where o.game_id = :id")
+	@Query("select o from OrderDetails o where o.game.game_id = :id")
 	List<OrderDetails> findByGameId(@Param("id") String id);
 	@Query(value = """
 	        SELECT

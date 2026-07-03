@@ -8,7 +8,8 @@ import jakarta.persistence.*;
 public class Payments {
 	@Id
 	private String payment_id; 
-	private String order_id; 
+	@Column(name = "order_id")
+	private String orderid; 
 	private String payment_method;
 	private String payment_status; 
 	private Date paid_at; 
@@ -18,7 +19,7 @@ public class Payments {
 			String transactionCode) {
 		super();
 		this.payment_id = payment_id;
-		this.order_id = order_id;
+		this.orderid = order_id;
 		this.payment_method = payment_method;
 		this.payment_status = payment_status;
 		this.paid_at = paid_at;
@@ -30,11 +31,11 @@ public class Payments {
 	public void setPayment_id(String payment_id) {
 		this.payment_id = payment_id;
 	}
-	public String getOrder_id() {
-		return order_id;
+	public String getOrderid() {
+		return orderid;
 	}
-	public void setOrder_id(String order_id) {
-		this.order_id = order_id;
+	public void setOrderid(String order_id) {
+		this.orderid = order_id;
 	}
 	public String getPayment_method() {
 		return payment_method;

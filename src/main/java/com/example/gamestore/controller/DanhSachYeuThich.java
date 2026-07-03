@@ -1,5 +1,6 @@
 package com.example.gamestore.controller;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -8,7 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.gamestore.dao.CartDao;
+import com.example.gamestore.dao.CartItemsDao;
+import com.example.gamestore.dao.OrderDetailsDao;
 import com.example.gamestore.dao.WishListDao;
+import com.example.gamestore.entity.Cart;
+import com.example.gamestore.entity.CartItems;
+import com.example.gamestore.entity.OrderDetails;
 import com.example.gamestore.entity.Users;
 import com.example.gamestore.entity.WishList;
 
@@ -19,6 +26,12 @@ public class DanhSachYeuThich {
 
     @Autowired
     private WishListDao wishListDao;
+    @Autowired
+    OrderDetailsDao orderdetaildao;
+    @Autowired
+    CartDao cartdao;
+    @Autowired
+    CartItemsDao cartitemdao;
 
     // HIỂN THỊ DANH SÁCH YÊU THÍCH
     @GetMapping("/user/wishlist")
@@ -31,7 +44,23 @@ public class DanhSachYeuThich {
 
         // Lấy user đang đăng nhập
         Users user = (Users) session.getAttribute("user");
-
+        if(user!=null) {
+			List<String> gamePaidId = new ArrayList<>();
+			for(OrderDetails d : orderdetaildao.findAll()) {
+				if(d.getOrder().getUsername().equals(user.getUsername()) && d.getOrder().getStatus().equals("Paid")) {
+					gamePaidId.add(d.getGame().getGame_id());
+				}
+			}
+			model.addAttribute("gamePaidId",gamePaidId);
+			Cart cart = cartdao.findByUsername(user.getUsername());
+			List<CartItems> cartitemlist = cartitemdao.findByCartId(cart.getCart_id());
+			List<String> listgame = new ArrayList<>();
+			for(CartItems c : cartitemlist) {
+				listgame.add(c.getGame().getGame_id());
+			}
+			model.addAttribute("listgame",listgame);
+			model.addAttribute("username",user);
+		}
         // Chưa đăng nhập
         if (user == null) {
             return "redirect:/login";
@@ -43,12 +72,12 @@ public class DanhSachYeuThich {
         // Sắp xếp
         switch (sort) {
             case "oldest":
-                danhSachWishlist.sort(Comparator.comparing(WishList::getadded_at));
+                danhSachWishlist.sort(Comparator.comparing(WishList::getAdded_at));
                 break;
 
             default:
                 danhSachWishlist.sort(
-                        Comparator.comparing(WishList::getadded_at).reversed());
+                        Comparator.comparing(WishList::getAdded_at).reversed());
                 break;
         }
 
@@ -81,16 +110,16 @@ public class DanhSachYeuThich {
     }
 
     // XÓA DANH SÁCH YÊU THÍCH
-    @PostMapping("/user/wishlist/delete")
-    public String delete(@RequestParam("id") String id) {
+    @PostMapping("/user/wishlist/delete/{id}")
+    public String delete(@PathVariable("id") String id) {
         wishListDao.deleteById(id);
         return "redirect:/user/wishlist?message=Đã+xóa+khỏi+danh+sách+yêu+thích";
     }
 
-    // THÊM VÀO GIỎ HÀNG
-    @PostMapping("/user/wishlist/addcart")
-    public String addCart(@RequestParam("id") String id) {
-        // TODO: Thêm game vào Cart
-        return "redirect:/user/wishlist?message=Đã+thêm+vào+giỏ+hàng";
-    }
+//    // THÊM VÀO GIỎ HÀNG
+//    @PostMapping("/user/wishlist/addcart")
+//    public String addCart(@RequestParam("id") String id) {
+//    	
+//        return "redirect:/user/wishlist?message=Đã+thêm+vào+giỏ+hàng";
+//    }
 }
