@@ -90,4 +90,12 @@ public class GameSpecification {
             return cb.conjunction();
         };
     }
+    public static Specification<Game> hasRating(String rating) {
+        return (root, query, cb) -> {
+            if (rating == null || rating.isEmpty()) {
+                return null;
+            }
+            return cb.equal(root.get("rating"), rating);
+        };
+    }
 }

@@ -19,15 +19,11 @@ public class QuanLyUser {
     private UserDao userDao;
 
     // 1. GIAO DIỆN CHÍNH (Đã bổ sung GET và truyền dữ liệu list sang Thymeleaf)
-    @GetMapping("/admin/cruduser")
+    @RequestMapping("/admin/cruduser")
     public String crud(Model model) {
-        // Lấy toàn bộ danh sách user từ database
         List<Users> danhSachUsers = userDao.findAll();
-        
-        // Đẩy danh sách này sang file HTML (sử dụng Thymeleaf)
         model.addAttribute("usersList", danhSachUsers);
         
-        // Trả về file giao diện: src/main/resources/templates/Admin/user-management.html
         return "Admin/user-management"; 
     }
 

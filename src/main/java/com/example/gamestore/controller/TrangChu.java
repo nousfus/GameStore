@@ -1,6 +1,5 @@
 package com.example.gamestore.controller;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,7 +36,9 @@ import com.example.gamestore.entity.GameCategories;
 import com.example.gamestore.entity.Orders;
 import com.example.gamestore.entity.Roles;
 import com.example.gamestore.entity.Users;
+import com.example.gamestore.service.MinioService;
 
+import io.minio.MinioClient;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -62,6 +63,10 @@ public class TrangChu {
 	GameCategoriesDao gamecategorydao;
 	@Autowired
 	OrdersDao orderdao;
+	@Autowired
+	private MinioClient minioClient;
+	@Autowired
+	MinioService minioService;
 	@RequestMapping("/")
 	public String abc(Model m) {
 		Users user = (Users) session.getAttribute("user");
@@ -146,44 +151,21 @@ public class TrangChu {
 	}
 	@PostMapping("/user/profile")
 	public String editprofile(Model m,
-			@RequestParam(value = "avatar", required = false) MultipartFile[] avatar,
+			@RequestParam(value = "avatar", required = false) MultipartFile avatar,
 			@RequestParam("fullname") String fullname,
-			@RequestParam("email") String email) throws IOException {
+			@RequestParam("email") String email) throws Exception {
 		Users user = (Users) session.getAttribute("user");
 		user.setFullname(fullname);
 		user.setEmail(email);
 		m.addAttribute("userEdit",user);
 		if(avatar != null &&
-				avatar.length > 0 &&
-				   !avatar[0].isEmpty()) {
+				   !avatar.isEmpty()) {
 
 				    if(user.getAvatar() != null){
 
-				        Path oldThumb = Paths.get(
-				                "uploads/images/",
-				                user.getAvatar());
-
-				        Files.deleteIfExists(oldThumb);
+				    	minioService.delete("images", user.getAvatar());
 				    }
-
-				    MultipartFile thumb = avatar[0];
-
-				    String thumbnailName =
-				            System.currentTimeMillis()
-				            + "_"
-				            + thumb.getOriginalFilename()
-				                  .replaceAll("\\s+","_");
-
-				    Path thumbPath =
-				            Paths.get("uploads/images/",
-				                      thumbnailName);
-
-				    Files.copy(
-				            thumb.getInputStream(),
-				            thumbPath,
-				            StandardCopyOption.REPLACE_EXISTING);
-
-				    user.setAvatar(thumbnailName);
+				    user.setAvatar(minioService.upload(avatar, "images"));
 				}
 		userdao.save(user);
 		return "redirect:/user/profile";
@@ -206,6 +188,10 @@ public class TrangChu {
 		}else if(role.equals("R03")){
 			session.setAttribute("rolepicked", "Developer");	
 			return "forward:/developer/home";
+		}
+		else if(role.equals("R02")){
+			session.setAttribute("rolepicked", "User");	
+			return "forward:/";
 		}
 		else {
 			return "User/profile";

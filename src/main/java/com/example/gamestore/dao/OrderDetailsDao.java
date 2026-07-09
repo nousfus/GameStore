@@ -21,7 +21,7 @@ public interface OrderDetailsDao extends JpaRepository<OrderDetails, String>{
 	@Query(value = """
 	        SELECT
 	            CAST(o.order_date AS DATE) AS revenueDate,
-	            SUM((od.price - od.discount_amount) * od.quantity) AS revenue
+	            SUM(od.price - od.discount_amount) AS revenue
 	        FROM Orders o
 	        JOIN OrderDetails od ON o.order_id = od.order_id
 	        JOIN Game g ON g.game_id = od.game_id

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,12 +50,27 @@ public class ThanhToan {
 	public String a(Model m) {
 		Users user = (Users) session.getAttribute("user");
 		m.addAttribute("username",user.getUsername());
-		m.addAttribute("total",session.getAttribute("total"));
+		m.addAttribute("total",session.getAttribute("total2"));
+		session.setAttribute("instant", false);
+		return "User/payment";
+	}
+	@GetMapping("/user/instant-purchase/{gameid}")
+	public String instantPurchase(
+	        @PathVariable String gameid,
+	        @RequestParam float total,Model m){
+		System.out.println(gameid);
+		Users user = (Users) session.getAttribute("user");
+		m.addAttribute("username",user.getUsername());
+		m.addAttribute("total",total);
+		session.setAttribute("instantgame", gamedao.findById(gameid).orElse(null));
+		session.setAttribute("instanttotal", total);
+		session.setAttribute("instant", true);
 		return "User/payment";
 	}
 	@PostMapping("/payment/process")
 	public String abc(Model m,@RequestParam("method") String pay) {
 		Users user = (Users) session.getAttribute("user");
+		Boolean instant = (Boolean) session.getAttribute("instant");
 		String neworderid = null;
 		for(Orders o : orderdao.findAll()) {
 			int lastorder = Integer.parseInt(o.getOrder_id().substring(4));
@@ -62,9 +78,10 @@ public class ThanhToan {
 		}
 		Date date = new Date(System.currentTimeMillis());
 		
-		String neededCart_id = (String) session.getAttribute("cartid");
+		
+		String neededCart_id = cartdao.findByUsername(user.getUsername()).getCart_id();
 		String tempusername = user.getUsername();									//Tổng giá sản phẩm
-		int total =	(int)session.getAttribute("total");							
+		float total = instant ? (float) session.getAttribute("instanttotal") : (float) session.getAttribute("total2");						
 		Orders order = new Orders(neworderid,tempusername,date,total,"Pending");orderdao.save(order);	//tạo order
 		
 		
@@ -74,17 +91,25 @@ public class ThanhToan {
 		int lastorder = Integer.parseInt(od.getOrder_detail_id().substring(5));
 		String neworderdetailid = "ODD00"+(lastorder+1);									//Mã orderdetails
 		
-		
-		for(CartItems c : cartitemdao.findByCartId(neededCart_id)) {
-			Discounts discount = discountdao.findByGameId(c.getGame().getGame_id());					// Discount của game
+		if(instant) {
+			Game c = (Game) session.getAttribute("instantgame");
+			Discounts discount = discountdao.findByGameId(c.getGame_id());					// Discount của game
 			float discountamount = 0;
 			if(discount!=null) {
-				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
+				discountamount = discount.getDiscountType().equals("PERCENT") ? (c.getPrice() * discount.getDiscount_percent()) / 100 : discount.getDiscount_percent();
 			}else {discountamount = 0;}
-			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
-			
+			OrderDetails odd = new OrderDetails(neworderdetailid,order,c,c.getPrice(),discountamount);orderdetaildao.save(odd);
+		}else if(session.getAttribute("instantgame") == null &&  session.getAttribute("instant") == null) {
+			for(CartItems c : cartitemdao.findByCartId(neededCart_id)) {
+				Discounts discount = discountdao.findByGameId(c.getGame().getGame_id());					// Discount của game
+				float discountamount = 0;
+				if(discount!=null) {
+					discountamount = (c.getGame().getPrice() * discount.getDiscount_percent()) / 100;
+				}else {discountamount = 0;}
+				OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
+			}
 		}
-
+		
 		//Payments
 		List<Payments> hahaha = paymentdao.findAll();
 		Payments pa = hahaha.get(paymentdao.findAll().size()-1);
@@ -92,7 +117,7 @@ public class ThanhToan {
 		int payment = Integer.parseInt(pa.getPayment_id().substring(4));
 		String newpaymentid = "PM00"+(payment+1);									//Mã payment id
 		
-		int lsattrancation = Integer.parseInt(pa.getTransactionCode().substring(7));
+		int lsattrancation = Integer.parseInt(pa.getTransaction_code().substring(7));
 		String newtransactionid = "TRANS00"+(lsattrancation+1);									//Mã transaction
 		
 		Payments payments = new Payments(newpaymentid,neworderid,pay,"Success",date,newtransactionid);paymentdao.save(payments);
@@ -101,10 +126,12 @@ public class ThanhToan {
 				cartitemdao.delete(c);
 			}
 		}
-		cartdao.delete(cartdao.findById(neededCart_id).orElse(null));		// Xóa cart
 		session.removeAttribute("cartid");
 		session.removeAttribute("total");
+		session.removeAttribute("total2");
 		session.removeAttribute("quantity");
-		return "forward:/user/cart";
+		session.removeAttribute("instantgame");
+		session.removeAttribute("instanttotal");
+		return "redirect:/user/product-list";
 	}
 }

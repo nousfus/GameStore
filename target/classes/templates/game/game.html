@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+</head>
+<body>
+<form action="/addgame"
+      method="post"
+      enctype="multipart/form-data">
+	  
+    <h2>Tạo game</h2>
+    <input placeholder="Game Name" name = "gamename"><br/>
+    <input placeholder="Description" name = "description"><br/>
+    <input placeholder="price" type = "number" name = "price"><br/>
+	Thumbnail 	<input type="file" name="thumbnail"accept="image/*"><br/>	
+    Chọn thể loại <br/>
+	<block th:each = "item :${dscategory}">
+					<input type = "checkbox" th:text = "${item.category_name}" th:value = "${item.category_id}" name = "category">
+				</block>
+	<h2>Cấu hình</h2>
+
+	<select name="os">
+	    <option value="">OS</option>
+	    <option value="Microsoft Windows">Microsoft Windows</option>
+	    <option value="macOS">macOS</option>
+	    <option value="Ubuntu">Ubuntu</option>
+	    <option value="Android">Android</option>
+	    <option value="iOS">iOS</option>
+	    <option value="Linux">Linux</option>
+	</select><br/>
+
+	<select name="cpu">
+	    <option value="">CPU</option>
+	    <option value="Intel Celeron N4020">Intel Celeron N4020</option>
+	    <option value="Intel Core i3-12100">Intel Core i3-12100</option>
+	    <option value="AMD Ryzen 5 5600">AMD Ryzen 5 5600</option>
+	    <option value="Intel Core i5-14600K">Intel Core i5-14600K</option>
+	    <option value="AMD Ryzen 7 7800X3D">AMD Ryzen 7 7800X3D</option>
+	    <option value="Intel Core Ultra 9 285K">Intel Core Ultra 9 285K</option>
+	    <option value="AMD Ryzen 9 9950X">AMD Ryzen 9 9950X</option>
+	    <option value="AMD Ryzen Threadripper PRO 7995WX">AMD Ryzen Threadripper PRO 7995WX</option>
+	</select><br/>
+
+	<select name="ram">
+	    <option value="">RAM</option>
+	    <option value="4GB">4GB</option>
+	    <option value="8GB">8GB</option>
+	    <option value="12GB">12GB</option>
+	    <option value="16GB">16GB</option>
+	    <option value="24GB">24GB</option>
+	    <option value="32GB">32GB</option>
+	    <option value="48GB">48GB</option>
+	    <option value="64GB">64GB</option>
+	</select><br/>
+
+	<select name="gpu">
+	    <option value="">Graphics Card</option>
+	    <option value="Intel UHD Graphics">Intel UHD Graphics</option>
+	    <option value="GTX 1050 Ti">NVIDIA GeForce GTX 1050 Ti</option>
+	    <option value="GTX 1660 Super">NVIDIA GeForce GTX 1660 Super</option>
+	    <option value="RTX 3060">NVIDIA GeForce RTX 3060</option>
+	    <option value="RTX 4070 Super">NVIDIA GeForce RTX 4070 Super</option>
+	    <option value="RTX 5080">NVIDIA GeForce RTX 5080</option>
+	    <option value="RTX 5090">NVIDIA GeForce RTX 5090</option>
+	</select><br/>
+
+	<select name="directx">
+	    <option value="">DirectX</option>
+	    <option value="8.0">DirectX 8.0</option>
+	    <option value="9.0">DirectX 9.0</option>
+	    <option value="10">DirectX 10</option>
+	    <option value="11">DirectX 11</option>
+	    <option value="12">DirectX 12</option>
+	    <option value="12 Ultimate">DirectX 12 Ultimate</option>
+	</select><br/>
+
+	<select name="storage">
+	    <option value="">Storage</option>
+	    <option value="128GB">128GB</option>
+	    <option value="256GB">256GB</option>
+	    <option value="512GB">512GB</option>
+	    <option value="1TB">1TB</option>
+	    <option value="2TB">2TB</option>
+	    <option value="4TB">4TB</option>
+	</select><br/>
+
+    <h2>Chọn video trailer</h2>
+	    <input type="file" name="video" accept="video/*">
+		<input name = "title" placeholder = "title video">
+    <h2>Chọn ảnh game</h2>
+	    <input type="file"
+	           name="images"
+	           accept="image/*"
+	           multiple>
+	<button>add Game</button>
+</form>	<!---->
+    <hr/>
+    <h2>Game</h2>
+    <table border = 1>
+        <thead>
+            <tr>
+                <th>GameId</th>
+                <th>Developer Id</th>
+                <th>Game name</th>
+                <th>Description</th>
+                <th>price</th>
+                <th>ReleaseDate</th>
+                <th>Rating</th>
+                <th>Thumbnai</th>
+                <th>Active</th>
+				<th>Video</th>
+				<th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each = "item : ${dsgame}">
+                <td th:text = "${item.game_id}">GameId</td>
+                <td th:text = "${item.game_name}">Game name</td>
+                <td th:text = "${item.description}">Description</td>
+                <td th:text = "${item.price}">price</td>
+                <td th:text = "${item.release_date}">ReleaseDate</td>
+                <td th:text = "${item.rating}">Rating</td>
+				<td>
+				    <img th:src="@{/uploads/images/{file}(file=${item.thumbnail})}"
+				         width="100">
+				</td>
+				<td th:text = "${item.status}">Active</td>
+				<td th:text = "${item.video_url}"></td>
+				<td><a th:href = "@{/game/edit/{id}(id=${item.game_id})}">edit</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Game version</h2>
+    <table border = 1>
+        <thead>
+            <tr>
+                <th>Version id</th>
+                <th>game Id</th>
+                <th>version number</th>
+                <th>Update description</th>
+                <th>releasedate</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each = "item : ${dsgameversion}">
+                <td th:text = "${item.version_id}">GameId</td>
+                <td th:text = "${item.game_id}">Developer Id</td>
+                <td th:text = "${item.version_number}">Game name</td>
+                <td th:text = "${item.update_description}">Description</td>
+                <td th:text = "${item.release_date}">price</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Game Requirements</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Requirement ID</th>
+            <th>Game ID</th>
+            <th>Type</th>
+            <th>OS</th>
+            <th>Processor</th>
+            <th>RAM</th>
+            <th>Graphics Card</th>
+            <th>DirectX</th>
+            <th>Storage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="item : ${dsgamerequirement}">
+            <td th:text="${item.requirement_id}"></td>
+            <td th:text="${item.game_id}"></td>
+            <td th:text="${item.requirement_type}"></td>
+            <td th:text="${item.os}"></td>
+            <td th:text="${item.processor}"></td>
+            <td th:text="${item.memory_ram}"></td>
+            <td th:text="${item.graphicscard}"></td>
+            <td th:text="${item.directx}"></td>
+            <td th:text="${item.storage}"></td>
+        </tr>
+    </tbody>
+</table>
+<h2>Game Images</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Image ID</th>
+            <th>Game ID</th>
+            <th>Image URL</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="item : ${dsgameimage}">
+            <td th:text="${item.image_id}"></td>
+            <td th:text="${item.game_id}"></td>
+            <td th:text="${item.image_url}"></td>
+        </tr>
+    </tbody>
+</table>
+<h2>Game Categories</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Game ID</th>
+            <th>Category ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="item : ${dsgamecategory}">
+            <td th:text="${item.game_id}"></td>
+            <td th:text="${item.category_id}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

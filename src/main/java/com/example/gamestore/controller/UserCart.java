@@ -43,13 +43,14 @@ public class UserCart {
 			for(CartItems c : list0) {
 				total += c.getGame().getPrice();
 				for(Discounts d : discountdao.findAll()) {
-					if(c.getGame().getGame_id().equals(d.getgame_id())) {
-						discount += ((c.getGame().getPrice()* d.getdiscount_percent()) / 100 );
+					if(c.getGame().getGame_id().equals(d.getGame_id())) {
+						discount += ((c.getGame().getPrice()* d.getDiscount_percent()) / 100 );
 					}
 				}
 			}
 			m.addAttribute("discount",discount);
 			m.addAttribute("total",total);
+			session.setAttribute("total2", total);
 			m.addAttribute("cartitemdao",cartitemdao);
 		}
 		return "User/cart";
@@ -68,14 +69,14 @@ public class UserCart {
 		for(CartItems c : list) {
 			total += c.getGame().getPrice();
 			for(Discounts d : discountdao.findAll()) {
-				if(c.getGame().getGame_id().equals(d.getgame_id())) {
-					discount += ((c.getGame().getPrice()* d.getdiscount_percent()) / 100 );
+				if(c.getGame().getGame_id().equals(d.getGame_id())) {
+					discount += ((c.getGame().getPrice()* d.getDiscount_percent()) / 100 );
 				}
 			}
 		}
 		m.addAttribute("discount",discount);
 		m.addAttribute("total",total);
-		session.setAttribute("total", total);
+
 	    return "forward:/user/cart";
 	}
 	@RequestMapping("/delete/{id}")
@@ -89,8 +90,10 @@ public class UserCart {
 	}
 	@RequestMapping("/thanhtoan")
 	public String thanhtoan(Model m) {
+		String total = (String )session.getAttribute("total2");
+		System.out.println(total);
 		Users user = (Users) session.getAttribute("user");
-		m.addAttribute("total",session.getAttribute("total"));
+		m.addAttribute("total",total);
 		m.addAttribute("username",user.getUsername());
 		return "User/payment";
 	}

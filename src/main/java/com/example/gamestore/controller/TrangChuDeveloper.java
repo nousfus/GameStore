@@ -1,23 +1,14 @@
 package com.example.gamestore.controller;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,11 +27,7 @@ import com.example.gamestore.entity.OrderDetails;
 import com.example.gamestore.entity.Roles;
 import com.example.gamestore.entity.Users;
 import com.example.gamestore.service.MinioService;
-import com.google.common.net.HttpHeaders;
-
 import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -126,6 +113,26 @@ public class TrangChuDeveloper {
 		
 		m.addAttribute("selectedCategories", selectedCategories);
 		m.addAttribute("gameEdit",game);
+		//Hiển thị video game
+		  if(game.getVideo_url() == null) return "";
+		    if (game.getVideo_url().contains("watch?v=")) {
+
+		        String VideoId = game.getVideo_url()
+		                .split("watch\\?v=")[1]
+		                .split("&")[0];
+
+		        m.addAttribute("youtube", true);
+		        m.addAttribute("videourl",
+		                "https://www.youtube.com/embed/" + VideoId);
+
+		    }else {
+
+		        m.addAttribute("youtube", false);
+		        m.addAttribute("videourl",
+		                "/videos/" + game.getVideo_url());
+
+		    }
+
 		return "Developer/game-management";
 	}
 	@PostMapping("/create-game")
@@ -173,7 +180,7 @@ public class TrangChuDeveloper {
 			if (isEdit && game.getThumbnail() != null && !game.getThumbnail().isBlank()) {
 				minioService.delete("images", game.getThumbnail());
 			}
-		    	
+			game.setThumbnail(minioService.upload(thumbnail, "images"));
 		}
  
     		

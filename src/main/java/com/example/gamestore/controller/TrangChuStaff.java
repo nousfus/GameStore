@@ -60,7 +60,7 @@ public class TrangChuStaff {
 		if(user!=null) {
 			m.addAttribute("rolepicked",session.getAttribute("rolepicked"));
 			m.addAttribute("username",user.getUsername());
-			m.addAttribute("userEdit",user);
+			m.addAttribute("user",user);
 			List<Roles> list = userroledao.findByUsername(user.getUsername());
 			m.addAttribute("dsrole",list);
 		}
@@ -122,20 +122,9 @@ public class TrangChuStaff {
 		Users user = (Users) session.getAttribute("user");
 		Orders order = orderdao.findById(orderid).orElse(null);
 		List<OrderDetails> orderdetail = orderdetaildao.findByOrderID(orderid);
-		List<String> game = new ArrayList<>();
-		for(OrderDetails o : orderdetail) {
-			game.add(o.getGame().getGameName());
-		}
 		order.setStatus("Paid");
 		orderdao.save(order);
-		List<Notifications> noti = notidao.findByUsername(user.getUsername());
-		String lastid = noti.get(notidao.findByUsername(user.getUsername()).size()).getNotification_id();
-		String newnotid = "NT00" + (lastid.substring(4) + 1);	
-		Date date = new Date(System.currentTimeMillis());
-		String title = "Mua hàng thành công";
-		String content = "Đã mua "+game;
-		notidao.save(new Notifications(newnotid,user.getUsername(),title,content,false,date));
-		return "staff/orders-management";
+		return "redirect:/staff/orders";
 	}
 	@RequestMapping("/reviews")
 	public String reviews() {

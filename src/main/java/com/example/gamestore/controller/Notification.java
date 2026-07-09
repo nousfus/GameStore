@@ -27,12 +27,7 @@ public class Notification {
 
 	@Autowired
 	NotificationsDao notificationdao;
-
-	// =========================================================================
-	// PHÂN HỆ: USER (XEM, ĐỌC, XÓA THÔNG BÁO)
-	// =========================================================================
-
-	@RequestMapping("user/notification")	
+	@RequestMapping("/user/notification")	
 	public String abc(Model m) {
 		Users user = (Users) session.getAttribute("user");
 		if (user == null) {

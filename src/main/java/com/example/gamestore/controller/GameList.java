@@ -36,11 +36,13 @@ import com.example.gamestore.entity.Orders;
 import com.example.gamestore.entity.Payments;
 import com.example.gamestore.entity.Reviews;
 import com.example.gamestore.entity.Users;
+import com.example.gamestore.entity.WishList;
 import com.example.gamestore.service.GameSpecification;
 import com.example.gamestore.service.MinioService;
 import com.google.common.net.HttpHeaders;
 
 import io.minio.MinioClient;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -72,10 +74,16 @@ public class GameList {
 	GameImagesDao gameimagedao;
 	@Autowired
 	MinioService minioService;
+	@Autowired
+	HttpServletRequest request;
+	@Autowired
+	WishListDao wishlistdao;
 	@GetMapping("/user/product-list")
 	public String productList(
 	        @RequestParam(defaultValue = "0") int page,
 	        Model m) {
+		String path = request.getServletPath();
+		session.setAttribute("path", path);
 		Users user = (Users) session.getAttribute("user");
 		m.addAttribute("username",user);
 		m.addAttribute("dscate",categorydao.findAll());
@@ -113,11 +121,17 @@ public class GameList {
 				listgame.add(c.getGame().getGame_id());
 			}
 			m.addAttribute("listgame",listgame);
+			List<String> gamewishilst = new ArrayList<>();
+			for(WishList w : wishlistdao.findByUsername(user.getUsername())) {
+				gamewishilst.add(w.getGame().getGame_id());
+			}
+		    m.addAttribute("wishlist",gamewishilst);
 		}
 		
 	    m.addAttribute("gamePage", gamePage);
 	    m.addAttribute("currentPage", page);
 		m.addAttribute("OrderDetail",orderdetaildao);
+		m.addAttribute("currentUrl", request.getRequestURI());
 
 	    return "user/product-list";
 	}
@@ -128,8 +142,11 @@ public class GameList {
 	        @RequestParam(required = false) String storage,
 	        @RequestParam(required = false) Double price,
 	        @RequestParam(required =false) String sort,
+	        @RequestParam(required = false) String rating,
 	        @RequestParam(defaultValue = "0") int page,
 	        Model m) {
+		String path = request.getServletPath();
+		session.setAttribute("path", path);
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
 			List<String> gamePaidId = new ArrayList<>();
@@ -147,13 +164,20 @@ public class GameList {
 			}
 			m.addAttribute("listgame",listgame);
 			m.addAttribute("username",user);
+			
+			List<String> gamewishilst = new ArrayList<>();
+			for(WishList w : wishlistdao.findByUsername(user.getUsername())) {
+				gamewishilst.add(w.getGame().getGame_id());
+			}
+		    m.addAttribute("wishlist",gamewishilst);
 		}
 	    Specification<Game> spec = Specification
 	            .where(GameSpecification.hasRam(ram))
 	            .and(GameSpecification.hasStorage(storage))
 	            .and(GameSpecification.priceLessThan(price))
 	            .and(GameSpecification.hasCategory(categories))
-	            .and(GameSpecification.sortBy(sort));
+	            .and(GameSpecification.sortBy(sort))
+	            .and(GameSpecification.hasRating(rating));
 
 	    Pageable pageable = PageRequest.of(page, 9);
 	    Page<Game> gamePage = gamedao.findAll(spec, pageable); 
@@ -173,15 +197,51 @@ public class GameList {
 		    }
 		    m.addAttribute("categories",names);
 		}
-	    
+	   if(sort!=null) {
+		   m.addAttribute("Pickedsort",sort);
+	   }
+	    if(categories!=null) {
+	    	 m.addAttribute("pickedcategories",categories);
+	    }
+	    m.addAttribute("pickedram",ram);
+	    m.addAttribute("pickedprice",price);
+	    m.addAttribute("hasRating",rating);
+	    m.addAttribute("pickStorage",storage);
 	    m.addAttribute("gamePage", gamePage);
 	    m.addAttribute("currentPage", page);
 	    m.addAttribute("dscate",categorydao.findAll());
+	    
+
 	    
 	    return "user/product-list";
 	}
 	@RequestMapping("/user/product-detail/{id}")								// Trang chi tiết sản phẩm
 	public String detail(@PathVariable("id") String id,Model m) throws Exception {
+		String path = request.getServletPath();
+		session.setAttribute("path", path);
+		Users user = (Users) session.getAttribute("user");
+		if(user!=null) {
+			List<String> gamePaidId = new ArrayList<>();
+			for(OrderDetails d : orderdetaildao.findAll()) {
+				if(d.getOrder().getUsername().equals(user.getUsername()) && d.getOrder().getStatus().equals("Paid")) {
+					gamePaidId.add(d.getGame().getGame_id());
+				}
+			}
+			m.addAttribute("gamePaidId",gamePaidId);
+			Cart cart = cartDao.findByUsername(user.getUsername());
+			List<CartItems> cartitemlist = cartitemdao.findByCartId(cart.getCart_id());
+			List<String> listgame = new ArrayList<>();
+			for(CartItems c : cartitemlist) {
+				listgame.add(c.getGame().getGame_id());
+			}
+			m.addAttribute("listgame",listgame);
+			m.addAttribute("username",user);
+			List<String> gamewishilst = new ArrayList<>();
+			for(WishList w : wishlistdao.findByUsername(user.getUsername())) {
+				gamewishilst.add(w.getGame().getGame_id());
+			}
+		    m.addAttribute("wishlist",gamewishilst);
+		}
 		//Hiển thị thông tin game
 		Game game = gamedao.findById(id).orElse(null);
 		m.addAttribute("game",game);
@@ -191,9 +251,17 @@ public class GameList {
 		Discounts discount = discountdao.findByGameId(id);
 		m.addAttribute("gameDiscount",discount);
 		if(discount!=null) {
-			m.addAttribute("discount",discount.getdiscount_percent());
-			float price = game.getPrice() - ((game.getPrice()*discount.getdiscount_percent()) / 100);
-			m.addAttribute("priceafterdiscount",price);	
+			if(discount.getDiscountType().equals("PERCENT")) {
+				m.addAttribute("discount",discount.getDiscount_percent());
+				float price = game.getPrice() - ((game.getPrice()*discount.getDiscount_percent()) / 100);
+				m.addAttribute("priceafterdiscount",price);	
+				m.addAttribute("percent",true);
+			}else {
+				m.addAttribute("discount",discount.getDiscount_percent());
+				float price = game.getPrice() - discount.getDiscount_percent();
+				m.addAttribute("priceafterdiscount",price);	
+				m.addAttribute("percent",false);
+			}
 		}
 
 		// Đánh giá
@@ -339,7 +407,7 @@ public class GameList {
 		float discountamount = 0;
 		for(CartItems c : cartitemdao.findByCartId(neededCart_id)) {
 			if(discount!=null) {
-				discountamount = (c.getGame().getPrice() * discount.getdiscount_percent()) / 100;
+				discountamount = (c.getGame().getPrice() * discount.getDiscount_percent()) / 100;
 			}else {discountamount = 0;}
 			OrderDetails odd = new OrderDetails(neworderdetailid,order,c.getGame(),c.getGame().getPrice(),discountamount);orderdetaildao.save(odd);	
 		}
@@ -351,7 +419,7 @@ public class GameList {
 		int payment = Integer.parseInt(pa.getPayment_id().substring(4));
 		String newpaymentid = "PM00"+(payment+1);									//Mã payment id
 		
-		int lsattrancation = Integer.parseInt(pa.getTransactionCode().substring(7));
+		int lsattrancation = Integer.parseInt(pa.getTransaction_code().substring(7));
 		String newtransactionid = "TRANS00"+(lsattrancation+1);									//Mã transaction
 		
 		Payments payments = new Payments(newpaymentid,neworderid,pay,"Success",date,newtransactionid);paymentdao.save(payments);

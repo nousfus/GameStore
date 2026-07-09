@@ -1,5 +1,6 @@
 package com.example.gamestore.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.gamestore.dao.CartDao;
 import com.example.gamestore.dao.CartItemsDao;
+import com.example.gamestore.dao.GameDao;
 import com.example.gamestore.dao.OrderDetailsDao;
 import com.example.gamestore.dao.WishListDao;
 import com.example.gamestore.entity.Cart;
 import com.example.gamestore.entity.CartItems;
+import com.example.gamestore.entity.Game;
 import com.example.gamestore.entity.OrderDetails;
 import com.example.gamestore.entity.Users;
 import com.example.gamestore.entity.WishList;
@@ -32,14 +35,17 @@ public class DanhSachYeuThich {
     CartDao cartdao;
     @Autowired
     CartItemsDao cartitemdao;
-
+    @Autowired
+    HttpSession session;
+    @Autowired
+    GameDao gamedao;
     // HIỂN THỊ DANH SÁCH YÊU THÍCH
     @GetMapping("/user/wishlist")
     public String wishlist(
             @RequestParam(defaultValue = "newest") String sort,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(required = false) String message,
-            HttpSession session,
+            
             Model model) {
 
         // Lấy user đang đăng nhập
@@ -108,7 +114,36 @@ public class DanhSachYeuThich {
 
         return "User/wishlist";
     }
-
+    @GetMapping("/user/wishlist/add/{id}")
+    public String add(@PathVariable String id) {
+    	Users user = (Users) session.getAttribute("user");
+    	if(user==null) {
+			return "redirect:/login-register";
+		}
+    	List<WishList> wishlist = wishListDao.findByUsername(user.getUsername());
+    	List<String> gamewishlist = new ArrayList<>();
+    	for(WishList w : wishlist) {
+    		gamewishlist.add(w.getGame().getGame_id());
+    	}
+     	if(!gamewishlist.contains(id)) {
+        	List<WishList> all = wishListDao.findAll();
+        	WishList last = all.get(wishListDao.findAll().size()-1);
+        	String wishList_id = "WL00" + (Integer.parseInt(last.getwishlist_id().substring(4)) + 1);
+        	Date date = new Date(System.currentTimeMillis());
+        	Game game = gamedao.findById(id).orElse(null);
+    		wishListDao.save(new WishList(wishList_id,user.getUsername(),game,date));
+    	}else {
+    		for(WishList c : wishlist) {
+    			if(c.getGame().getGame_id().equals(id)) {
+    				wishListDao.delete(c);
+    			}
+    		}
+    		
+    	}
+        String path = (String) session.getAttribute("path");
+        return "redirect:"+path;
+    }
+    
     // XÓA DANH SÁCH YÊU THÍCH
     @PostMapping("/user/wishlist/delete/{id}")
     public String delete(@PathVariable("id") String id) {

@@ -14,11 +14,11 @@ public class WishList {
 	private Game game; 
 	private Date added_at; 
 	public WishList() { }
-	public WishList(String wishlist_id, String username, Game game_id, Date added_at) {
+	public WishList(String wishlist_id, String username, Game game, Date added_at) {
 		super();
 		this.wishlist_id = wishlist_id;
 		this.username = username;
-		this.game = game_id;
+		this.game = game;
 		this.added_at = added_at;
 	}
 	public String getwishlist_id() {

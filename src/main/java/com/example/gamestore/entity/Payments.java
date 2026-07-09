@@ -16,14 +16,14 @@ public class Payments {
 	private String transaction_code;
 	public Payments() {}
 	public Payments(String payment_id, String order_id, String payment_method, String payment_status, Date paid_at,
-			String transactionCode) {
+			String transaction_code) {
 		super();
 		this.payment_id = payment_id;
 		this.orderid = order_id;
 		this.payment_method = payment_method;
 		this.payment_status = payment_status;
 		this.paid_at = paid_at;
-		this.transaction_code = transactionCode;
+		this.transaction_code = transaction_code;
 	}
 	public String getPayment_id() {
 		return payment_id;
@@ -55,11 +55,11 @@ public class Payments {
 	public void setPaid_at(Date paid_at) {
 		this.paid_at = paid_at;
 	}
-	public String getTransactionCode() {
+	public String getTransaction_code() {
 		return transaction_code;
 	}
-	public void setTransactionCode(String transactionCode) {
-		this.transaction_code = transactionCode;
+	public void setTransaction_code(String transaction_code) {
+		this.transaction_code = transaction_code;
 	}
 	
 	

@@ -96,11 +96,11 @@ public class TrangChuAdmin {
 	}
 	@RequestMapping("/user-management")
 	public String user() {
-		return "Admin/user-management";
+		return "redirect:/admin/cruduser";
 	}
 	@RequestMapping("/promotions")
 	public String promotions() {
-		return "Admin/promotions";
+		return "redirect:/admin/khuyenmai";
 	}
 	@RequestMapping("/revenue-report")
 	public String revenuereport(Model m,
