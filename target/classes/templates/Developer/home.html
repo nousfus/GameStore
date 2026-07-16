@@ -44,21 +44,21 @@
 <header>
     <div class="logo">GameStore Developer</div>
     <nav>
-        <a href="/developer">Dashboard</a>
-        <a href="/developer/game-management">Game Management</a>
-        <a href="/developer/revenue-tracking">Revenue</a>
-        <a href="/developer/review-feedback">Reviews</a>
+        <a href="/developer">Trang chủ</a>
+        <a href="/developer/game-management">Quản lý game</a>
+        <a href="/developer/revenue-tracking">Doanh thu</a>
+        <a href="/developer/review-feedback">Bình luận game</a>
     </nav>
     <div class="header-right">
-        <div class="muted">Signed in as <strong th:text="${username}">Developer</strong></div>
+        <div class="muted">Vai trò : <strong th:text="${username}">Developer</strong></div>
 		<a href = "/logout">
             <button class="login-btn">
-                Logout
+                Đăng xuất
             </button>
 		</a>
 		<a href = "/developer/profile">
             <button class="login-btn">
-                Profile
+                Trang cá nhân
             </button>
 		</a>
     </div>
@@ -74,8 +74,8 @@
 <main class="container">
     <section class="section-overview">
         <div style="display:flex;justify-content:space-between;align-items:center">
-            <h2>Quick Actions</h2>
-            <a href="/developer/game-management" style="color:#22d3ee;text-decoration:none">Manage Games</a>
+            <h2>Xem nhanh</h2>
+            <a href="/developer/game-management" style="color:#22d3ee;text-decoration:none">Quản lý game</a>
         </div>
 
         <div class="grid">

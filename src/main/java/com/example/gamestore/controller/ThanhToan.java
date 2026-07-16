@@ -49,6 +49,11 @@ public class ThanhToan {
 	@GetMapping("/payment/process")
 	public String a(Model m) {
 		Users user = (Users) session.getAttribute("user");
+		m.addAttribute("qrUrl","https://img.vietqr.io/image/VCB-9908208692-compact2.png\r\n"
+				+ "    ?amount="+session.getAttribute("total2")+"\r\n"
+				+ "    &addInfo=ORDER123\r\n"
+				+ "    &accountName=LE%20HOANG%20THIEN%20TRIEU");
+		
 		m.addAttribute("username",user.getUsername());
 		m.addAttribute("total",session.getAttribute("total2"));
 		session.setAttribute("instant", false);

@@ -72,13 +72,7 @@ public class TrangChuAdmin {
 
 	@RequestMapping("/content-management")
 	public String content(Model m) {
-		List<Game> list = new ArrayList<>();
-		for(Game g : gamedao.findAll()) {
-			if(g.getStatus().equals("Unactive")) {
-				list.add(g);
-			}
-		}
-		m.addAttribute("listgame",list);
+		m.addAttribute("listgame",gamedao.findAll());
 		return "Admin/content-management";
 	}
 	@RequestMapping("/games/edit/{id}")
@@ -183,7 +177,6 @@ public class TrangChuAdmin {
 		m.addAttribute("lonNhat",lonNhat);
 		m.addAttribute("nhoNhat",nhoNhat);
 		m.addAttribute("trungBinh",trungBinh);
-		
 		m.addAttribute("maxRevenue", maxRevenue);
 		m.addAttribute("revenues",revenues);
 		m.addAttribute("dates",dates);

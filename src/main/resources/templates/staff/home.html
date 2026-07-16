@@ -44,22 +44,22 @@
 <header>
     <div class="logo">GameStore Staff</div>
     <nav>
-        <a href="/staff">Dashboard</a>
-        <a href="/staff/notifications">Notifications</a>
-        <a href="/staff/orders">Orders</a>
-        <a href="/staff/support">Support</a>
+        <a href="/staff">Trang chủ</a>
+        <a href="/staff/notifications">Quản lý thông báo</a>
+        <a href="/staff/orders">Đơn hàng</a>
+        <a href="/staff/support">Hỗ trợ khách hàng</a>
     </nav>
 
 	<div class="header-right">
 	        <div class="muted">Signed in as <strong th:text="${username}">Developer</strong></div>
 			<a href = "/logout">
 	            <button class="login-btn">
-	                Logout
+	                Đăng xuất
 	            </button>
 			</a>
 			<a href = "/staff/profile">
 	            <button class="login-btn">
-	                Profile
+	                Trang cá nhân
 	            </button>
 			</a>
 	    </div>
@@ -76,8 +76,8 @@
 <main class="container">
     <section class="section-overview">
         <div style="display:flex;justify-content:space-between;align-items:center">
-            <h2>Quick Actions</h2>
-            <a href="/staff/orders" style="color:#22d3ee;text-decoration:none">Manage Orders</a>
+            <h2>Xem nhanh</h2>
+            <a href="/staff/orders" style="color:#22d3ee;text-decoration:none">Quản lý đơn hàng</a>
         </div>
 
         <div class="grid">

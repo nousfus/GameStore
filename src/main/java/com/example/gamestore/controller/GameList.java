@@ -11,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -105,6 +106,9 @@ public class GameList {
 		    }
 
 		   m.addAttribute("categories",names);
+		   m.addAttribute("highestPrice",gamedao.findTopByOrderByPriceDesc().getPrice());
+		   
+		  
 		}
 		if(user!=null) {
 			List<String> gamePaidId = new ArrayList<>();
@@ -145,7 +149,9 @@ public class GameList {
 	        @RequestParam(required = false) String rating,
 	        @RequestParam(defaultValue = "0") int page,
 	        Model m) {
+		
 		String path = request.getServletPath();
+		m.addAttribute("highestPrice",gamedao.findTopByOrderByPriceDesc().getPrice());
 		session.setAttribute("path", path);
 		Users user = (Users) session.getAttribute("user");
 		if(user!=null) {
@@ -171,18 +177,17 @@ public class GameList {
 			}
 		    m.addAttribute("wishlist",gamewishilst);
 		}
-	    Specification<Game> spec = Specification
-	            .where(GameSpecification.hasRam(ram))
-	            .and(GameSpecification.hasStorage(storage))
-	            .and(GameSpecification.priceLessThan(price))
-	            .and(GameSpecification.hasCategory(categories))
-	            .and(GameSpecification.sortBy(sort))
-	            .and(GameSpecification.hasRating(rating));
 
-	    Pageable pageable = PageRequest.of(page, 9);
-	    Page<Game> gamePage = gamedao.findAll(spec, pageable); 
-	    
-	    for(Game game : gamePage.getContent()) {
+		    Specification<Game> spec = Specification
+		            .where(GameSpecification.hasRam(ram))
+		            .and(GameSpecification.hasStorage(storage))
+		            .and(GameSpecification.priceLessThan(price))
+		            .and(GameSpecification.hasCategory(categories))
+		            .and(GameSpecification.sortBy(sort))
+		            .and(GameSpecification.hasRating(rating));
+		    Pageable pageable = PageRequest.of(page, 9);
+		    Page<Game> gamePage = categories != null ? gamedao.findAll(spec, pageable) : gamedao.findAllGame(pageable); 
+		for(Game game : gamePage.getContent()) {
 
 		    List<String> names = new ArrayList<>();
 
@@ -210,7 +215,7 @@ public class GameList {
 	    m.addAttribute("gamePage", gamePage);
 	    m.addAttribute("currentPage", page);
 	    m.addAttribute("dscate",categorydao.findAll());
-	    
+	    m.addAttribute("highestPrice",gamedao.findTopByOrderByPriceDesc().getPrice());
 
 	    
 	    return "user/product-list";

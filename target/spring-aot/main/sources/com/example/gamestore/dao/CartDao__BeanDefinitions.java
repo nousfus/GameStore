@@ -1,0 +1,65 @@
+package com.example.gamestore.dao;
+
+import com.example.gamestore.entity.Cart;
+import jakarta.persistence.EntityManager;
+import java.lang.Class;
+import java.lang.String;
+import org.springframework.aot.generate.Generated;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.aot.BeanInstanceSupplier;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.InstanceSupplier;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.core.ResolvableType;
+import org.springframework.data.jpa.repository.query.QueryEnhancerSelector;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean__Autowiring11;
+import org.springframework.data.repository.core.support.RepositoryComposition;
+import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport;
+import org.springframework.data.repository.query.QueryLookupStrategy;
+
+/**
+ * Bean definitions for {@link CartDao}.
+ */
+@Generated
+public class CartDao__BeanDefinitions {
+  /**
+   * Get the bean instance supplier for 'cartDao'.
+   */
+  private static BeanInstanceSupplier<JpaRepositoryFactoryBean> getCartDaoInstanceSupplier() {
+    return BeanInstanceSupplier.<JpaRepositoryFactoryBean>forConstructor(Class.class)
+            .withGenerator((registeredBean, args) -> new JpaRepositoryFactoryBean(args.get(0)));
+  }
+
+  /**
+   * Get the bean definition for 'cartDao'.
+   */
+  public static BeanDefinition getCartDaoBeanDefinition() {
+    RootBeanDefinition beanDefinition = new RootBeanDefinition(JpaRepositoryFactoryBean.class);
+    beanDefinition.setTargetType(ResolvableType.forClassWithGenerics(JpaRepositoryFactoryBean.class, CartDao.class, Cart.class, String.class));
+    beanDefinition.setLazyInit(false);
+    beanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(0, "com.example.gamestore.dao.CartDao");
+    beanDefinition.getPropertyValues().addPropertyValue("queryLookupStrategyKey", QueryLookupStrategy.Key.CREATE_IF_NOT_FOUND);
+    beanDefinition.getPropertyValues().addPropertyValue("lazyInit", false);
+    beanDefinition.getPropertyValues().addPropertyValue("namedQueries", new RuntimeBeanReference("jpa.named-queries#11"));
+    beanDefinition.getPropertyValues().addPropertyValue("repositoryFragments", new RuntimeBeanReference("jpa.CartDao.fragments#0"));
+    beanDefinition.getPropertyValues().addPropertyValue("transactionManager", "transactionManager");
+    beanDefinition.getPropertyValues().addPropertyValue("entityManager", new RuntimeBeanReference("jpaSharedEM_entityManagerFactory", EntityManager.class));
+    beanDefinition.getPropertyValues().addPropertyValue("escapeCharacter", '\\');
+    beanDefinition.getPropertyValues().addPropertyValue("mappingContext", new RuntimeBeanReference("jpaMappingContext"));
+    beanDefinition.getPropertyValues().addPropertyValue("queryEnhancerSelector", QueryEnhancerSelector.DefaultQueryEnhancerSelector.class);
+    beanDefinition.getPropertyValues().addPropertyValue("enableDefaultTransactions", true);
+    beanDefinition.getPropertyValues().addPropertyValue("repositoryFragmentsFunction", new RepositoryFactoryBeanSupport.RepositoryFragmentsFunction() {
+      public RepositoryComposition.RepositoryFragments getRepositoryFragments(
+          BeanFactory beanFactory, RepositoryFactoryBeanSupport.FragmentCreationContext context) {
+        EntityManager entityManager = beanFactory.getBean(EntityManager.class);
+        return RepositoryComposition.RepositoryFragments.just(new com.example.gamestore.dao.CartDaoImpl__AotRepository(entityManager, context));
+      }
+    });
+    InstanceSupplier<JpaRepositoryFactoryBean> instanceSupplier = getCartDaoInstanceSupplier();
+    instanceSupplier = instanceSupplier.andThen(JpaRepositoryFactoryBean__Autowiring11::apply);
+    beanDefinition.setInstanceSupplier(instanceSupplier);
+    return beanDefinition;
+  }
+}

@@ -390,20 +390,8 @@
 </head>
 
 <body>
-    <header>
-        <a href="/" class="logo">GameStore</a>
-
-        <nav>
-            <a href="/">Store</a>
-            <a href="/user/product-list">Library</a>
-            <a href="#">Community</a>
-            <a href="#">News</a>
-        </nav>
-
-        <div class="header-right">
-            <button class="user-menu" th:text="${username}">Tài khoản</button>
-        </div>
-    </header>
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
+    <div th:replace="fragments/layout-fragments :: header"></div>
 
     <main>
         <div class="page-header">
@@ -462,9 +450,7 @@
         </div>
     </main>
 
-    <footer>
-        <p>© 2026 GameStore. All Rights Reserved.</p>
-    </footer>
+    <div th:replace="fragments/layout-fragments :: footer"></div>
 <script>
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 </script>

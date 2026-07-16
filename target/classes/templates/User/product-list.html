@@ -63,20 +63,12 @@
         @media (max-width:1100px) { .games { grid-template-columns: repeat(2,1fr); } main { grid-template-columns: 1fr; } .sidebar { order:2; } }
         @media (max-width:700px) { .games { grid-template-columns: 1fr; } .search-box { width:140px; } header { padding:12px 16px; } }
     </style>
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
 </head>
 
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <a href="/" class="logo">GameStore</a>
-
-        <nav>
-            <a href="/user/product-list">Store</a>
-            <a href="/user/product-list">Library</a>
-            <a href="#">Community</a>
-            <a href="#">News</a>
-        </nav>
+    <div th:replace="fragments/layout-fragments :: header"></div>
 
 		<div class="header-right" >
 			<form th:action="@{/game}" method="get">
@@ -85,27 +77,27 @@
 			           placeholder="Search games..."
 			           class="search-box"
 			           th:value="${keyword}">
-			    <button type="submit" class="user-menu">Search</button>
+			    <button type="submit" class="user-menu">Tìm kiếm</button>
 			</form>	
 	
 			<a href = "/login-register" th:if = "${username == null}">
 	            <button class="user-menu">
-	                Login
+	                Đăng nhập
 	            </button>
 			</a>
 			<a href = "/user/logout" th:if = "${username != null}">
 	            <button class="user-menu">
-	                Logout
+	                Đăng xuất
 	            </button>
 			</a>
 			<a href = "/user/profile" th:if = "${username != null}">
 	            <button class="user-menu">
-	                Profile
+	                Trang cá nhân
 	            </button>
 			</a>
 			<a href = "/user/cart" th:if = "${username != null}">
 	            <button class="user-menu">
-	                Cart
+	                Giỏ hàng
 	            </button>
 			</a>
     </div>
@@ -121,7 +113,7 @@
 				<button type="submit" class="user-menu">Lọc</button><br/><br/>
                 <h3>Thể loại</h3>
                 <label th:each = "item :${dscate}">
-					<input type="checkbox" th:text = "${item.category_name}" name = "categories" th:value = "${item.category_id}"  th:checked="${pickedcategories != null and pickedcategories.contains(item.category_id)}">
+					<input type="checkbox" th:text = "${item.category_name} + ' '" name = "categories" th:value = "${item.category_id}"  th:checked="${pickedcategories != null and pickedcategories.contains(item.category_id)}">
 				</label>
             </div>
 
@@ -129,14 +121,14 @@
                 <h4>Giá</h4>
 				<label>
 				      Từ: <strong>0đ</strong> -
-				      Tới: <strong id="priceValue">1.000.000đ</strong>
+				      Tới: <strong id="priceValue" th:text = "${highestPrice+'đ'}"></strong>
 				  </label>
 
 				  <input type="range"
 				         id="priceRange"
 				         min="0"
-				         max="1000000"
-				         th:value="${pickedprice}"
+				         th:max="${highestPrice}"
+				         th:value="${pickedprice != null ? pickedprice : highestPrice}"
 				         name="price">
             </div>
 
@@ -185,7 +177,7 @@
         <section class="products-section">
 
             <div class="products-header">
-                <h2>Danh sách Sản phẩm</h2>
+                <h2>Danh sách game</h2>
 				<select class="sort-options" name="sort">
 				    <option value="">Sắp xếp theo</option>
 				    <option value="newest" th:selected = "${Pickedsort != null and Pickedsort=='newest'}">Mới nhất</option>
@@ -268,7 +260,6 @@
 
     </main>
 
-    <!-- FOOTER -->
     <footer>
         <p>© 2026 GameStore. All Rights Reserved.</p>
     </footer>

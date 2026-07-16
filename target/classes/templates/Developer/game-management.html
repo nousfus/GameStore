@@ -140,12 +140,8 @@
         <div class="value" th:text="${#lists.size(listgame)}">0</div>
       </div>
       <div class="summary-card">
-        <div class="label">Đang hoạt động</div>
-        <div class="value">18</div>
-      </div>
-      <div class="summary-card">
         <div class="label">Chờ cập nhật</div>
-        <div class="value">4</div>
+        <div class="value" th:text="${#lists.size(listgame)}">4</div>
       </div>
     </div>
 

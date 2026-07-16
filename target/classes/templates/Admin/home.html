@@ -45,22 +45,22 @@
 <header>
     <div class="logo">GameStore Admin</div>
     <nav>
-        <a href="/admin">Dashboard</a>
-        <a href="/admin/content-management">Content</a>
-        <a href="/admin/cruduser">Users</a>
-        <a href="/admin/promotions">Promotions</a>
+        <a href="/admin">Trang chủ</a>
+        <a href="/admin/content-management">Nội dung</a>
+        <a href="/admin/cruduser">Người dùng</a>
+        <a href="/admin/promotions">Khuyến mãi</a>
     </nav>
 
 	<div class="header-right">
-        <div class="muted">Signed in as <strong th:text="${username}">Developer</strong></div>
+        <div class="muted">Vai trò : <strong th:text="${username}">Developer</strong></div>
 		<a href = "/user/logout">
             <button class="login-btn">
-                Logout
+                Đăng xuất
             </button>
 		</a>
 		<a href = "/admin/profile">
             <button class="login-btn">
-                Profile
+                Trang cá nhân
             </button>
 		</a>
     </div>
@@ -78,7 +78,7 @@
     <section class="section-overview">
         <div style="display:flex;justify-content:space-between;align-items:center">
             <h2>Quick Actions</h2>
-            <a href="/admin/revenue-report" style="color:#22d3ee;text-decoration:none">View Reports</a>
+            <a href="/admin/revenue-report" style="color:#22d3ee;text-decoration:none">Xem doanh thu</a>
         </div>
 
         <div class="grid">

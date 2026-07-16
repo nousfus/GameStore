@@ -42,6 +42,7 @@
         @media(max-width:1024px){main{padding:20px 40px}.profile-container{grid-template-columns:1fr}.sidebar{position:static;display:flex;flex-direction:column}}
 
     </style>
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
 </head>
 <body>
 
@@ -49,10 +50,10 @@
     <header>
         <a href="/" class="logo">GameStore</a>
         <nav>
-            <a href="/">Store</a>
-            <a href="/user/product-list">Library</a>
-            <a href="#">Community</a>
-            <a href="#">News</a>
+            <a href="/">Cửa hàng</a>
+            <a href="/user/product-list">Thư viện</a>
+            <a href="#">Cộng đồng</a>
+            <a href="#">Tin tức</a>
         </nav>
         <div class="header-right">
             <button class="user-menu" th:text = "'Xin chào '+${username}">Tài khoản</button>
@@ -114,9 +115,5 @@
     </main>
 
     <!-- FOOTER -->
-    <footer>
-        <p>© 2026 GameStore. All Rights Reserved.</p>
+    <div th:replace="fragments/layout-fragments :: header"></div>
     </footer>
-
-</body>
-</html>

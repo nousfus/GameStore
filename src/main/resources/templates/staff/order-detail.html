@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chi tiết Đơn hàng - Nhân viên</title>
+    <title>Xác nhận đơn hàng</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
         body{background:#0f172a;color:#fff}
@@ -48,8 +48,8 @@
                 <div><span class="status-badge status-pending" th:text = "${order.status}">Đang chờ xử lý</span></div>
             </div>
             <div class="actions">
-                <button class="btn btn-primary"><a th:href = "@{/staff/orders-update/{id}(id =${order.order_id})}">Cập nhật trạng thái</a></button>
-                <button class="btn btn-secondary">In hóa đơn</button>
+                <button class="btn btn-primary"><a th:href = "@{/staff/orders-update/{id}(id =${order.order_id})}">Xác nhận đơn hàng</a></button>
+				<button class="btn btn-primary"><a th:href = "@{/payment/process}">Chuyển đến trang thanh toán</a></button>
             </div>
         </div>
     </div>

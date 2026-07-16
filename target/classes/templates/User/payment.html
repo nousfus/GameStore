@@ -38,6 +38,7 @@
         @media(max-width:1024px){main{padding:20px 40px}}
         @media(max-width:768px){header{flex-direction:column;gap:20px;padding:20px}main{padding:20px}}
     </style>
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
 </head>
 <body>
 
@@ -45,10 +46,10 @@
         <a href="/" class="logo">GameStore</a>
 
         <nav>
-            <a href="/">Store</a>
-            <a href="/user/product-list">Library</a>
-            <a href="#">Community</a>
-            <a href="#">News</a>
+            <a href="/">Cửa hàng</a>
+            <a href="/user/product-list">Thư viện</a>
+            <a href="#">Cộng đồng</a>
+            <a href="#">Tin tức</a>
         </nav>
 
         <div class="header-right">
@@ -75,9 +76,9 @@
                 <h3 style="color:#22d3ee;margin-bottom:12px">Chọn phương thức thanh toán</h3>
 
                 <div class="methods">
-                    <label><input type="radio" name="method" value="momo" checked onclick="showInstructions('momo')"> Momo</label>
+                    <label><input type="radio" name="method" value="momo" onclick="showInstructions('momo')"> Momo</label>
                     <label><input type="radio" name="method" value="vnpay" onclick="showInstructions('vnpay')"> VNPay</label>
-                    <label><input type="radio" name="method" value="bank" onclick="showInstructions('bank')"> Chuyển khoản ngân hàng</label>
+                    <label><input type="radio" name="method" value="bank" checked onclick="showInstructions('bank')"> Chuyển khoản ngân hàng</label>
                 </div>
 
                 <div id="momo" class="instructions">
@@ -93,26 +94,16 @@
 
                 <div id="bank" class="instructions" style="display:none">
                     <h4 style="color:#22d3ee;margin-bottom:8px">Chuyển khoản ngân hàng</h4>
-                    <p>Ngân hàng: <strong>Ngân hàng ABC</strong></p>
-                    <p>Chủ tài khoản: <strong>Công ty GameStore</strong></p>
-                    <p>Số tài khoản: <strong>0123456789</strong></p>
-                    <p>Nội dung: <strong>Thanh toán đơn #<span>12345</span></strong></p>
+                   	<img th:src="${qrUrl}" width="300">
                 </div>
 
                 <div class="button-row">
-                    <button type="submit" class="btn btn-primary">Thanh toán</button>
+                    <button type="submit" class="btn btn-primary">Chuyển khoản để xác nhận thanh toán</button>
                     <a href="/user/cart" style="text-decoration:none"><button type="button" class="btn btn-secondary">Quay lại giỏ hàng</button></a>
                 </div>
             </form>
         </div>
     </main>
 
-    <footer>
-        &copy; 2026 GameStore
+    <div th:replace="fragments/layout-fragments :: header"></div>
     </footer>
-
-    <script>
-        function showInstructions(id){['momo','vnpay','bank'].forEach(function(x){var el=document.getElementById(x);if(!el) return;el.style.display=(x===id)?'block':'none';});}
-    </script>
-</body>
-</html>

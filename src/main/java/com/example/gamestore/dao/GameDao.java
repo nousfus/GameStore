@@ -27,4 +27,5 @@ public interface GameDao extends JpaRepository<Game, String>,
 	List<Game> findByDeveloper_Developerid(String id);
 	@Query("SELECT g FROM Game g WHERE LOWER(g.GameName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
 	Page<Game> findByGameNameContainingIgnoreCase(@Param("keyword") String keyword, Pageable pageable);
+	Game findTopByOrderByPriceDesc();
 }

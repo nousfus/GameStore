@@ -83,6 +83,7 @@ public class TrangChuDeveloper {
 		DeveloperProfiles dev = developerdao.findByUsername(user.getUsername());
 		if(dev!=null) {
 			List<Game> listgame = gamedao.findByDeveloper_Developerid(dev.getDeveloperid());
+			
 			m.addAttribute("listgame",listgame);
 			m.addAttribute("listcate",categorydao.findAll());
 			m.addAttribute("gameEdit",new Game());

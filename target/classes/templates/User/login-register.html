@@ -196,6 +196,7 @@
         }
 
     </style>
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
 </head>
 
 <body>
@@ -205,10 +206,10 @@
         <a href="/" class="logo">GameStore</a>
 
         <nav>
-            <a href="/">Store</a>
-            <a href="/user/product-list">Library</a>
-            <a href="#">Community</a>
-            <a href="#">News</a>
+            <a href="/">Cửa hàng</a>
+            <a href="/user/product-list">Thư viện</a>
+            <a href="#">Cộng đồng</a>
+            <a href="#">Tin tức</a>
         </nav>
     </header>
 
@@ -387,9 +388,5 @@
     </script>
 
     <!-- FOOTER -->
-    <footer>
-        <p>© 2026 GameStore. All Rights Reserved.</p>
+    <div th:replace="fragments/layout-fragments :: header"></div>
     </footer>
-
-</body>
-</html>
