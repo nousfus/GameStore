@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Người dùng - Admin</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif}
+        body{background:#0f172a;color:#fff}
+        header{background:#111827;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #374151}
+        .logo{color:#22d3ee;font-weight:bold;font-size:24px}
+        main{padding:30px}
+        .card{background:#111827;padding:20px;border-radius:10px;border:1px solid #374151}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:12px 10px;border-bottom:1px solid #374151;text-align:left}
+        th{color:#9ca3af;background:#1f2937}
+        
+        /* Cải tiến nút bấm */
+        button, .btn-trigger {padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer; border:none; transition: 0.2s;}
+        .btn-add {background:#22d3ee; color:#000; margin-bottom:15px;}
+        .btn-add:hover {background:#06b6d4;}
+        .btn-edit {background:#4b5563; color:#fff;}
+        .btn-edit:hover {background:#6b7280;}
+        .btn-delete {background:#ef4444; color:#fff;}
+        .btn-delete:hover {background:#dc2626;}
+
+        /* CSS giao diện MODAL (Cửa sổ biểu mẫu bật lên) */
+        .modal {
+            display: none; /* Mặc định ẩn */
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; top: 0; width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.6); /* Nền mờ phía sau */
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #1e293b; padding: 25px; border-radius: 8px; 
+            width: 100%; max-width: 450px; border: 1px solid #475569;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+        .modal-header { font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #22d3ee; }
+        
+        /* Định dạng Form trong Modal */
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { color: #9ca3af; font-size: 14px; }
+        .form-group input, .form-group select {
+            padding: 8px; background: #0f172a; border: 1px solid #475569; 
+            color: white; border-radius: 4px; outline: none;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: #22d3ee; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .btn-cancel { background: #374151; color: #fff; }
+        .btn-submit { background: #22d3ee; color: #000; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">GameStore Admin</div>
+    <nav>
+        <a href="/" style="color:#d1d5db;text-decoration:none;margin-right:12px">Trang chủ</a>
+        <a href="/admin/cruduser" style="color:#22d3ee;text-decoration:none">Người dùng</a>
+    </nav>
+</header>
+<main>
+    <h1 style="margin-bottom:12px">Quản lý Người dùng</h1>
+    <div class="card">
+        <p style="color:#9ca3af;margin-bottom:12px">Tìm kiếm / Lọc / Thao tác quản lý người dùng</p>
+
+        <button type="button" class="btn-add" id="openAddModalBtn">+ Thêm người dùng mới</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tài khoản (Username)</th>
+                    <th>Họ và Tên</th>
+                    <th>Email</th>
+                    <th>Vai trò (Role)</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${usersList}">
+                    <td th:text="${user.username}">username_mau</td>
+                    <td class="user-name" th:text="${user.fullname}">Nguyễn Văn A</td>
+                    <td class="user-email" th:text="${user.email}">a@example.com</td>
+                    
+                    <td class="user-role">user</td>
+                    
+                    <td class="user-status" th:text="${user.status}">active</td>
+                    <td>
+                        <button type="button" class="btn-edit open-edit-btn" 
+                                th:data-id="${user.username}" 
+                                th:data-name="${user.fullname}" 
+                                th:data-email="${user.email}" 
+                                data-role="user" 
+                                th:data-status="${user.status}">Sửa</button>
+                        
+                        <form method="post" action="/admin/user-management/delete" style="display:inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')">
+                            <input type="hidden" name="id" th:value="${user.username}">
+                            <button type="submit" class="btn-delete">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(usersList)}">
+                    <td colspan="6" style="text-align: center; color: #9ca3af; padding: 20px;">Không có người dùng nào tồn tại trong hệ thống.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">Thêm Người Dùng Mới</div>
+            <form method="post" action="/admin/user-management/add">
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input name="name" placeholder="Nhập họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="email" type="email" placeholder="Nhập địa chỉ Email" required>
+                </div>
+                <div class="form-group">
+                    <label>Vai trò (Role)</label>
+                    <select name="role">
+                        <option value="user">user</option>
+                        <option value="staff">staff</option>
+                        <option value="admin">admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <select name="status">
+                        <option value="active">active</option>
+                        <option value="inactive">inactive</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" id="closeAddModalBtn">Hủy</button>
+                    <button type="submit" class="btn-submit">Thêm ngay</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">Chỉnh Sửa Thông Tin</div>
+            <form method="post" action="/admin/user-management/edit">
+                <input type="hidden" name="id" id="editId">
+                
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input name="name" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="email" id="editEmail" type="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Vai trò (Role)</label>
+                    <select name="role" id="editRole">
+                        <option value="user">user</option>
+                        <option value="staff">staff</option>
+                        <option value="admin">admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <select name="status" id="editStatus">
+                        <option value="active">active</option>
+                        <option value="inactive">inactive</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" id="closeEditModalBtn">Hủy</button>
+                    <button type="submit" class="btn-submit">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            // --- XỬ LÝ MODAL THÊM MỚI ---
+            const addModal = document.getElementById('addModal');
+            document.getElementById('openAddModalBtn').addEventListener('click', () => {
+                addModal.style.display = 'flex';
+            });
+            document.getElementById('closeAddModalBtn').addEventListener('click', () => {
+                addModal.style.display = 'none';
+            });
+
+            // --- XỬ LÝ MODAL CHỈNH SỬA ---
+            const editModal = document.getElementById('editModal');
+            
+            // Bắt sự kiện click vào các nút Sửa trên bảng dữ liệu
+            document.querySelectorAll('.open-edit-btn').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    // 1. Lấy dữ liệu ẩn từ thuộc tính data của nút được click
+                    const id = this.dataset.id;
+                    const name = this.dataset.name;
+                    const email = this.dataset.email;
+                    const role = this.dataset.role;
+                    const status = this.dataset.status;
+
+                    // 2. Điền dữ liệu lấy được vào các ô tương ứng trong form sửa
+                    document.getElementById('editId').value = id;
+                    document.getElementById('editName').value = name;
+                    document.getElementById('editEmail').value = email;
+                    document.getElementById('editRole').value = role;
+                    document.getElementById('editStatus').value = status;
+
+                    // 3. Hiển thị cửa sổ chỉnh sửa lên màn hình
+                    editModal.style.display = 'flex';
+                });
+            });
+
+            // Nút hủy của modal sửa
+            document.getElementById('closeEditModalBtn').addEventListener('click', () => {
+                editModal.style.display = 'none';
+            });
+
+            // Đóng cửa sổ nếu click ra khu vực ngoài hộp biểu mẫu
+            window.addEventListener('click', (e) => {
+                if (e.target === addModal) addModal.style.display = 'none';
+                if (e.target === editModal) editModal.style.display = 'none';
+            });
+        });
+    </script>
+</main>
+<footer style="background:#111827;padding:20px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
+</body>
+</html>

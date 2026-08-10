@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý Khuyến mãi - Admin</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: linear-gradient(180deg,#020617 0%, #071028 40%, #0f172a 100%); color: #e6eef6; font-family: Inter, Arial, Helvetica, sans-serif; }
+        header { background: rgba(15,23,39,0.95); padding: 18px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(148,163,184,0.06); }
+        .logo { color: #22d3ee; font-weight:800; font-size:18px; }
+
+        main { max-width:1200px; margin: 28px auto; padding: 0 20px; }
+        h1 { margin-bottom: 12px; }
+
+        .card { background: rgba(4,8,20,0.7); padding: 20px; border-radius: 12px; border:1px solid rgba(148,163,184,0.04); box-shadow: 0 12px 30px rgba(2,6,23,0.45); }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center; }
+        .form-grid .full { grid-column: 1 / -1; }
+
+        label { display:block; font-size:13px; color:#9fb6c9; margin-bottom:6px; }
+        input[type="text"], input[type="date"], input[type="number"], select, textarea {
+            width:100%; padding:10px 12px; border-radius:8px; background: rgba(2,6,23,0.5); border:1px solid rgba(148,163,184,0.04); color:#e6f6ff;
+        }
+
+        .input-inline { display:flex; gap:8px; }
+        .input-inline > * { flex:1; }
+
+        .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
+        .btn { padding:10px 14px; border-radius:10px; border:none; font-weight:700; cursor:pointer; }
+        .btn-primary { background:linear-gradient(90deg,#22d3ee,#38bdf8); color:#041017; }
+        .btn-ghost { background:transparent; border:1px solid rgba(148,163,184,0.06); color:#cfe7fb}
+
+        .promo-preview { background: linear-gradient(90deg, rgba(34,211,238,0.06), rgba(56,189,248,0.03)); padding:12px; border-radius:10px; border:1px solid rgba(34,211,238,0.08); color:#dff6fb; }
+
+        table { width:100%; border-collapse: collapse; margin-top:16px; }
+        th, td { padding:10px 8px; border-bottom:1px solid rgba(148,163,184,0.03); text-align:left; color:#cfe7fb; }
+        th { color:#94a3b8; font-size:13px; }
+
+        .row-actions { display:flex; gap:8px; }
+        .small-btn { padding:6px 8px; border-radius:8px; border:none; cursor:pointer; }
+        .small-edit { background:transparent; color:#67e8f9; border:1px solid rgba(103,232,249,0.08); }
+        .small-delete { background:transparent; color:#fb7185; border:1px solid rgba(251,113,133,0.06); }
+
+        @media (max-width:900px) { .form-grid { grid-template-columns: 1fr; } }
+		a{
+			text-decoration :none;
+			color : white;
+		}
+    </style>
+</head>
+<body>
+<header><div class="logo">GameStore Admin</div></header>
+<main style="padding:30px">
+    <h1>Quản lý Khuyến mãi</h1>
+    <div class="card">
+        <p style="color:#9ca3af;margin-bottom:12px">Tạo / Sửa / Xóa mã khuyến mãi</p>
+
+        <!-- Create Promotion Form -->
+        <form method="post" action="/admin/promotions/add" style="margin-bottom:12px">
+            <div class="form-grid">
+                <div>
+                    <label for="code">Mã khuyến mãi</label>
+                    <input id="code" name="code" type="text" placeholder="NHANH10" th:value = "${Edit.discount_id}">
+                </div>
+
+                <div>
+                    <label for="type">Loại</label>
+                    <select id="type" name="type">
+						<option value="PERCENT"
+						        th:selected="${Edit.discountType == 'PERCENT'}">
+						    Giảm giá phần trăm
+						</option>
+
+						<option value="FIXED"
+						        th:selected="${Edit.discountType == 'FIXED'}">
+						    Giảm giá cố định
+						</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="value">Giá trị (số)</label>
+                    <input id="value" name="value" type="number" min="0" placeholder="10"  th:value = "${Edit.discount_percent}">
+                </div>
+				
+                <div>
+                    <label for="expiry">Hạn sử dụng</label>
+                    <input id="expiry" name="expiry" type="date" th:value="${#dates.format(Edit.end_date, 'yyyy-MM-dd')}">
+                </div>
+
+                <div class="full">
+                    <label for="games">Áp dụng cho (IDs game, dấu phẩy)</label>
+					<select id="type" name="games">
+						<option value = "">Chọn game</option>
+						<option	 th:each = " item :${gamelist}" th:selected="${Edit.game_id == item.game_id}"><b th:text = "${item.game_id}"></b></option>
+                    </select>
+                </div>
+
+                <div class="full" style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+                    <div style="flex:1">
+                        <label>Xem trước</label>
+                        <div class="promo-preview">
+                            <div><strong id="preview-code">-</strong></div>
+                            <div id="preview-desc" style="color:#cfe7fb;font-size:13px;margin-top:6px">Không có dữ liệu</div>
+                        </div>
+                    </div>
+                    <div style="width:220px;display:flex;flex-direction:column;gap:8px;">
+                        <label style="visibility:hidden">submit</label>
+						<button type="submit" class="btn btn-primary" th:if = "${isEdit}">Cập nhật</button>
+                        <button type="submit" class="btn btn-primary" th:if = "${!isEdit}">Thêm</button>
+                        <button type="reset" class="btn btn-ghost"><a th:href = "@{/admin/khuyenmai}">Làm mới</a></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div style="margin-top:6px">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Giảm</th>
+                        <th>Hạn</th>
+                        <th>Áp dụng cho</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "item :${promotions}">
+                        <td th:text = "${item.discount_id}">SUMMER21</td>
+                        <td th:text = "${item.discount_percent}">10%</td>
+                        <td th:text = "${#dates.format(item.end_date, 'yyyy-MM-dd')}">31/07/2026</td>
+                        <td th:text = "${item.game_id}">GAME123, GAME456</td>
+                        <td>
+                            <div class="row-actions">
+                                <a th:href = "@{/admin/promotions/edit/{id}(id=${item.discount_id})}"><button type="button" class="small-btn small-edit promo-edit" data-code="SUMMER21">Sửa</button></a>
+                                <form method="post" action="/admin/promotions/delete" style="display:inline">
+                                    <input type="hidden" name="code" value="SUMMER21">
+                                    <button type="submit" class="small-btn small-delete">Xóa</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            document.querySelectorAll('.promo-edit').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var code = this.dataset.code;
+                    var row = document.getElementById('promo-edit-' + code);
+                    if(row) row.style.display = 'table-row';
+                });
+            });
+            document.querySelectorAll('.promo-cancel').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var code = this.dataset.code;
+                    var row = document.getElementById('promo-edit-' + code);
+                    if(row) row.style.display = 'none';
+                });
+            });
+
+            // Live preview for create form
+            var previewCode = document.getElementById('preview-code');
+            var previewDesc = document.getElementById('preview-desc');
+            var codeInput = document.getElementById('code');
+            var typeInput = document.getElementById('type');
+            var valueInput = document.getElementById('value');
+
+            function updatePreview(){
+                var c = codeInput.value || '-';
+                var t = typeInput.value;
+                var v = valueInput.value || '';
+                previewCode.textContent = c;
+                if(!v) previewDesc.textContent = 'Giá trị chưa được nhập';
+                else previewDesc.textContent = (t === 'percent' ? v + '% giảm' : v + ' vnđ giảm');
+            }
+
+            [codeInput, typeInput, valueInput].forEach(function(el){ if(el) el.addEventListener('input', updatePreview); });
+            updatePreview();
+        });
+    </script>
+</main>
+<footer style="background:#111827;padding:20px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
+</body>
+</html>

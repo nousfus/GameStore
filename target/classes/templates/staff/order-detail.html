@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Xác nhận đơn hàng</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+        body{background:#0f172a;color:#fff}
+        header{background:#111827;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #374151}
+        .logo{color:#22d3ee;font-weight:bold}
+        main{padding:30px}
+        .card{background:#111827;padding:20px;border-radius:10px;border:1px solid #374151;margin-bottom:16px}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:10px;border-bottom:1px solid #374151;text-align:left}
+        th{color:#9ca3af}
+        .status-badge{display:inline-block;padding:6px 12px;border-radius:18px;font-weight:bold}
+        .status-pending{background:#f59e0b;color:#000}
+        .status-completed{background:#10b981;color:#fff}
+        .status-cancelled{background:#ef4444;color:#fff}
+        .actions{display:flex;gap:10px}
+        .btn{padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
+        .btn-primary{background:#22d3ee;color:#000}
+        .btn-secondary{background:#374151;color:#fff}
+		a{text-decoration : none}
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">GameStore Staff</div>
+</header>
+<main>
+    <h1 style="margin-bottom:12px">Chi tiết Đơn hàng</h1>
+
+    <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+                <div style="color:#9ca3af">Mã đơn</div>
+                <div style="font-weight:bold;font-size:18px" th:text = "${order.order_id}">#ORD-2026-001234</div>
+            </div>
+            <div>
+                <div style="color:#9ca3af">Ngày mua</div>
+                <div th:text = "${order.order_date}">15/06/2026</div>
+            </div>
+            <div>
+                <div style="color:#9ca3af">Trạng thái</div>
+                <div><span class="status-badge status-pending" th:text = "${order.status}">Đang chờ xử lý</span></div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary"><a th:href = "@{/staff/orders-update/{id}(id =${order.order_id})}">Xác nhận đơn hàng</a></button>
+				<button class="btn btn-primary"><a th:href = "@{/payment/process}">Chuyển đến trang thanh toán</a></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3 style="margin-bottom:8px">Người mua</h3>
+            <p><strong th:text = "${order.username}">Nguyễn Văn A</strong></p>
+        </div>
+        <div class="card">
+            <h3 style="margin-bottom:8px">Thanh toán</h3>
+			<p>Mã thanh toán : <strong th:text = "${payment.transaction_code}"></strong></p>
+            <p>Phương thức thanh toán: <strong th:text = "${payment.payment_method}"></strong></p>
+            <p>Tổng tiền: <strong style="color:#22d3ee" th:text = "${order.total_amount}">1.298.000đ</strong></p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom:12px">Sản phẩm</h3>
+        <table>
+            <thead>
+                <tr><th>Sản phẩm</th><th>Đơn giá</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each = "item : ${orderdetail}">
+                    <td>
+                        <div style="display:flex;gap:10px;align-items:center">
+                            <img th:src="@{/images/{file}(file=${item.game.thumbnail})}" style="width:64px;height:40px;object-fit:cover;border-radius:6px">
+                            <div>
+                                <div style="font-weight:bold" th:text = "${item.game.gameName}">Shadow Strike</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text = "${item.game.price}">799.000đ</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer style="background:#111827;padding:20px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
+</body>
+</html>

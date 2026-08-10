@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo - GameStore</title>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif}
+        body{background-color:#0f172a;color:white}
+        header{background-color:#111827;padding:20px 80px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #374151;position:sticky;top:0;z-index:10}
+        .logo{color:#22d3ee;font-size:32px;font-weight:bold;text-decoration:none}
+        nav a{ text-decoration:none;color:#d1d5db;margin:0 15px;transition:0.3s }
+        nav a:hover{color:white}
+        .header-right{display:flex;align-items:center;gap:10px}
+        .user-menu{background-color:#22d3ee;color:black;border:none;padding:10px 20px;border-radius:10px;font-weight:bold;cursor:pointer}
+        main{padding:40px 80px;min-height:calc(100vh - 150px)}
+        .page-header{margin-bottom:30px}
+        .page-header h1{font-size:32px;margin-bottom:10px}
+        .profile-container{display:grid;grid-template-columns:250px 1fr;gap:30px}
+        .sidebar{background-color:#111827;padding:20px;border-radius:15px;border:1px solid #374151;height:fit-content;position:sticky;top:100px}
+        .sidebar h3{color:#22d3ee;margin-bottom:20px;font-size:16px}
+        .menu-item{padding:12px 15px;margin-bottom:8px;background:none;border:none;color:#d1d5db;text-align:left;cursor:pointer;border-radius:8px;transition:0.3s;width:100%;font-size:14px}
+        .menu-item:hover, .menu-item.active{background-color:#1f2937;color:#22d3ee}
+        .content-section{background-color:#111827;padding:30px;border-radius:15px;border:1px solid #374151}
+        .section-title{font-size:24px;margin-bottom:25px;color:#22d3ee}
+
+        .notifications-list{display:flex;flex-direction:column;gap:15px}
+        .notification-item{padding:18px;border-radius:12px;background-color:#0b1220;border:1px solid #273141;display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+        .notification-left{flex:1}
+        .notification-title{font-size:18px;color:#e6f6fb;margin-bottom:6px}
+        .notification-content{color:#cbd5e1;margin-bottom:8px}
+        .notification-meta{font-size:13px;color:#9ca3af}
+        .badge-unread{background:#ef4444;color:white;padding:4px 8px;border-radius:8px;font-weight:bold;font-size:12px;margin-left:8px}
+        .actions{display:flex;gap:10px}
+        .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:bold}
+        .btn-mark{background:#22d3ee;color:black}
+        .btn-delete{background:transparent;border:2px solid #ef4444;color:#ef4444}
+
+        footer{background-color:#111827;padding:30px;text-align:center;color:#9ca3af;border-top:1px solid #374151;margin-top:40px}
+
+        @media(max-width:1024px){main{padding:20px 40px}.profile-container{grid-template-columns:1fr}.sidebar{position:static;display:flex;flex-direction:column}}
+
+    </style>
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">GameStore</a>
+        <nav>
+            <a href="/">Cửa hàng</a>
+            <a href="/user/product-list">Thư viện</a>
+            <a href="#">Cộng đồng</a>
+            <a href="#">Tin tức</a>
+        </nav>
+        <div class="header-right">
+            <button class="user-menu" th:text = "'Xin chào '+${username}">Tài khoản</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <div class="page-header">
+            <h1>Quản lý Thông báo</h1>
+        </div>
+
+        <div class="profile-container">
+
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <h3>Quản lý tài khoản</h3>
+                <a href="/user/profile"><button class="menu-item">Thông tin cá nhân</button></a>
+                <a href="/user/change-password"><button class="menu-item">Đổi mật khẩu</button></a>
+                <a href="/user/history-purchase"><button class="menu-item">Lịch sử mua hàng</button></a>
+                <a href="/user/notifications"><button class="menu-item active">Quản lý thông báo</button></a>
+            </aside>
+
+            <!-- CONTENT -->
+            <div class="content-section">
+
+                <h2 class="section-title">Thông báo của bạn</h2>
+
+                <div class="notifications-list">
+                    <div th:if="${notifications == null or #lists.isEmpty(notifications)}" class="alert warning" style="background:#111827;border:1px solid #374151;color:#9ca3af;padding:15px;border-radius:8px">
+                        Chưa có thông báo nào.
+                    </div>
+
+                    <div th:each="n : ${notifications}" class="notification-item">
+                        <div class="notification-left">
+                            <div style="display:flex;align-items:center;">
+                                <div class="notification-title" th:text="${n.title}">Tiêu đề thông báo</div>
+                                <div th:if="${!n.is_read}" class="badge-unread">Chưa đọc</div>
+                            </div>
+                            <div class="notification-content" th:text="${n.content}">Nội dung thông báo...</div>
+                            <div class="notification-meta">
+                                <span th:text="${#dates.format(n.created_at, 'dd-MM-yyyy HH:mm')}">01-01-2026 12:00</span>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <a th:href="@{/user/notifications/mark-read/{id}(id=${n.notification_id})}"><button class="btn btn-mark" th:if="${!n.is_read}">Đánh dấu đã đọc</button></a>
+                            <a th:href="@{/user/notifications/delete/{id}(id=${n.notification_id})}" onclick="return confirm('Xác nhận xóa thông báo?')"><button class="btn btn-delete">Xóa</button></a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <div th:replace="fragments/layout-fragments :: header"></div>
+    </footer>
