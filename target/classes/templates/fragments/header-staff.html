@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header-staff">
+    <header >
+        <div class="logo">
+            <a th:href="@{/staff/home}" style="color: inherit; text-decoration: none;">GameStore Staff</a>
+        </div>
+        <nav>
+            <a th:href="@{/staff/home}">Trang chủ</a>
+            <a th:href="@{/staff/orders}">Đơn hàng</a>
+            <a th:href="@{/staff/notifications}">Thông báo</a>
+            <a th:href="@{/staff/reviews}">Đánh giá</a>
+        </nav>
+        <div class="header-right" style="display: flex; align-items: center; gap: 10px;">
+            <div style="color: #9ca3af; margin-right: 15px;">Vai trò: <strong th:text="${username}" style="color: white;">Staff</strong></div>
+            <a th:href="@{/staff/profile}"><button class="login-btn">Trang cá nhân</button></a>
+            <a th:href="@{/user/logout}"><button class="login-btn">Đăng xuất</button></a>
+        </div>
+    </header>
+ </div>
+</body>
+</html>

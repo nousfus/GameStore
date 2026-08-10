@@ -21,6 +21,10 @@ import com.example.gamestore.entity.Game;
 import com.example.gamestore.entity.OrderDetails;
 import com.example.gamestore.entity.Users;
 import com.example.gamestore.entity.WishList;
+import com.example.gamestore.dao.CategoriesDao;
+import com.example.gamestore.dao.GameCategoriesDao;
+import com.example.gamestore.entity.Categories;
+import com.example.gamestore.entity.GameCategories;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -39,6 +43,10 @@ public class DanhSachYeuThich {
     HttpSession session;
     @Autowired
     GameDao gamedao;
+    @Autowired
+    private CategoriesDao categorydao;
+    @Autowired
+    private GameCategoriesDao gamecategorydao;
     // HIỂN THỊ DANH SÁCH YÊU THÍCH
     @GetMapping("/user/wishlist")
     public String wishlist(
@@ -75,6 +83,22 @@ public class DanhSachYeuThich {
         // Chỉ lấy wishlist của user hiện tại
         List<WishList> danhSachWishlist = wishListDao.findByUsername(user.getUsername());
 
+     // LẤY THỂ LOẠI CHO GAME TRONG WISHLIST
+        for (WishList wishlist : danhSachWishlist) {
+            Game game = wishlist.getGame();
+            List<String> names = new ArrayList<>();
+            List<GameCategories> listCategories =
+                    gamecategorydao.findByGameid(game.getGame_id());
+            for (GameCategories gc : listCategories) {
+                Categories c =
+                        categorydao.findById(gc.getCategory_id()).orElse(null);
+                if (c != null) {
+                    names.add(c.getCategory_name());
+                }
+            }
+            game.setCategories(String.join(" | ", names));
+        }
+        
         // Sắp xếp
         switch (sort) {
             case "oldest":
