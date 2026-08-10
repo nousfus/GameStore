@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="header-user">
+    <header>
+		<a href="/" class="logo" style="display: flex; align-items: center;">
+		    <img th:src="@{/assets/logo.png}" alt="GameStore Logo" style="height: 45px; object-fit: contain; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));">
+		</a>
+        <nav>
+            <a th:href="@{/user/product-list}">Cửa hàng</a>
+            <a href="#">Cộng đồng</a>
+            <a href="#">Tin tức</a>
+        </nav>
+        <div class="header-right">
+            <!-- Thanh tìm kiếm -->
+            <form th:action="@{/game}" method="get" style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" name="keyword" placeholder="Tìm kiếm game..." class="search-box" th:value="${keyword}">
+                <button type="submit" class="login-btn">Tìm kiếm</button>
+            </form>
+            
+            <!-- Chưa đăng nhập -->
+            <a th:href="@{/login-register}" th:if="${username == null}">
+                <button class="login-btn">Đăng nhập</button>
+            </a>
+            
+            <!-- Đã đăng nhập -->
+            <th:block th:if="${username != null}">
+                <a th:href="@{/user/cart}"><button class="login-btn">Giỏ hàng</button></a>
+                <a th:href="@{/user/profile}"><button class="login-btn">Trang cá nhân</button></a>
+                <a th:href="@{/user/logout}"><button class="login-btn">Đăng xuất</button></a>
+            </th:block>
+        </div>
+    </header>
+</div>
+</body>
+</html>
