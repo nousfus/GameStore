@@ -4,7 +4,9 @@ package com.example.gamestore.controller;
 import java.io.InputStream;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -91,25 +93,19 @@ public class GameList {
 		Pageable pageable = PageRequest.of(page, 9);
 		Page<Game> gamePage = gamedao.findAllGame(pageable);
 
+		Map<String, String> categoryMap = new HashMap<>();
 		for(Game game : gamePage.getContent()) {
-
 		    List<String> names = new ArrayList<>();
-
-		    List<GameCategories> listCategories =
-		            gamecategorydao.findByGameid(game.getGame_id());
-
+		    List<GameCategories> listCategories = gamecategorydao.findByGameid(game.getGame_id());
 		    for(GameCategories gc : listCategories) {
 		        Categories c = categorydao.findById(gc.getCategory_id()).orElse(null);
 		        if(c != null) {
 		            names.add(c.getCategory_name());
 		        }
 		    }
-
-		   m.addAttribute("categories",names);
-		   m.addAttribute("highestPrice",gamedao.findTopByOrderByPriceDesc().getPrice());
-		   
-		  
+		    categoryMap.put(game.getGame_id(), String.join(" | ", names));
 		}
+		m.addAttribute("categoryMap", categoryMap);
 		if(user!=null) {
 			List<String> gamePaidId = new ArrayList<>();
 			for(OrderDetails d : orderdetaildao.findAll()) {
@@ -187,21 +183,19 @@ public class GameList {
 		            .and(GameSpecification.hasRating(rating));
 		    Pageable pageable = PageRequest.of(page, 9);
 		    Page<Game> gamePage = categories != null ? gamedao.findAll(spec, pageable) : gamedao.findAllGame(pageable); 
-		for(Game game : gamePage.getContent()) {
-
-		    List<String> names = new ArrayList<>();
-
-		    List<GameCategories> listCategories =
-		            gamecategorydao.findByGameid(game.getGame_id());
-
-		    for(GameCategories gc : listCategories) {
-		        Categories c = categorydao.findById(gc.getCategory_id()).orElse(null);
-		        if(c != null) {
-		            names.add(c.getCategory_name());
+		    Map<String, String> categoryMap = new HashMap<>();
+		    for(Game game : gamePage.getContent()) {
+		        List<String> names = new ArrayList<>();
+		        List<GameCategories> listCategories = gamecategorydao.findByGameid(game.getGame_id());
+		        for(GameCategories gc : listCategories) {
+		            Categories c = categorydao.findById(gc.getCategory_id()).orElse(null);
+		            if(c != null) {
+		                names.add(c.getCategory_name());
+		            }
 		        }
+		        categoryMap.put(game.getGame_id(), String.join(" | ", names));
 		    }
-		    m.addAttribute("categories",names);
-		}
+		    m.addAttribute("categoryMap", categoryMap);
 	   if(sort!=null) {
 		   m.addAttribute("Pickedsort",sort);
 	   }
@@ -220,7 +214,7 @@ public class GameList {
 	    
 	    return "user/product-list";
 	}
-	@RequestMapping("/user/product-detail/{id}")								// Trang chi tiết sản phẩm
+	@RequestMapping("/user/product-detail/{id}")								
 	public String detail(@PathVariable("id") String id,Model m) throws Exception {
 		String path = request.getServletPath();
 		session.setAttribute("path", path);
@@ -294,24 +288,21 @@ public class GameList {
 		m.addAttribute("listimages",listimages);
 		
 		//Hiển thị video game
-		  if(game.getVideo_url() == null) return "";
+		if (game.getVideo_url() != null && !game.getVideo_url().trim().isEmpty()) {
 		    if (game.getVideo_url().contains("watch?v=")) {
-
 		        String VideoId = game.getVideo_url()
 		                .split("watch\\?v=")[1]
 		                .split("&")[0];
-
 		        m.addAttribute("youtube", true);
-		        m.addAttribute("videourl",
-		                "https://www.youtube.com/embed/" + VideoId);
-
-		    }else {
-
+		        m.addAttribute("videourl", "https://www.youtube.com/embed/" + VideoId);
+		    } else {
 		        m.addAttribute("youtube", false);
-		        m.addAttribute("videourl",
-		                "/videos/" + game.getVideo_url());
-
+		        m.addAttribute("videourl", "/videos/" + game.getVideo_url());
 		    }
+		} else {
+		    m.addAttribute("youtube", false);
+		    m.addAttribute("videourl", "");
+		}
 
 	    
 	    session.setAttribute("game",game);
@@ -375,7 +366,7 @@ public class GameList {
 	    return "redirect:/user/product-list";
 	}
 	@PostMapping("/delete/{abc}")
-	public String dleete(@PathVariable("abc")String id) {
+	public String delete(@PathVariable("abc")String id) {
 		CartItems cartitem = cartitemdao.findById(id).orElse(null);
 		String cartid = cartitem.getCartid();
 		cartitemdao.delete(cartitem);
@@ -472,6 +463,3 @@ public class GameList {
 
 	}
 }
-//<a th:href="@{/games/{file}(file=${game.gameFile})}">
-//Download
-//</a>

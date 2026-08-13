@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Người dùng - Admin</title>
+        <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
+    
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif}
         body{background:#0f172a;color:#fff}
@@ -54,13 +56,7 @@
     </style>
 </head>
 <body>
-<header>
-    <div class="logo">GameStore Admin</div>
-    <nav>
-        <a href="/" style="color:#d1d5db;text-decoration:none;margin-right:12px">Trang chủ</a>
-        <a href="/admin/cruduser" style="color:#22d3ee;text-decoration:none">Người dùng</a>
-    </nav>
-</header>
+<div th:replace="fragments/header-admin :: header-admin"></div>
 <main>
     <h1 style="margin-bottom:12px">Quản lý Người dùng</h1>
     <div class="card">
@@ -180,6 +176,9 @@
             </form>
         </div>
     </div>
+    
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function(){

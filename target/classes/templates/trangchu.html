@@ -1,660 +1,319 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameStore - Trang Chủ</title>
+    <title>GameStore - Khám Phá Thế Giới Game</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
 
     <style>
-        *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body{
-            background-color: #0f172a;
-            color: white;
-        }
-
-        /* HEADER */
-        header{
-            background-color: #111827;
-            padding: 20px 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #374151;
-            position: sticky;
-            top: 0;
-        }
-
-        .logo{
-            color: #22d3ee;
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        nav a{
-            text-decoration: none;
-            color: #d1d5db;
-            margin: 0 15px;
-            transition: 0.3s;
-        }
-
-        nav a:hover{
-            color: white;
-        }
-
-        .header-right{
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .search-box{
-            padding: 10px 15px;
-            width: 250px;
-            border: none;
-            outline: none;
-            border-radius: 10px;
-            background-color: #1f2937;
-            color: white;
-        }
-
-        .login-btn{
-            background-color: #22d3ee;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .login-btn:hover{
-            background-color: #67e8f9;
-        }
-
-        /* HERO */
-        .hero{
-            height: 500px;
-            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-            url('https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=1400&auto=format&fit=crop');
+        /* HERO BANNER */
+        .home-page .hero {
+            height: 550px;
+            background-image: linear-gradient(rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.8) 70%, #0f172a 100%),
+                              url('/assets/banner.png');
             background-size: cover;
-            background-position: center;
+            background-position: center top;
             display: flex;
             align-items: center;
-            padding: 0 80px;
+            justify-content: center;
+            padding: 0 20px;
+            position: relative;
         }
 
-        .hero-content{
-            width: 600px;
+        .home-page .hero-content { 
+            width: 1000px; 
+            text-align: center; 
+            position: relative;
+            z-index: 2;
+            margin-top: 150px; 
+        }
+        
+        .home-page .hero-content h1 { 
+            font-size: 50px; 
+            margin-bottom: 20px; 
+            text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        
+        .home-page .hero-content p { 
+            color: #e2e8f0; 
+            line-height: 1.6; 
+            margin-bottom: 30px; 
+            font-size: 18px; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
-        .hero-content h1{
-            font-size: 55px;
-            margin-bottom: 20px;
+        .home-page .hero-buttons {
+            display: flex;
+            justify-content: center; 
+            gap: 20px; 
         }
 
-        .hero-content p{
-            color: #d1d5db;
-            line-height: 1.8;
-            margin-bottom: 30px;
-            font-size: 18px;
-        }
-
-        .hero-buttons button{
-            padding: 14px 28px;
+        .home-page .hero-buttons button {
+            padding: 14px 32px;
             border: none;
             border-radius: 12px;
             font-size: 16px;
             cursor: pointer;
-            margin-right: 15px;
+            margin-right: 0; 
             font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        .store-btn{
-            background-color: #22d3ee;
-            color: black;
-        }
+        .store-btn { background: linear-gradient(135deg, #22d3ee, #38bdf8); color: #020617; }
+        .store-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4); }
+        .trailer-btn { background-color: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px); }
+        .trailer-btn:hover { background-color: rgba(255,255,255,0.25); transform: translateY(-3px); }
 
-        .store-btn:hover{
-            background-color: #67e8f9;
+        /* SECTIONS CHUNG */
+        .home-page section { padding: 40px 80px 20px; }
+        .home-page .section-title { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            margin-bottom: 25px; 
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.2);
         }
-
-        .trailer-btn{
-            background-color: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .trailer-btn:hover{
-            background-color: rgba(255,255,255,0.2);
-        }
-
-        /* SECTION */
-        section{
-            padding: 60px 80px;
-        }
-
-        .section-title{
+        
+        .home-page .section-title h2 { 
+            font-size: 28px; 
+            color: #f8fafc;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            gap: 12px;
         }
-
-        .section-title h2{
-            font-size: 35px;
-        }
-
-        .section-title a{
-            text-decoration: none;
-            color: #22d3ee;
-        }
-
-        /* CATEGORIES */
-        .categories{
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .category{
-            background-color: #1e293b;
-            padding: 25px;
-            text-align: center;
-            border-radius: 20px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .category:hover{
+        
+        .home-page .section-title h2::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 26px;
             background-color: #22d3ee;
-            color: black;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
         }
 
-        /* GAME CARDS */
-        .games{
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
+        .home-page .section-title a { 
+            text-decoration: none; 
+            color: #22d3ee; 
+            font-weight: 600;
+            padding: 8px 16px;
+            background: rgba(34, 211, 238, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .home-page .section-title a:hover {
+            background: #22d3ee;
+            color: #020617;
+            transform: translateX(5px);
         }
 
-        .game-card{
-            background-color: #111827;
-            border-radius: 20px;
-            overflow: hidden;
-            transition: 0.3s;
+        /* 10 THỂ LOẠI (CATEGORIES GRID) */
+        .home-page .categories { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 15px; 
         }
-
-        .game-card:hover{
-            transform: translateY(-8px);
-        }
-
-        .game-card img{
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
-
-        .game-info{
-            padding: 20px;
-        }
-
-        .game-info h3{
-            margin-bottom: 15px;
-            font-size: 25px;
-        }
-
-        .price-row{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .price{
-            color: #22d3ee;
-            font-size: 22px;
+        
+        .home-page .category-card { 
+            background: #1e293b; 
+            padding: 16px; 
+            text-align: center; 
+            border-radius: 12px; 
+            transition: 0.3s; 
+            color: #e2e8f0; 
+            text-decoration: none; 
+            border: 1px solid #374151; 
             font-weight: bold;
+            font-size: 15px;
+        }
+        
+        .home-page .category-card:hover { 
+            background: linear-gradient(135deg, #22d3ee, #38bdf8); 
+            color: #020617; 
+            transform: translateY(-4px); 
+            border-color: #22d3ee;
+            box-shadow: 0 5px 15px rgba(34, 211, 238, 0.3);
         }
 
-        .cart-btn{
-            background-color: #22d3ee;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
+        /* GAME CARDS (5 CỘT) */
+        .home-page .games { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); /* Ép hiển thị 5 game 1 hàng */
+            gap: 20px; 
         }
-
-        .cart-btn:hover{
-            background-color: #67e8f9;
+        
+        .home-page .game-card { 
+            background: linear-gradient(180deg, #1e293b, #0f172a); 
+            border-radius: 14px; 
+            overflow: hidden; 
+            transition: 0.3s; 
+            border: 1px solid rgba(148, 163, 184, 0.1);
         }
-
-        /* TRENDING */
-        .trending{
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+        
+        .home-page .game-card:hover { 
+            transform: translateY(-6px); 
+            border-color: #22d3ee;
+            box-shadow: 0 8px 25px rgba(34, 211, 238, 0.15);
         }
-
-        .trend-card{
-            position: relative;
-            overflow: hidden;
-            border-radius: 20px;
+        
+        .home-page .game-card img { 
+            width: 100%; 
+            height: 160px; /* Thu nhỏ ảnh để vừa 5 cột */
+            object-fit: cover; 
         }
-
-        .trend-card img{
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            transition: 0.5s;
+        
+        .home-page .game-info { padding: 14px; }
+        .home-page .game-info h3 { 
+            margin-bottom: 10px; 
+            font-size: 17px; /* Thu nhỏ font tiêu đề */
+            color: white; 
+            text-decoration: none; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
         }
-
-        .trend-card:hover img{
-            transform: scale(1.1);
-        }
-
-        .trend-overlay{
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(transparent, black);
-        }
-
-        .trend-overlay p{
-            color: #d1d5db;
-            margin-top: 5px;
-        }
-
-        /* FOOTER */
-        .site-footer {
-		    background-color: #0b0f19; /* Nền tối đậm hơn body tạo chiều sâu */
-		    border-top: 1px solid #1e293b;
-		    padding: 60px 0 20px 0;
-		    margin-top: 80px;
-		    font-size: 14px;
-		    color: #94a3b8; /* Màu chữ xám nhạt dễ đọc */
-		}
-		
-		.footer-container {
-		    max-width: 1200px;
-		    margin: 0 auto;
-		    padding: 0 40px;
-		    display: grid;
-		    grid-template-columns: 2fr 1fr 1.5fr 2fr; /* Chia tỉ lệ 4 cột */
-		    gap: 40px;
-		}
-		
-		.footer-column h4 {
-		    color: #22d3ee; /* Tông màu xanh Cyan đồng bộ với Logo */
-		    font-size: 18px;
-		    font-weight: bold;
-		    margin-bottom: 20px;
-		    position: relative;
-		    padding-bottom: 8px;
-		}
-		
-		/* Đường gạch chân trang trí dưới tiêu đề mỗi cột */
-		.footer-column h4::after {
-		    content: '';
-		    position: absolute;
-		    left: 0;
-		    bottom: 0;
-		    width: 35px;
-		    height: 2px;
-		    background-color: #22d3ee;
-		}
-		
-		.footer-column p {
-		    line-height: 1.6;
-		    margin-bottom: 15px;
-		}
-		
-		.footer-column ul {
-		    list-style: none;
-		    padding: 0;
-		    margin: 0;
-		}
-		
-		.footer-column ul li {
-		    margin-bottom: 12px;
-		}
-		
-		.footer-column ul li a {
-		    color: #94a3b8;
-		    text-decoration: none;
-		    transition: all 0.3s ease;
-		    display: inline-block;
-		}
-		
-		/* Hiệu ứng hover dịch chuyển nhẹ và đổi màu chữ sang trắng */
-		.footer-column ul li a:hover {
-		    color: #ffffff;
-		    padding-left: 6px;
-		}
-		
-		/* Cấu hình danh sách thông tin liên hệ */
-		.contact-info li {
-		    display: flex;
-		    align-items: flex-start;
-		    gap: 10px;
-		    line-height: 1.5;
-		}
-		
-		.info-icon {
-		    color: #22d3ee;
-		}
-		
-		/* Các nút liên kết mạng xã hội */
-		.footer-socials {
-		    display: flex;
-		    gap: 10px;
-		    margin-top: 20px;
-		}
-		
-		.social-icon {
-		    color: #94a3b8;
-		    text-decoration: none;
-		    padding: 8px 16px;
-		    background-color: #1e293b;
-		    border-radius: 6px;
-		    font-weight: 500;
-		    font-size: 13px;
-		    transition: all 0.3s ease;
-		}
-		
-		.social-icon:hover {
-		    color: #0f172a;
-		    background-color: #22d3ee;
-		    transform: translateY(-3px); /* Nhấc nhẹ nút lên khi hover */
-		}
-		
-		/* Form đăng ký nhận bản tin */
-		.newsletter-form {
-		    display: flex;
-		    gap: 8px;
-		    margin-top: 15px;
-		}
-		
-		.newsletter-form input {
-		    flex: 1;
-		    padding: 10px 14px;
-		    background-color: #1e293b;
-		    border: 1px solid #334155;
-		    border-radius: 6px;
-		    color: #ffffff;
-		    outline: none;
-		    font-size: 13px;
-		    transition: border-color 0.3s ease;
-		}
-		
-		.newsletter-form input:focus {
-		    border-color: #22d3ee;
-		}
-		
-		.newsletter-form button {
-		    background-color: #22d3ee;
-		    color: #0f172a;
-		    border: none;
-		    padding: 10px 18px;
-		    border-radius: 6px;
-		    font-weight: bold;
-		    cursor: pointer;
-		    font-size: 13px;
-		    transition: background-color 0.3s ease;
-		}
-		
-		.newsletter-form button:hover {
-		    background-color: #06b6d4;
-		}
-		
-		/* Khu vực hàng bản quyền dưới cùng */
-		.footer-bottom {
-		    max-width: 1200px;
-		    margin: 50px auto 0 auto;
-		    padding: 20px 40px 0 40px;
-		    border-top: 1px solid #1e293b;
-		    text-align: center;
-		    font-size: 13px;
-		    color: #64748b;
-		}
-		
-		/* Tối ưu hóa hiển thị trên màn hình Tablet và Mobile (Responsive) */
-		@media (max-width: 992px) {
-		    .footer-container {
-		        grid-template-columns: 1fr 1fr; /* Chuyển thành 2 hàng, mỗi hàng 2 cột */
-		        gap: 30px;
-		    }
-		}
-		
-		@media (max-width: 576px) {
-		    .footer-container {
-		        grid-template-columns: 1fr; /* Điện thoại nhỏ hiển thị 1 cột đứng dọc */
-		        padding: 0 20px;
-		    }
-		    .newsletter-form {
-		        flex-direction: column; /* Ô nhập và nút bấm xếp dọc trên mobile */
-		    }
-		}
+        
+        .home-page .price-row { display: flex; justify-content: space-between; align-items: center; }
+        .home-page .price { color: #22d3ee; font-size: 16px; font-weight: bold; }
+        .home-page .cart-btn { background-color: #22d3ee; color: black; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px;}
+        .home-page .cart-btn:hover { background-color: #67e8f9; transform: scale(1.05); }
 
         /* RESPONSIVE */
-        @media(max-width: 1024px){
-
-            .games{
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .trending{
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .categories{
-                grid-template-columns: repeat(2, 1fr);
-            }
+        @media(max-width: 1400px){
+            .home-page .games { grid-template-columns: repeat(4, 1fr); }
+            .home-page .categories { grid-template-columns: repeat(4, 1fr); }
         }
-
+        @media(max-width: 1100px){
+            .home-page .games, .home-page .categories { grid-template-columns: repeat(3, 1fr); }
+            .home-page section { padding: 40px 40px 20px; }
+        }
         @media(max-width: 768px){
-
-            header{
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
-            }
-
-            nav{
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .hero{
-                padding: 20px;
-            }
-
-            .hero-content{
-                width: 100%;
-            }
-
-            .hero-content h1{
-                font-size: 40px;
-            }
-
-            section{
-                padding: 40px 20px;
-            }
-
-            .games,
-            .trending,
-            .categories{
-                grid-template-columns: 1fr;
-            }
+            .home-page .hero { padding: 40px 20px; height: auto; }
+            .home-page .hero-content { width: 100%; text-align: center; margin-top: 100px;}
+            .home-page .hero-content h1 { font-size: 32px; white-space: normal;}
+            .home-page section { padding: 40px 20px 20px; }
+            .home-page .games, .home-page .categories { grid-template-columns: repeat(2, 1fr); }
+            .home-page .section-title { flex-direction: column; align-items: flex-start; gap: 15px;}
         }
-        a{
-            text-decoration: none;
+        @media(max-width: 480px){
+            .home-page .games, .home-page .categories { grid-template-columns: 1fr; }
         }
     </style>
-    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
 </head>
 
-<body>
+<body class="home-page">
 
-    <div th:replace="fragments/layout-fragments :: header"></div>
+    <!-- HEADER -->
+    <div th:replace="~{fragments/header-user :: header-user}"></div>
 
-    <!-- HERO -->
+    <!-- HERO BANNER -->
     <div class="hero">
-
         <div class="hero-content">
-			<h2 th:if = "${username!=null}"th:text = "'Chào mừng '+${username}"></h2>
-            <h1>
-                Khám phá những tựa Game PC hay nhất
-            </h1>
-
-            <p>
-                Mua và tải hàng ngàn trò chơi bản quyền trực tuyến.
-                Khám phá game mới, game multiplayer, game indie
-                và các đợt giảm giá lớn giống Steam.
-            </p>
-
+            <h2 th:if="${username!=null}" th:text="'Chào mừng trở lại, '+${username} + '!'" style="color: #22d3ee; margin-bottom: 10px; font-size: 24px;"></h2>
+            <h1>Khám phá những tựa Game đỉnh cao nhất</h1>
+            <p>Sở hữu ngay hàng ngàn trò chơi bản quyền trực tuyến. Khám phá các siêu phẩm hành động, nhập vai, chiến thuật với những đợt giảm giá khổng lồ chỉ có tại GameStore.</p>
             <div class="hero-buttons">
-
-                <button class="store-btn">
-                   Game mới nhất
-                </button>
-
-                <button class="trailer-btn">
-                    Chất lượng tuyệt với
-                </button>
-
+                <a href="/user/product-list"><button class="store-btn">Vào Cửa Hàng</button></a>
+                <a href="#category-section"><button class="trailer-btn">Khám phá ngay ↓</button></a>
             </div>
-
         </div>
-
     </div>
 
-    <!-- CATEGORIES -->
-    <section>
-
+    <!-- DANH MỤC 10 THỂ LOẠI TỪ DATABASE -->
+    <section id="category-section">
         <div class="section-title">
-            <h2>Thể loại</h2>
-            <a href="/user/product">Xem tất cả</a>
+            <h2>Danh Mục Thể Loại</h2>
         </div>
-
         <div class="categories">
-
-            <div class="category">Action</div>
-            <div class="category">Adventure</div>
-            <div class="category">RPG</div>
-            <div class="category">Survival</div>
-            <div class="category">Open World</div>
-            <div class="category">Strategy</div>
-            <div class="category">Indie</div>
-            <div class="category">Multiplayer</div>
-
+            <a th:href="@{/user/product-list/filter(categories='CAT001')}" class="category-card">Action</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT002')}" class="category-card">RPG</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT003')}" class="category-card">Survival</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT004')}" class="category-card">Adventure</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT005')}" class="category-card">Strategy</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT006')}" class="category-card">Simulation</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT007')}" class="category-card">Sports</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT008')}" class="category-card">Racing</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT009')}" class="category-card">FPS</a>
+            <a th:href="@{/user/product-list/filter(categories='CAT010')}" class="category-card">TPS</a>
         </div>
-
     </section>
 
-    <!-- FEATURED GAMES -->
+    <!-- KHU VỰC 1: GAME HÀNH ĐỘNG (ACTION) - CAT001 -->
     <section>
-
         <div class="section-title">
-            <h2>Trò chơi nổi bật</h2>
-            <a href="/user/product">Khám phá thêm</a>
+            <h2>Hành Động Chớp Nhoáng (Action)</h2>
+            <a th:href="@{/user/product-list/filter(categories='CAT001')}">Xem tất cả Action ➜</a>
         </div>
-
         <div class="games">
-
-            <div class="game-card" th:each = "game :${top3game}">
-				<a href = "/user/product-detail">
-                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="game-info">
-
-                    <h3 th:text = "${game.gameName}">Cyber Warriors</h3>
-
-                    <div class="price-row">
-
-                        <div class="price" th:text = "${game.price}">499.000đ</div>
-
-                        <button class="cart-btn">
-                            Thêm vào giỏ
-                        </button>
-
+            <div class="game-card" th:each="game : ${actionGames}">
+                <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}" style="text-decoration: none;">
+                    <img th:src="@{/images/{file}(file=${game.thumbnail})}" alt="Game Thumbnail">
+                    <div class="game-info">
+                        <h3 th:text="${game.gameName}">Tên Game</h3>
+                        <div class="price-row">
+                            <div class="price" th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA')} + ' VND'">0 đ</div>
+                            <button type="button" class="cart-btn">+</button>
+                        </div>
                     </div>
-
-                </div>
-				</a>
+                </a>
             </div>
-
-			
         </div>
-
     </section>
 
-    <!-- TRENDING -->
+    <!-- KHU VỰC 2: GAME NHẬP VAI (RPG) - CAT002 -->
     <section>
-
         <div class="section-title">
-            <h2>Trending Now</h2>
-            <a href="#">Xem đánh giá</a>
+            <h2>Nhập Vai Đỉnh Cao (RPG)</h2>
+            <a th:href="@{/user/product-list/filter(categories='CAT002')}">Xem tất cả RPG ➜</a>
         </div>
-
-        <div class="trending">
-
-            <div class="trend-card">
-
-                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="trend-overlay">
-                    <h3>Shadow Strike</h3>
-                    <p>120K Players</p>
-                </div>
-
+        <div class="games">
+            <div class="game-card" th:each="game : ${rpgGames}">
+                <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}" style="text-decoration: none;">
+                    <img th:src="@{/images/{file}(file=${game.thumbnail})}" alt="Game Thumbnail">
+                    <div class="game-info">
+                        <h3 th:text="${game.gameName}">Tên Game</h3>
+                        <div class="price-row">
+                            <div class="price" th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA')} + ' VND'">0 đ</div>
+                            <button type="button" class="cart-btn">+</button>
+                        </div>
+                    </div>
+                </a>
             </div>
-
-            <div class="trend-card">
-
-                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="trend-overlay">
-                    <h3>Battle Force</h3>
-                    <p>95K Players</p>
-                </div>
-
-            </div>
-
-            <div class="trend-card">
-
-                <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="trend-overlay">
-                    <h3>Fantasy Quest</h3>
-                    <p>80K Players</p>
-                </div>
-
-            </div>
-
-            <div class="trend-card">
-
-                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="trend-overlay">
-                    <h3>Galaxy Mission</h3>
-                    <p>60K Players</p>
-                </div>
-
-            </div>
-
         </div>
-
     </section>
 
-    <div th:replace="fragments/layout-fragments :: footer"></div>
+    <!-- KHU VỰC 3: GAME SINH TỒN (SURVIVAL) - CAT003 -->
+    <section>
+        <div class="section-title">
+            <h2>Thử Thách Sinh Tồn (Survival)</h2>
+            <a th:href="@{/user/product-list/filter(categories='CAT003')}">Xem tất cả Survival ➜</a>
+        </div>
+        <div class="games">
+            <div class="game-card" th:each="game : ${survivalGames}">
+                <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}" style="text-decoration: none;">
+                    <img th:src="@{/images/{file}(file=${game.thumbnail})}" alt="Game Thumbnail">
+                    <div class="game-info">
+                        <h3 th:text="${game.gameName}">Tên Game</h3>
+                        <div class="price-row">
+                            <div class="price" th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA')} + ' VND'">0 đ</div>
+                            <button type="button" class="cart-btn">+</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

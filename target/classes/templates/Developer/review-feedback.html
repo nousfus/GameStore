@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -239,9 +239,7 @@
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">GameStore Developer</div>
-  </header>
+  <div th:replace="fragments/header-dev :: header-dev"></div>
 
   <main class="container">
     <h1 class="page-title">Phản hồi Đánh giá Game</h1>
@@ -330,6 +328,6 @@
     </div>
   </main>
 
-  <footer>© 2026 GameStore</footer>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

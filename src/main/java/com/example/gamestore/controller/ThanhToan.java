@@ -87,7 +87,8 @@ public class ThanhToan {
 		String neededCart_id = cartdao.findByUsername(user.getUsername()).getCart_id();
 		String tempusername = user.getUsername();									//Tổng giá sản phẩm
 		float total = instant ? (float) session.getAttribute("instanttotal") : (float) session.getAttribute("total2");						
-		Orders order = new Orders(neworderid,tempusername,date,total,"Pending");orderdao.save(order);	//tạo order
+		Orders order = new Orders(neworderid, tempusername, date, total, "Paid"); 
+		orderdao.save(order);
 		
 		
 		// Order Detail
@@ -117,16 +118,25 @@ public class ThanhToan {
 		
 		//Payments
 		List<Payments> hahaha = paymentdao.findAll();
-		Payments pa = hahaha.get(paymentdao.findAll().size()-1);
+		String newpaymentid = "PM001";
+		String newtransactionid = "TRANS001";
 		
-		int payment = Integer.parseInt(pa.getPayment_id().substring(4));
-		String newpaymentid = "PM00"+(payment+1);									//Mã payment id
+		if (hahaha != null && !hahaha.isEmpty()) {
+		    Payments pa = hahaha.get(hahaha.size() - 1);
+		    if (pa.getPayment_id() != null && pa.getPayment_id().length() > 4) {
+		        int payment = Integer.parseInt(pa.getPayment_id().substring(4));
+		        newpaymentid = "PM00" + (payment + 1);
+		    }
+		    if (pa.getTransaction_code() != null && pa.getTransaction_code().length() > 7) {
+		        int lsattrancation = Integer.parseInt(pa.getTransaction_code().substring(7));
+		        newtransactionid = "TRANS00" + (lsattrancation + 1);
+		    }
+		}
 		
-		int lsattrancation = Integer.parseInt(pa.getTransaction_code().substring(7));
-		String newtransactionid = "TRANS00"+(lsattrancation+1);									//Mã transaction
+		Payments payments = new Payments(newpaymentid, neworderid, pay, "Success", date, newtransactionid);
+		paymentdao.save(payments);
 		
-		Payments payments = new Payments(newpaymentid,neworderid,pay,"Success",date,newtransactionid);paymentdao.save(payments);
-		for(CartItems c : cartitemdao.findAll()) {							// Xóa item trong cart item
+		for(CartItems c : cartitemdao.findAll()) {	
 			if(c.getCartid().equals(neededCart_id)) {
 				cartitemdao.delete(c);
 			}

@@ -67,48 +67,15 @@
 </head>
 
 <body>
-
-    <div th:replace="fragments/layout-fragments :: header"></div>
-
-		<div class="header-right" >
-			<form th:action="@{/game}" method="get">
-			    <input type="text"
-			           name="keyword"
-			           placeholder="Search games..."
-			           class="search-box"
-			           th:value="${keyword}">
-			    <button type="submit" class="user-menu">Tìm kiếm</button>
-			</form>	
-	
-			<a href = "/login-register" th:if = "${username == null}">
-	            <button class="user-menu">
-	                Đăng nhập
-	            </button>
-			</a>
-			<a href = "/user/logout" th:if = "${username != null}">
-	            <button class="user-menu">
-	                Đăng xuất
-	            </button>
-			</a>
-			<a href = "/user/profile" th:if = "${username != null}">
-	            <button class="user-menu">
-	                Trang cá nhân
-	            </button>
-			</a>
-			<a href = "/user/cart" th:if = "${username != null}">
-	            <button class="user-menu">
-	                Giỏ hàng
-	            </button>
-			</a>
-    </div>
-    </header>
+<div th:replace="fragments/header-user :: header-user"></div>
 
     <!-- MAIN CONTENT -->
+    <form action="/user/product-list/filter" method="get">
     <main>
 
         <!-- SIDEBAR - FILTER -->
         <aside class="sidebar">
-			<form action="/user/product-list/filter" method="get">
+			
             <div class="filter-group">
 				<button type="submit" class="user-menu">Lọc</button><br/><br/>
                 <h3>Thể loại</h3>
@@ -187,82 +154,89 @@
 				    <option value="rating" th:selected = "${Pickedsort != null and Pickedsort=='rating'}">Đánh giá cao nhất</option>
 				</select>
             </div>
-			</form>
+			
 			<div class="games">
+    <div class="game-card" th:each="game : ${gamePage.content}">
 
-			    <div class="game-card"
-			         th:each="game : ${gamePage.content}">
+        <!-- Chỉ gắn link vào Ảnh -->
+        <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}">
+            <img th:src="@{/images/{file}(file=${game.thumbnail})}">
+        </a>
 
-			        <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}">
-			            <img th:src="@{/images/{file}(file=${game.thumbnail})}">
+        <div class="game-info">
+            <!-- Chỉ gắn link vào Tiêu đề -->
+            <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}" style="text-decoration:none;">
+                <div class="game-title" th:text="${game.gameName}"></div>
+            </a>
 
-			            <div class="game-info">
-			                <div class="game-title"
-			                     th:text="${game.gameName}">
-			                </div>
-
-			                <div class="game-rating">★★★★★ (4.8)</div>
-			                <div class="game-category" th:text = "${categories}">
-			                    Action | Sci-Fi
-			                </div>
-			                <div class="price-row">
-			                    <div class="price"
-			                         th:text="${game.price}">
-			                    </div>
-			                </div>
-
-			                <div class="action-buttons">				
-								<!-- Đã mua -->
-								<button class="download-btn"
-								        th:if="${username != null && gamePaidId.contains(game.game_id)}">
-								    <a th:href="@{/games/{file}(file=${game.filegame})}">Tải về</a>
-								</button>
-
-								<!-- Đã thêm vào giỏ -->
-								<button class="download-btn"
-								        th:if="${username != null
-								               && !gamePaidId.contains(game.game_id)
-								               && listgame.contains(game.game_id)}">
-								    Đã thêm
-								</button>
-
-								<!-- Chưa mua, chưa thêm -->
-								<form th:if="${game.status=='Active'
-								             && (username == null
-								                 || (!gamePaidId.contains(game.game_id)
-								                     && !listgame.contains(game.game_id)))}"
-								      th:action="@{/user/addcart/{id}(id=${game.game_id})}"
-								      method="post">
-
-								    <button class="cart-btn" type="submit">
-								        Thêm giỏ hàng
-								    </button>
-								</form>
-								<button class="cart-btn" th:if = "${game.status=='Unactive'}">Sắp ra mắt</button>
-			                    <a th:href = "@{/user/wishlist/add/{id}(id=${game.game_id})}" th:if = "${username == null || !wishlist.contains(game.game_id)}"><button class="wishlist-btn">❤</button></a>
-								<a th:href = "@{/user/wishlist/add/{id}(id=${game.game_id})}" th:if = "${username != null && wishlist.contains(game.game_id)}"><button style ="background:transparent; border:1px solid #d606910f; color:#f01e48; padding:8px 10px; border-radius:10px; cursor:pointer; ">❤</button></a>
-			                </div>
-			            </div>
-			        </a>
-					
-			    </div>
-
-			</div>
-			<!---->
-            <!-- PAGINATION-->
-            <div class="pagination">
-                <a th:if="${!gamePage.first}" th:href="@{/user/product-list(page=${currentPage-1})}"><button>&lt;</button></a>
-                <a th:each="i : ${#numbers.sequence(0, gamePage.totalPages-1)}" th:href="@{/user/product-list(page=${i})}" th:text="${i+1}"><button class="active">1</button></a>
-                <a th:if="${!gamePage.first}" th:href="@{/user/product-list(page=${currentPage+1})}"><button>&gt;</button></a>
+            <div class="game-rating">★★★★★ (4.8)</div>
+            <div class="game-category" th:text="${categoryMap.get(game.game_id)}">Action | Sci-Fi</div>
+            <div class="price-row">
+                <div class="price" th:text="${#numbers.formatDecimal(game.price, 0, 'POINT', 0, 'COMMA')} + ' VND'"></div>
             </div>
 
+            <div class="action-buttons">
+                    <!-- Đã mua -->
+                    <button class="download-btn"
+                            th:if="${username != null && #lists.contains(gamePaidId, game.game_id)}">
+                        <a th:href="@{/games/{file}(file=${game.filegame})}" style="color: green; text-decoration: none;">Tải Game</a>
+                    </button>
+                    
+                    <!-- Đã thêm vào giỏ -->
+                    <button class="download-btn"
+                            th:if="${username != null
+                                   && !#lists.contains(gamePaidId, game.game_id)
+                                   && #lists.contains(listgame, game.game_id)}">
+                        Đã có trong giỏ
+                    </button>
+                    
+                    <!-- Chưa mua, chưa thêm -->
+                    <form th:if="${game.status=='Active'
+                                 && (username == null
+                                     || (!#lists.contains(gamePaidId, game.game_id)
+                                         && !#lists.contains(listgame, game.game_id)))}"
+                          th:action="@{/user/addcart/{id}(id=${game.game_id})}"
+                          method="post" style="flex: 1;">
+                        <button class="cart-btn" type="submit" style="width: 100%;">
+                            Thêm vào giỏ
+                        </button>
+                    </form>
+                    
+                    <!-- Sắp ra mắt -->
+                    <button class="cart-btn" th:if="${game.status=='Unactive'}" style="flex: 1;">Sắp ra mắt</button>
+                    
+                    <!-- Danh sách yêu thích -->
+                    <a th:href="@{/user/wishlist/add/{id}(id=${game.game_id})}" 
+                       th:if="${username == null || !#lists.contains(wishlist, game.game_id)}">
+                       <button class="wishlist-btn" title="Thêm vào yêu thích">🤍</button>
+                    </a>
+                    
+                    <a th:href="@{/user/wishlist/add/{id}(id=${game.game_id})}" 
+                       th:if="${username != null && #lists.contains(wishlist, game.game_id)}">
+                       <button style="background:transparent; border:1px solid #d606910f; color:#ef4444; padding:8px 10px; border-radius:10px; cursor:pointer;" title="Bỏ yêu thích">❤️</button>
+                    </a>
+                </div>
+        </div>
+    </div>
+</div>
+			<!---->
+            <!-- PAGINATION-->
+            <div class="pagination" th:if="${gamePage.totalPages > 0}">
+			    <button th:if="${!gamePage.first}" type="submit" name="page" th:value="${currentPage-1}">&lt;</button>
+			    
+			    <button th:each="i : ${#numbers.sequence(0, gamePage.totalPages-1)}" 
+			            type="submit" name="page" th:value="${i}" 
+			            th:text="${i+1}" 
+			            th:classappend="${i == currentPage} ? 'active' : ''">1</button>
+			            
+			    <button th:if="${!gamePage.last}" type="submit" name="page" th:value="${currentPage+1}">&gt;</button>
+			</div>
         </section>
-
     </main>
+    </form>
 
-    <footer>
-        <p>© 2026 GameStore. All Rights Reserved.</p>
-    </footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+
 	<script>
 	    const priceRange = document.getElementById("priceRange");
 	    const priceValue = document.getElementById("priceValue");

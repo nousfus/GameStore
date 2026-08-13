@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,9 +27,7 @@
     </style>
 </head>
 <body>
-<header>
-    <div class="logo">GameStore Staff</div>
-</header>
+<div th:replace="fragments/header-staff :: header-staff"></div>
 <main>
     <h1 style="margin-bottom:12px">Chi tiết Đơn hàng</h1>
 
@@ -89,6 +87,6 @@
         </table>
     </div>
 </main>
-<footer style="background:#111827;padding:20px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -126,9 +126,7 @@
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">GameStore Developer</div>
-  </header>
+  <div th:replace="fragments/header-dev :: header-dev"></div>
 
   <main class="container">
     <h1 class="page-title">Quản lý Game</h1>
@@ -311,14 +309,20 @@
                 <img th:src="@{/images/{file}(file=${game.thumbnail})}" alt="Thumbnail game" />
               </td>
               <td><span class="status-chip" th:text="${game.status}">Active</span></td>
-              <td>
-                <div class="actions" style="margin-top:0">
-                  <a th:href="@{/developer/game-management/edit/{id}(id=${game.game_id})}">
-                    <button type="button" class="btn-secondary">Chỉnh sửa</button>
-                  </a>
-                  <button class="btn-danger">Xóa</button>
-                </div>
-              </td>
+              	<td>
+				  <div class="actions" style="margin-top:0">
+				    <!-- Nút Chỉnh sửa -->
+				    <a th:href="@{/developer/game-management/edit/{id}(id=${game.game_id})}">
+				      <button type="button" class="btn-secondary">Chỉnh sửa</button>
+				    </a>
+				    
+				    <!-- Nút Xóa -->
+				    <a th:href="@{/developer/game-management/delete/{id}(id=${game.game_id})}" 
+				       onclick="return confirm('Bạn có chắc chắn muốn xóa tựa game này không?');">
+				        <button type="button" class="btn-danger">Xóa</button>
+				    </a>
+				  </div>
+				</td>
             </tr>
           </tbody>
         </table>
@@ -326,7 +330,7 @@
     </div>
   </main>
 
-  <footer>© 2026 GameStore</footer>
+  <div th:replace="~{fragments/footer :: footer}"></div>>
   <script>
           function submitReviewReport(button) {
               const reason = prompt('Nhập lý do báo cáo bình luận này:', '');

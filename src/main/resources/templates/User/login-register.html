@@ -1,220 +1,18 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập / Đăng ký - GameStore</title>
-
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body{
-            background-color: #0f172a;
-            color: white;
-        }
-
-        /* HEADER */
-        header{
-            background-color: #111827;
-            padding: 20px 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #374151;
-            position: sticky;
-            top: 0;
-        }
-
-        .logo{
-            color: #22d3ee;
-            font-size: 32px;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        nav a{
-            text-decoration: none;
-            color: #d1d5db;
-            margin: 0 15px;
-            transition: 0.3s;
-        }
-
-        nav a:hover{
-            color: white;
-        }
-
-        /* MAIN CONTENT */
-        main{
-            min-height: calc(100vh - 200px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        .auth-container{
-            width: 100%;
-            max-width: 900px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            background-color: #111827;
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid #374151;
-        }
-
-        .auth-section h2{
-            font-size: 28px;
-            margin-bottom: 30px;
-            color: #22d3ee;
-        }
-
-        .form-group{
-            margin-bottom: 20px;
-        }
-
-        .form-group label{
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .form-group input{
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #374151;
-            border-radius: 10px;
-            background-color: #1f2937;
-            color: white;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .form-group input:focus{
-            border-color: #22d3ee;
-            background-color: #0f172a;
-        }
-
-        .form-group input::placeholder{
-            color: #6b7280;
-        }
-
-        .submit-btn{
-            width: 100%;
-            padding: 14px;
-            background-color: #22d3ee;
-            color: black;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 15px;
-        }
-
-        .submit-btn:hover{
-            background-color: #67e8f9;
-        }
-
-        .form-group.checkbox{
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-        }
-
-        .form-group.checkbox input{
-            width: auto;
-            margin-right: 8px;
-        }
-
-        .form-group.checkbox label{
-            margin: 0;
-        }
-
-        .forgot-password{
-            text-align: right;
-            margin-bottom: 15px;
-        }
-
-        /* Developer form (hidden until checkbox checked) */
-        .dev-form{
-            display: none;
-            padding: 12px;
-            border: 1px dashed #374151;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            background-color: #0b1220;
-        }
-
-        .forgot-password a{
-            color: #22d3ee;
-            text-decoration: none;
-        }
-
-        .forgot-password a:hover{
-            text-decoration: underline;
-        }
-
-        .divider{
-            border-top: 1px solid #374151;
-            margin: 30px 0;
-        }
-
-        /* FOOTER */
-        footer{
-            background-color: #111827;
-            padding: 30px;
-            text-align: center;
-            color: #9ca3af;
-            border-top: 1px solid #374151;
-        }
-
-        /* RESPONSIVE */
-        @media(max-width: 768px){
-            header{
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
-            }
-
-            .auth-container{
-                grid-template-columns: 1fr;
-                padding: 20px;
-                gap: 30px;
-            }
-
-            main{
-                padding: 20px 10px;
-            }
-        }
-
-    </style>
     <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
 </head>
 
 <body>
 
     <!-- HEADER -->
-    <header>
-        <a href="/" class="logo">GameStore</a>
-
-        <nav>
-            <a href="/">Cửa hàng</a>
-            <a href="/user/product-list">Thư viện</a>
-            <a href="#">Cộng đồng</a>
-            <a href="#">Tin tức</a>
-        </nav>
-    </header>
-
+<div th:replace="fragments/header-user :: header-user"></div>
     <!-- MAIN CONTENT -->
-    <main>
+    <main class="login-register-page">
         <div class="auth-container">
 
             <!-- TABS -->
@@ -319,6 +117,9 @@
 
         </div>
     </main>
+    
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    
 
     <script>
         function showLogin(){
@@ -386,7 +187,3 @@
         // Ensure correct state on page load
         toggleDevForm();
     </script>
-
-    <!-- FOOTER -->
-    <div th:replace="fragments/layout-fragments :: header"></div>
-    </footer>

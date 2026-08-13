@@ -3,531 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin Cá nhân - GameStore</title>
+    <title>Hồ sơ cá nhân - GameStore</title>
+    
+    <!-- CSS CHUNG CỦA WEB -->
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
 
+    <!-- CSS DÀNH RIÊNG CHO TRANG PROFILE -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body {
-            background: radial-gradient(circle at top left, #1e293b 0%, #020617 45%, #0f172a 100%);
-            color: #f8fafc;
-            min-height: 100vh;
-        }
-
-        header {
-            background: rgba(15, 23, 42, 0.95);
-            padding: 20px 80px;
+        .profile-wrapper {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .logo {
-            color: #22d3ee;
-            font-size: 32px;
-            font-weight: 700;
-            text-decoration: none;
-            letter-spacing: 0.03em;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #cbd5e1;
-            margin: 0 15px;
-            transition: 0.3s;
-        }
-
-        nav a:hover {
-            color: #ffffff;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-menu {
-            background: linear-gradient(135deg, #22d3ee, #38bdf8);
-            color: #020617;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 999px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(34, 211, 238, 0.18);
-        }
-
-        .user-menu:hover {
-            transform: translateY(-1px);
-        }
-
-        main {
-            padding: 40px 80px 60px;
+            gap: 30px;
+            padding: 40px 80px;
             max-width: 1400px;
             margin: 0 auto;
+            min-height: calc(100vh - 150px);
+            color: #e2e8f0;
         }
 
-        .page-header {
-            margin-bottom: 26px;
+        /* ----- SIDEBAR MENU ----- */
+        .profile-sidebar {
+            width: 280px;
+            background-color: #111827;
+            border-radius: 12px;
+            padding: 25px 20px;
+            border: 1px solid #374151;
+            height: fit-content;
         }
-
-        .page-header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-            color: #f8fafc;
+        
+        .profile-sidebar h2 {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #374151;
         }
-
-        .page-header p {
-            color: #94a3b8;
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
-
-        .profile-container {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 24px;
-            align-items: start;
-        }
-
-        .sidebar {
-            background: rgba(15, 23, 42, 0.85);
-            padding: 20px;
-            border-radius: 18px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.24);
-            position: sticky;
-            top: 94px;
-        }
-
-        .sidebar h3 {
-            color: #67e8f9;
-            margin-bottom: 16px;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .menu-item {
+        
+        .sidebar-menu li { margin-bottom: 10px; }
+        
+        .sidebar-menu a {
             display: block;
-            width: 100%;
+            padding: 12px 15px;
+            color: #9ca3af;
             text-decoration: none;
-            padding: 12px 14px;
-            margin-bottom: 8px;
-            background: transparent;
-            border: 1px solid transparent;
-            color: #dbe4ee;
-            text-align: left;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            padding-left: 20px;
+        }
+        
+        .sidebar-menu a.active {
+            background-color: rgba(34, 211, 238, 0.15);
+            color: #22d3ee;
+            border-left: 4px solid #22d3ee;
+        }
+
+        /* ----- MAIN CONTENT ----- */
+        .profile-content {
+            flex: 1;
+            background-color: #111827;
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid #374151;
+        }
+
+        .profile-header {
+            margin-bottom: 30px;
+        }
+        
+        .profile-header h1 {
+            font-size: 28px;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .profile-header p {
+            color: #9ca3af;
+            font-size: 15px;
+        }
+
+        /* FORM ĐỔI VAI TRÒ */
+        .role-switch-form {
+            background: #1f2937;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #374151;
+        }
+
+        .role-switch-form select {
+            background: #111827;
+            color: #22d3ee;
+            border: 1px solid #374151;
+            padding: 8px 12px;
+            border-radius: 6px;
+            outline: none;
             cursor: pointer;
-            border-radius: 12px;
-            transition: 0.2s ease;
-            font-size: 14px;
+            font-weight: bold;
         }
 
-        .menu-item:hover,
-        .menu-item.active {
-            background: linear-gradient(90deg, rgba(34, 211, 238, 0.16), rgba(56, 189, 248, 0.06));
-            color: #67e8f9;
-            border-color: rgba(34, 211, 238, 0.2);
+        .role-switch-form button {
+            background: #22d3ee;
+            color: black;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
+        
+        .role-switch-form button:hover { background: #67e8f9; }
 
-        .content-section {
-            background: rgba(15, 23, 42, 0.9);
-            padding: 26px;
-            border-radius: 22px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            box-shadow: 0 16px 40px rgba(2, 6, 23, 0.3);
-        }
-
-        .profile-hero {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(15, 23, 42, 0.8));
-            border: 1px solid rgba(34, 211, 238, 0.16);
-            border-radius: 18px;
-        }
-
-        .avatar-block {
+        /* KHU VỰC AVATAR */
+        .avatar-section {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 25px;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #374151;
         }
 
-        .profile-picture {
-            width: 90px;
-            height: 90px;
+        .avatar-wrapper {
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            object-fit: cover;
+            overflow: hidden;
             border: 3px solid #22d3ee;
-            box-shadow: 0 8px 20px rgba(34, 211, 238, 0.25);
-        }
-
-        .section-title {
-            font-size: 24px;
-            margin-bottom: 6px;
-            color: #f8fafc;
-        }
-
-        .section-subtitle {
-            color: #94a3b8;
-            font-size: 14px;
-        }
-
-        .role-badge {
-            display: inline-block;
-            margin-bottom: 8px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: rgba(34, 211, 238, 0.16);
-            color: #67e8f9;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .profile-stats {
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+            background-color: #1f2937;
             display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
         }
 
-        .stat-card {
-            min-width: 140px;
-            padding: 12px 14px;
-            background: rgba(2, 6, 23, 0.55);
-            border: 1px solid rgba(148, 163, 184, 0.16);
-            border-radius: 12px;
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .stat-label {
-            display: block;
-            color: #94a3b8;
-            font-size: 12px;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-card {
-            padding: 20px;
-            border-radius: 16px;
-            background: rgba(2, 6, 23, 0.45);
-            border: 1px solid rgba(148, 163, 184, 0.16);
-        }
-
-        .form-row {
+        .avatar-info h3 { font-size: 20px; color: white; margin-bottom: 5px;}
+        .avatar-info p { color: #9ca3af; font-size: 14px; margin-bottom: 10px;}
+        
+        /* FORM THÔNG TIN (DÀN 2 CỘT) */
+        .profile-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px;
-            margin-bottom: 18px;
+            gap: 25px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
+            gap: 8px;
         }
 
         .form-group label {
-            margin-bottom: 8px;
-            font-weight: 700;
+            color: #d1d5db;
             font-size: 14px;
-            color: #dbe4ee;
+            font-weight: 600;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 12px 14px;
-            border: 1px solid rgba(148, 163, 184, 0.24);
-            border-radius: 12px;
-            background: rgba(15, 23, 42, 0.82);
-            color: #f8fafc;
-            outline: none;
-            transition: 0.2s ease;
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background-color: #1f2937;
+            border: 1px solid #4b5563;
+            color: white;
+            font-size: 15px;
+            transition: all 0.3s;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
             border-color: #22d3ee;
-            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.14);
-            background: rgba(2, 6, 23, 0.9);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2);
         }
 
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
+        .form-group input[readonly] {
+            background-color: #374151;
+            color: #9ca3af;
+            cursor: not-allowed;
+            border-color: transparent;
         }
 
-        .upload-btn {
-            display: inline-block;
-            padding: 10px 16px;
-            background: linear-gradient(135deg, #22d3ee, #38bdf8);
-            color: #020617;
-            border: none;
-            border-radius: 999px;
-            font-weight: 700;
+        .file-upload-wrapper input[type="file"] {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .file-upload-wrapper input[type="file"]::file-selector-button {
+            padding: 8px 15px;
+            border-radius: 6px;
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: white;
             cursor: pointer;
-            transition: 0.2s ease;
-            margin-top: 10px;
+            margin-right: 15px;
+            transition: 0.3s;
+        }
+        
+        .file-upload-wrapper input[type="file"]::file-selector-button:hover {
+            background: #4b5563;
         }
 
-        .upload-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .upload-input {
-            display: none;
-        }
-
-        .button-group {
+        /* NÚT LƯU & XÓA */
+        .form-actions {
+            grid-column: span 2;
             display: flex;
-            gap: 14px;
-            margin-top: 22px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(148, 163, 184, 0.16);
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 25px;
+            border-top: 1px solid #374151;
         }
 
-        .btn {
-            flex: 1;
-            padding: 13px 14px;
+        .btn-save {
+            background-color: #22d3ee;
+            color: black;
             border: none;
-            border-radius: 999px;
-            font-weight: 700;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
             font-size: 15px;
             cursor: pointer;
-            transition: 0.2s ease;
+            transition: 0.3s;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #22d3ee, #38bdf8);
-            color: #020617;
+        .btn-save:hover { background-color: #67e8f9; transform: translateY(-2px); }
+
+        .btn-delete {
+            background-color: transparent;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-1px);
-        }
+        .btn-delete:hover { background-color: #ef4444; color: white; }
 
-        .btn-danger {
-            background: transparent;
-            border: 1px solid rgba(248, 113, 113, 0.25);
-            color: #fda4af;
-        }
-
-        .btn-danger:hover {
-            background: rgba(248, 113, 113, 0.14);
-            color: #fff1f2;
-        }
-
-        footer {
-            background: rgba(15, 23, 42, 0.95);
-            padding: 28px;
-            text-align: center;
-            color: #94a3b8;
-            border-top: 1px solid rgba(148, 163, 184, 0.16);
-            margin-top: 40px;
-        }
-
-        @media (max-width: 1024px) {
-            main {
-                padding: 24px 40px 50px;
-            }
-
-            .profile-container {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                position: static;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 16px;
-                padding: 20px;
-            }
-
-            main {
-                padding: 20px;
-            }
-
-            .profile-hero {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .profile-wrapper { flex-direction: column; padding: 30px 20px; }
+            .profile-sidebar { width: 100%; }
+            .profile-form { grid-template-columns: 1fr; }
+            .form-actions { grid-column: span 1; flex-direction: column; }
         }
     </style>
 </head>
-
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <a href="/" class="logo">GameStore</a>
+    <!-- GỌI HEADER CHUNG -->
+    <div th:replace="~{fragments/header-user :: header-user}"></div>
 
-        <nav>
-            <a href="/">Cửa hàng</a>
-            <a href="/user/product-list">Thư viện</a>
-            <a href="#">Cộng đồng</a>
-            <a href="#">Tin tức</a>
-        </nav>
+    <div class="profile-wrapper">
+        
+        <!-- CỘT TRÁI: SIDEBAR MENU -->
+        <aside class="profile-sidebar">
+            <h2>Thông tin Cá nhân</h2>
+            <ul class="sidebar-menu">
+                <li><a href="/user/profile" class="active">Hồ sơ cá nhân</a></li>
+                <li><a href="/user/change-password">Đổi mật khẩu</a></li>
+                <li><a href="/user/history">Lịch sử mua hàng</a></li>
+                <li><a href="/user/notifications">Quản lý thông báo</a></li>
+                <li><a href="/user/wishlist">Danh sách ưa thích</a></li>
+            </ul>
+        </aside>
 
-		<div class="header-right">
-		    <button class="user-menu">Tài khoản</button>
-
-		    <form action="/user/role" method="post">
-		        <select class="user-menu" name="role" onchange="this.form.submit()">
-					<option>Chọn vai trò</option>
-		            <option th:each="item : ${dsrole}"
-		                    th:value="${item.role_id}"
-		                    th:text="${item.rolename}">
-		            </option>
-		        </select>
-		    </form>
-		</div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main>
-
-        <div class="page-header">
-            <h1>Thông tin Cá nhân</h1>
-        </div>
-
-        <div class="profile-container">
-
-            <!-- SIDEBAR -->
-            <aside class="sidebar" th:if = "${rolepicked.equals('User')}">
-                <h3>Quản lý tài khoản</h3>
-                <a href="#" class="menu-item active">Thông tin cá nhân</a>
-                <a href = "/user/change-password" class="menu-item">Đổi mật khẩu</a>
-                <a href = "/user/history" class="menu-item">Lịch sử mua hàng</a>
-                <a href = "/user/notification" class="menu-item">Quản lý thông báo</a>
-                <a href = "/user/wishlist" class="menu-item">Danh sách ưa thích</a>
-            </aside>
-			
-			<!-- SIDEBAR -->
-			<aside class="sidebar" th:if = "${rolepicked.equals('Admin')}">
-               <h3>Quản lý tài khoản</h3>
-               <a href="#" class="menu-item active">Thông tin cá nhân</a>
-               <a href = "/user/change-password" class="menu-item">Đổi mật khẩu</a>
-               <a href = "/admin/user-management" class="menu-item">Quản lý người dùng</a>
-               <a href = "/admin/promotions" class="menu-item">Quản lý khuyến mãi</a>
-               <a href = "/admin/revenue-report" class="menu-item">Quản lý doanh thu</a>
-           </aside>
-		   
-		   <!-- SIDEBAR -->
-		   <aside class="sidebar" th:if = "${rolepicked.equals('Staff')}">
-                  <h3>Quản lý tài khoản</h3>
-                  <a href="#" class="menu-item active">Thông tin cá nhân</a>
-                  <a href = "/user/change-password" class="menu-item">Đổi mật khẩu</a>
-                  <a href = "/staff/notifications" class="menu-item">Quản lý thông báo</a>
-                  <a href = "/staff/orders" class="menu-item">Quản lý đơn hàng</a>
-                  <a href = "/staff/reviews" class="menu-item">Quản lý đánh giá</a>
-              </aside>
-			  
-			  <!-- SIDEBAR -->
-			  <aside class="sidebar" th:if = "${rolepicked.equals('Developer')}">
-                 <h3>Quản lý tài khoản</h3>
-                 <a href="#" class="menu-item active">Thông tin cá nhân</a>
-                 <a href = "/user/change-password" class="menu-item">Đổi mật khẩu</a>
-                 <a href = "/developer/game-management" class="menu-item">Quản lý game</a>
-                 <a href = "/developer/revenue-tracking" class="menu-item">Quản lý doanh thu</a>
-                 <a href = "/developer/review-feedback" class="menu-item">Phản hồi bình luận</a>
-             </aside>
-
-            <!-- CONTENT -->
-            <div class="content-section">
-
-                <div class="profile-hero">
-                    <div class="avatar-block">
-							<img th:src="@{/images/{file}(file=${user.Avatar})}" alt="Thumbnail hiện tại" style = "width : 100px"/>                
-						<div>
-                            <h2 class="section-title">Hồ sơ Cá nhân</h2>
-                            <p class="section-subtitle">Cập nhật thông tin để trải nghiệm GameStore tốt hơn.</p>
-                        </div>
-                    </div>
-	
-                    <div class="profile-stats">
-                        <div class="stat-card">
-                            <span class="stat-label">Email</span>
-                            <strong th:text="${user.email}">user@email.com</strong>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-label">Ngày tham gia</span>
-                            <strong th:text="${user.createdDate}">01/01/2026</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-card">
-					<form action = "/user/profile" method = "post"  enctype="multipart/form-data">
-                    <div style="display:flex; justify-content:flex-end; margin-bottom: 12px;">
-                        <input type = "file" accept="image/*" name = "avatar" /><button class="upload-btn" disabled>Thay đổi ảnh</button>
-                    </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="fullname">Họ và Tên</label>
-                                <input type="text" id="fullname" name="fullname" th:value="${user.fullname}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="username">Tên đăng nhập</label>
-                                <input type="text" id="username" name="username" th:value="${user.username}" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" th:value="${user.email}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="dob">Ngày tạo</label>
-                                <input type="text" id="dob" name="dob" th:value="${user.createdDate}" disabled>
-                            </div>
-                        </div>
-
-                        <div class="button-group">
-                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                            <button type="button" class="btn btn-danger" onclick="if(confirm('Bạn chắc chắn muốn xóa tài khoản?')) { alert('Yêu cầu xóa tài khoản đã gửi'); }">Xóa tài khoản</button>
-                        </div>
-                    </form>
-                </div>
-
+        <!-- CỘT PHẢI: NỘI DUNG FORM -->
+        <section class="profile-content">
+            
+            <div class="profile-header">
+                <h1>Hồ sơ Cá nhân</h1>
+                <p>Cập nhật thông tin để trải nghiệm GameStore tốt hơn.</p>
             </div>
 
-        </div>
+            <!-- NẾU CÓ NHIỀU VAI TRÒ THÌ HIỆN FORM ĐỔI VAI TRÒ -->
+            <form class="role-switch-form" th:if="${dsrole != null && dsrole.size() > 1}" th:action="@{/user/role}" method="post">
+                <span style="font-size: 14px; color: #9ca3af;">Đang đăng nhập dưới quyền:</span>
+                <select name="role">
+                    <option th:each="r : ${dsrole}" 
+				        th:value="${r.roleId}" 
+				        th:text="${r.roleName}"  
+				        th:selected="${r.roleName == rolepicked}">
+				    </option>
+                </select>
+                <button type="submit">Chuyển đổi ⇄</button>
+            </form>
 
-    </main>
+            <!-- FORM CẬP NHẬT THÔNG TIN CÁ NHÂN -->
+<form th:action="@{/user/profile}" method="post" enctype="multipart/form-data">
+                
+                <div class="avatar-section">
+                    <div class="avatar-wrapper">
+                        <!-- Đã đổi userEdit thành user và dùng #strings.isEmpty cực kỳ an toàn -->
+                        <img th:if="${!#strings.isEmpty(user.avatar)}" 
+                             th:src="@{/images/{file}(file=${user.avatar})}" alt="Avatar">
+                        <span th:if="${#strings.isEmpty(user.avatar)}" 
+                              style="color: #9ca3af; font-size: 30px;">👤</span>
+                    </div>
+                    <div class="avatar-info file-upload-wrapper">
+                        <h3 th:text="${user.fullname}">Tên người dùng</h3>
+                        <p th:text="${user.email}">email@example.com</p>
+                        <input type="file" name="avatar" accept="image/*">
+                    </div>
+                </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>© 2026 GameStore. All Rights Reserved.</p>
-    </footer>
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label>Tên đăng nhập (Username)</label>
+                        <!-- Đổi userEdit thành user -->
+                        <input type="text" th:value="${user.username}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ngày tham gia</label>
+                        <!-- Đổi userEdit thành user -->
+                        <input type="text" th:value="${user.createdDate}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Họ và Tên</label>
+                        <!-- Đổi userEdit thành user -->
+                        <input type="text" name="fullname" th:value="${user.fullname}" required placeholder="Nhập họ và tên của bạn">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <!-- Đổi userEdit thành user -->
+                        <input type="email" name="email" th:value="${user.email}" required placeholder="Nhập địa chỉ email">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Lưu thay đổi</button>
+                        <button type="button" class="btn-delete" onclick="if(confirm('Bạn có chắc chắn muốn xóa tài khoản này không?')) window.location.href='/user/delete-account'">Xóa tài khoản</button>
+                    </div>
+                </div>
+            </form>
+
+        </section>
+    </div>
+
+    <!-- GỌI FOOTER CHUNG -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

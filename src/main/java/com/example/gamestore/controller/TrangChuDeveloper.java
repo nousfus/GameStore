@@ -115,24 +115,19 @@ public class TrangChuDeveloper {
 		m.addAttribute("selectedCategories", selectedCategories);
 		m.addAttribute("gameEdit",game);
 		//Hiển thị video game
-		  if(game.getVideo_url() == null) return "";
-		    if (game.getVideo_url().contains("watch?v=")) {
-
-		        String VideoId = game.getVideo_url()
-		                .split("watch\\?v=")[1]
-		                .split("&")[0];
-
-		        m.addAttribute("youtube", true);
-		        m.addAttribute("videourl",
-		                "https://www.youtube.com/embed/" + VideoId);
-
-		    }else {
-
-		        m.addAttribute("youtube", false);
-		        m.addAttribute("videourl",
-		                "/videos/" + game.getVideo_url());
-
-		    }
+				if (game.getVideo_url() != null && !game.getVideo_url().trim().isEmpty()) {
+				    if (game.getVideo_url().contains("watch?v=")) {
+				        String VideoId = game.getVideo_url().split("watch\\?v=")[1].split("&")[0];
+				        m.addAttribute("youtube", true);
+				        m.addAttribute("videourl", "https://www.youtube.com/embed/" + VideoId);
+				    } else {
+				        m.addAttribute("youtube", false);
+				        m.addAttribute("videourl", "/videos/" + game.getVideo_url());
+				    }
+				} else {
+				    m.addAttribute("youtube", false);
+				    m.addAttribute("videourl", "");
+				}
 
 		return "Developer/game-management";
 	}
@@ -155,13 +150,27 @@ public class TrangChuDeveloper {
 		DeveloperProfiles dev = developerdao.findByUsername(user.getUsername());
 		m.addAttribute("gameEdit",new Game());
 
-   		// Tạo game id
-   		List<Game> list = gamedao.findAll();
-   		Game abc = list.get(gamedao.findAll().size()-1);
-   		int lastID = Integer.parseInt(abc.getGame_id().substring(4));
-   		Date date = new Date(System.currentTimeMillis());
-		String newGameId = GameId==null || GameId.trim().isEmpty()  ? "GM00"+(lastID+1) : GameId;
-		
+		// Tạo game id an toàn và thông minh
+		String newGameId = GameId;
+
+		if (GameId == null || GameId.trim().isEmpty()) {
+		    List<Game> list = gamedao.findAll();
+		    
+		    if (list.isEmpty()) {
+		        // Trường hợp 1: Database chưa có tựa game nào
+		        newGameId = "GM001";
+		    } else {
+		        // Trường hợp 2: Đã có game, lấy ID của game cuối cùng và tăng lên 1
+		        Game lastGame = list.get(list.size() - 1);
+		        try {
+		            int lastID = Integer.parseInt(lastGame.getGame_id().replace("GM", ""));
+		            newGameId = String.format("GM%03d", lastID + 1); // Đảm bảo luôn có 3 chữ số
+		        } catch (Exception e) {
+		            newGameId = "GM" + System.currentTimeMillis(); 
+		        }
+		    }
+		}
+
 		boolean isEdit = gamedao.existsById(GameId);
 		Game game;
 		if(isEdit){
@@ -170,7 +179,7 @@ public class TrangChuDeveloper {
 		    game = new Game();
 		    game.setGame_id(newGameId);
 		    game.setDeveloper(dev);
-		    game.setRelease_date(date);
+		    game.setRelease_date(new Date(System.currentTimeMillis()));
 		    game.setRating(0);
 		    game.setStatus("Unactive");
 		}
@@ -377,7 +386,7 @@ public class TrangChuDeveloper {
 			double total = 0;
 			List<OrderDetails> list = orderdetaildao.findByGameId(g.getGame_id());
 			for(OrderDetails d : list) {
-				total += (d.getOrder().getTotal_amount() * 70 ) / 100; // Lấy 70% tổng sản phẩm của game
+				total += (d.getOrder().getTotal_amount() * 70 ) / 100;
 				tongDoanhThu += total;
 				luotMua++;
 				Date date = new Date(System.currentTimeMillis());
@@ -395,7 +404,8 @@ public class TrangChuDeveloper {
 		m.addAttribute("luotMua",luotMua);
 		m.addAttribute("tongDoanhThu",tongDoanhThu);
 		m.addAttribute("doangThuThangNay",doangThuThangNay);
-
+		m.addAttribute("startDate", startDate);
+		m.addAttribute("endDate", endDate);
 
 		return "Developer/revenue-tracking";
 	}
@@ -405,4 +415,44 @@ public class TrangChuDeveloper {
 		return "Developer/review-feedback";
 	}
 	
+	@GetMapping("/game-management/delete/{id}")
+	public String deleteGame(@PathVariable("id") String gameid) {
+	    Users user = (Users) session.getAttribute("user");
+	    if (user == null) {
+	        return "redirect:/login-register";
+	    }
+
+	    Game game = gamedao.findById(gameid).orElse(null);
+	    if (game != null) {
+	        try {
+	            // 1. Xóa liên kết Khóa ngoại Thể loại trước
+	            gamecategorydao.deleteByGameid(gameid);
+
+	            // 2. THỬ XÓA GAME TRONG DATABASE TRƯỚC
+	            gamedao.delete(game);
+	            
+	            // 3. NẾU XÓA DATABASE THÀNH CÔNG -> MỚI XÓA FILE TRÊN MINIO
+	            if (game.getThumbnail() != null && !game.getThumbnail().isBlank()) {
+	                minioService.delete("images", game.getThumbnail());
+	            }
+	            if (game.getVideo_url() != null && !game.getVideo_url().startsWith("http") && !game.getVideo_url().isBlank()) {
+	                minioService.delete("videos", game.getVideo_url());
+	            }
+	            if (game.getFilegame() != null && !game.getFilegame().isBlank()) {
+	                minioService.delete("games", game.getFilegame());
+	            }
+
+	            List<GameImages> oldImages = gameimagedao.findByGameid(gameid);
+	            for (GameImages img : oldImages) {
+	                minioService.delete("images", img.getImage_url());
+	            }
+	            gameimagedao.deleteAll(oldImages);
+	            
+	        } catch (Exception e) {
+	            game.setStatus("Unactive");
+	            gamedao.save(game);
+	        }
+	    }
+	    return "redirect:/developer/game-management";
+	}
 }

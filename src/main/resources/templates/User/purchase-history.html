@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -461,20 +461,7 @@
 <body>
 
     <!-- HEADER -->
-    <header>
-        <a href="/" class="logo">GameStore</a>
-
-        <nav>
-            <a href="/">Cửa hàng</a>
-            <a href="/user/product-list">Thư viện</a>
-            <a href="#">Cộng đồng</a>
-            <a href="#">Tin tức</a>
-        </nav>
-
-        <div class="header-right">
-            <button class="user-menu"><h3 th:text = "'Xin chào '+${username}"></h3></button>
-        </div>
-    </header>
+    <div th:replace="fragments/header-user :: header-user"></div>
 
     <!-- MAIN CONTENT -->
     <main>
@@ -599,5 +586,5 @@
     </main>
 
     <!-- FOOTER -->
-    <div th:replace="fragments/layout-fragments :: header"></div>
-    </footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+

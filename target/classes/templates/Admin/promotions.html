@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý Khuyến mãi - Admin</title>
+        <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
+    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: linear-gradient(180deg,#020617 0%, #071028 40%, #0f172a 100%); color: #e6eef6; font-family: Inter, Arial, Helvetica, sans-serif; }
@@ -50,7 +52,7 @@
     </style>
 </head>
 <body>
-<header><div class="logo">GameStore Admin</div></header>
+<div th:replace="fragments/header-admin :: header-admin"></div>
 <main style="padding:30px">
     <h1>Quản lý Khuyến mãi</h1>
     <div class="card">
@@ -146,6 +148,7 @@
             </table>
         </div>
     </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function(){
@@ -185,6 +188,5 @@
         });
     </script>
 </main>
-<footer style="background:#111827;padding:20px;text-align:center;color:#9ca3af;margin-top:30px">© 2026 GameStore</footer>
 </body>
 </html>

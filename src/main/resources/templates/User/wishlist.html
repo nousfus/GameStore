@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -565,20 +565,7 @@ grid-template-columns: 1fr 1fr; /* Chuyển thành 2 hàng, mỗi hàng 2 cột 
 <body>
 
     <!-- HEADER -->
-    <header>
-        <a href="/" class="logo">GameStore</a>
-
-        <nav>
-            <a href="/">Cửa hàng</a>
-            <a href="/user/product-list">Thư viện</a>
-            <a href="#">Cộng đồng</a>
-            <a href="#">Hỗ trợ</a>
-        </nav>
-
-        <div class="header-right">
-            <button class="user-menu">Tài khoản</button>
-        </div>
-    </header>
+    <div th:replace="fragments/header-user :: header-user"></div>
 
     <!-- MAIN CONTENT -->
     <main>
@@ -672,46 +659,10 @@ grid-template-columns: 1fr 1fr; /* Chuyển thành 2 hàng, mỗi hàng 2 cột 
     </main>
 
     <!-- FOOTER -->
-    <div th:replace="fragments/layout-fragments :: header"></div>
-        <div class="footer-column">
-            <h4>Liên kết nhanh</h4>
-            <ul>
-<li><a th:href="@{/}">Trang chủ</a></li>
-                <li><a th:href="@{/cart/view}">Giỏ hàng của bạn</a></li>
-                <li><a th:href="@{/account/profile}">Thông tin tài khoản</a></li>
-                <li><a href="#">Chính sách bảo mật</a></li>
-            </ul>
-        </div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
 
-        <div class="footer-column">
-            <h4>Thông tin hỗ trợ</h4>
-            <ul class="contact-info">
-                <li><span class="info-icon">📍</span> Địa chỉ: Quận 12, TP. Hồ Chí Minh</li>
-                <li><span class="info-icon">📧</span> Email: gamestore@gmail.com</li>
-                <li><span class="info-icon">📞</span> Hotline: 0909 999 999</li>
-                <li><span class="info-icon">⏰</span> Giờ làm việc: 8:00 – 22:00</li>
-            </ul>
-        </div>
 
-        <div class="footer-column newsletter">
-            <h4>Đăng ký nhận tin</h4>
-            <p>Nhận thông báo sớm nhất về các sự kiện giảm giá game và sự kiện hot.</p>
-            <form class="newsletter-form" onsubmit="event.preventDefault();">
-                <input type="email" placeholder="Nhập email của bạn..." required>
-                <button type="submit">Đăng ký</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="footer-bottom">
-        <p>&copy; 2026 GameStore. All rights reserved. Phát triển bởi Gamers nhóm 5.</p>
-    </div>
-
-        <p>
-            © 2026 GameStore. All Rights Reserved.
-        </p>
-
-    </footer>
+	
     
 <script>
 const container = document.querySelector(".wishlist-container");
@@ -765,8 +716,7 @@ function render(page = currentPage) {
     items.forEach(item => container.appendChild(item));
 
    
-    // PHÂN TRANG
-    const start = (currentPage - 1) * itemsPerPage;
+    // PHÂN TRANG    const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
 
     items.slice(start, end).forEach(item => {

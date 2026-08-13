@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -74,11 +74,12 @@
     </style>
 </head>
 <body>
-<header><div class="logo">GameStore Admin</div></header>
+<div th:replace="fragments/header-admin :: header-admin"></div>
 <main>
     <div class="page-heading">
         <div>
             <h1>Quản lý game</h1>
+            <br>
             <p>Phân chia danh sách game theo trạng thái hoạt động và chờ phê duyệt giúp bạn xử lý nhanh hơn, chuyên nghiệp hơn.</p>
         </div>
     </div>
@@ -121,7 +122,6 @@
                         <td data-label="Trạng thái"><span class="badge active">Active</span></td>
                         <td data-label="Hành động">
                             <div class="row-actions">
-                                <a th:href="@{/admin/games/edit/{id}(id=${game.game_id})}"><button class="action-btn action-approve" type="button">Phê duyệt</button></a>
                                 <a th:href="@{/user/product-detail/{id}(id=${game.game_id})}"><button class="action-btn action-edit" type="button">Xem</button></a>
                                 <form method="post" th:action="@{/admin/games/delete}" style="display:inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa game này?')">
                                     <input type="hidden" name="id" th:value="${game.game_id}" />
@@ -181,7 +181,7 @@
         </div>
     </div>
 </main>
-<footer>© 2026 GameStore</footer>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script>
     const updateEmptyStates = () => {

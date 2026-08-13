@@ -90,11 +90,16 @@ public class UserCart {
 	}
 	@RequestMapping("/thanhtoan")
 	public String thanhtoan(Model m) {
-		String total = (String )session.getAttribute("total2");
-		System.out.println(total);
+		Float total = (Float) session.getAttribute("total2");
+		if (total == null) {
+			total = 0f;
+		}
 		Users user = (Users) session.getAttribute("user");
-		m.addAttribute("total",total);
-		m.addAttribute("username",user.getUsername());
+		if (user != null) {
+			m.addAttribute("total", total);
+			m.addAttribute("username", user.getUsername());
+		}
+		session.setAttribute("instant", false);
 		return "User/payment";
 	}
 }

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header-dev">
+    <style>
+        .dev-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0b1121;
+            padding: 16px 32px;
+            border-bottom: 1px solid #1f2937;
+            font-family: Arial, sans-serif;
+        }
+
+        .dev-header .logo {
+            color: #22d3ee;
+            font-size: 22px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .dev-header .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .dev-header .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .dev-header .nav-links a:hover {
+            color: #22d3ee;
+        }
+
+        .dev-header .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dev-header .role-text {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .dev-header .role-text strong {
+            color: white;
+        }
+
+        .dev-header .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .dev-header .btn-profile {
+            background-color: #22d3ee;
+            color: #0f172a;
+            border: none;
+        }
+
+        .dev-header .btn-profile:hover {
+            background-color: #67e8f9;
+            transform: translateY(-2px);
+        }
+
+        .dev-header .btn-logout {
+            background-color: transparent;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .dev-header .btn-logout:hover {
+            background-color: #ef4444;
+            color: white;
+        }
+    </style>
+
+    <header class="dev-header">
+        <a th:href="@{/developer/home}" class="logo">GameStore Developer</a>
+        
+        <nav class="nav-links">
+            <a th:href="@{/developer/home}">Trang chủ</a>
+            <a th:href="@{/developer/game-management}">Quản lý game</a>
+            <a th:href="@{/developer/revenue-tracking}">Doanh thu</a>
+            <a th:href="@{/developer/review-feedback}">Bình luận game</a>
+        </nav>
+        
+        <div class="user-actions">
+            <span class="role-text" th:if="${username != null}">Vai trò: <strong th:text="${username}">Developer</strong></span>
+            <a th:href="@{/developer/profile}" class="btn btn-profile">Trang cá nhân</a>
+            <a th:href="@{/user/logout}" class="btn btn-logout">Đăng xuất</a>
+        </div>
+    </header>
+</div>
+</body>
+</html>

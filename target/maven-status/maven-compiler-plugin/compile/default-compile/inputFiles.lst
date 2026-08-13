@@ -1,61 +1,59 @@
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\config\MinioConfig.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\config\WebConfig.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\ChangePassword.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\DangNhap_DangKy.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\DanhSachYeuThich.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\GameList.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\History_purchase.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\MuaHang.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\Notification.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\ProductList.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\Quanlykhuyenmai.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\QuanLyUser.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\StaffOrder.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\ThanhToan.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\TrangChu.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\TrangChuAdmin.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\TrangChuDeveloper.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\TrangChuStaff.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\UploadImages.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\controller\UserCart.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\CartDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\CartItemsDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\CategoriesDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\DeveloperProfilesDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\DiscountsDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\GameCategoriesDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\GameDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\GameImagesDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\NotificationsDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\OrderDetailsDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\OrdersDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\PaymentsDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\ReviewsDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\RolesDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\UserDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\UserRolesDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\dao\WishListDao.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Cart.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\CartItems.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Categories.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\DeveloperProfiles.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Discounts.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Game.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\GameCategories.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\GameImages.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Notifications.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\OrderDetails.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Orders.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Payments.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Reviews.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Roles.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\UserRoles.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\Users.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\entity\WishList.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\GameStoreApplication.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\service\EmailService.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\service\GameCategoriesId.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\service\GameSpecification.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\service\MinioService.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\service\UserRoleId.java
-D:\Nhóm 5\Code\GameStore\src\main\java\com\example\gamestore\temp.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\config\MinioConfig.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\config\WebConfig.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\ChangePassword.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\DangNhap_DangKy.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\DanhSachYeuThich.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\GameList.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\History_purchase.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\MuaHang.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\Notification.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\ProductList.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\Quanlykhuyenmai.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\QuanLyUser.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\StaffOrder.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\ThanhToan.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\TrangChu.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\TrangChuAdmin.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\TrangChuDeveloper.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\TrangChuStaff.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\controller\UserCart.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\CartDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\CartItemsDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\CategoriesDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\DeveloperProfilesDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\DiscountsDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\GameCategoriesDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\GameDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\GameImagesDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\NotificationsDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\OrderDetailsDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\OrdersDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\PaymentsDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\ReviewsDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\RolesDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\UserDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\UserRolesDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\dao\WishListDao.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Cart.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\CartItems.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Categories.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\DeveloperProfiles.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Discounts.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Game.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\GameCategories.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\GameImages.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Notifications.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\OrderDetails.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Orders.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Payments.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Reviews.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Roles.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\UserRoles.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\Users.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\entity\WishList.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\GameStoreApplication.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\service\EmailService.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\service\GameCategoriesId.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\service\GameSpecification.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\service\MinioService.java
+D:\Github\GameStore\src\main\java\com\example\gamestore\service\UserRoleId.java

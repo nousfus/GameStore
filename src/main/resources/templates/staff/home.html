@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -41,30 +41,7 @@
 
 <body>
 
-<header>
-    <div class="logo">GameStore Staff</div>
-    <nav>
-        <a href="/staff">Trang chủ</a>
-        <a href="/staff/notifications">Quản lý thông báo</a>
-        <a href="/staff/orders">Đơn hàng</a>
-        <a href="/staff/support">Hỗ trợ khách hàng</a>
-    </nav>
-
-	<div class="header-right">
-	        <div class="muted">Signed in as <strong th:text="${username}">Developer</strong></div>
-			<a href = "/logout">
-	            <button class="login-btn">
-	                Đăng xuất
-	            </button>
-			</a>
-			<a href = "/staff/profile">
-	            <button class="login-btn">
-	                Trang cá nhân
-	            </button>
-			</a>
-	    </div>
-
-</header>
+<div th:replace="fragments/header-staff :: header-staff"></div>
 
 <div class="hero">
     <div>
@@ -87,10 +64,8 @@
     </section>
 
 </main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-<footer>
-    <p>© 2026 GameStore</p>
-</footer>
 
 </body>
 </html>

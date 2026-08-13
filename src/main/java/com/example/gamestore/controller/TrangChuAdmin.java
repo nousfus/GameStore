@@ -57,16 +57,19 @@ public class TrangChuAdmin {
 		}
 		return "Admin/home";
 	}
-	@RequestMapping("/profile")									// Profile
+	@RequestMapping("/profile")									
 	public String profile(Model m) {
 		Users user = (Users) session.getAttribute("user");
-		if(user!=null) {
-			m.addAttribute("rolepicked",session.getAttribute("rolepicked"));
-			m.addAttribute("username",user.getUsername());
-			m.addAttribute("user",user);
+		if (user != null) {
+			m.addAttribute("rolepicked", session.getAttribute("rolepicked"));
+			m.addAttribute("username", user.getUsername());
+			m.addAttribute("user", user);
 			List<Roles> list = userroledao.findByUsername(user.getUsername());
-			m.addAttribute("dsrole",list);
+			m.addAttribute("dsrole", list);
+		} else {
+			return "redirect:/login-register";
 		}
+		
 		return "User/profile";
 	}
 
@@ -84,9 +87,12 @@ public class TrangChuAdmin {
 	}
 	@PostMapping("/games/delete")
 	public String delete(@RequestParam("id") String id) {
-		Game game = gamedao.findById(id).orElse(null);
-		gamedao.delete(game);
-		return "forward:/admin/content-management";
+	    Game game = gamedao.findById(id).orElse(null);
+	    if (game != null) {
+	        game.setStatus("Banned");
+	        gamedao.save(game);
+	    }
+	    return "redirect:/admin/content-management";
 	}
 	@RequestMapping("/user-management")
 	public String user() {
@@ -184,6 +190,8 @@ public class TrangChuAdmin {
 		m.addAttribute("TongDonHang",orderdao.findAll().size());
 		m.addAttribute("DonHangHomNay",DonHangHomNay);
 		m.addAttribute("listorder",paidOrder);
+		m.addAttribute("startDate", startDate);
+		m.addAttribute("endDate", endDate);
 		return "Admin/revenue-report";
 	}
 }

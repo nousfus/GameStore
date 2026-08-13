@@ -1,33 +1,24 @@
 package com.example.gamestore.entity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Roles")
 public class Roles { 
 	@Id
-	private String role_id; 
+	@Column(name = "role_id")
+	private String roleId;
+
 	@Column(name = "role_name")
-	private String rolename; 
+	private String roleName; 
 	@Override
 	public String toString() {
-		return role_id + ", " + rolename;
-	}
-	public Roles() { } 
-	public Roles(String role_id, String role_name) { 
-		this.role_id = role_id; 
-		this.rolename = role_name; 
-	}
-	public String getRole_id() {
-		return role_id;
-	}
-	public void setRole_id(String role_id) {
-		this.role_id = role_id;
-	}
-	public String getRolename() {
-		return rolename;
-	}
-	public void setRolename(String roleName) {
-		this.rolename = roleName;
+		return roleId + ", " + roleName;
 	}
 	
 	

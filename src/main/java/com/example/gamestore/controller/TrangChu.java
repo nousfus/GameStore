@@ -74,9 +74,37 @@ public class TrangChu {
 			m.addAttribute("username",user.getUsername());
 			session.setAttribute("rolepicked", "User");
 		}
-		// Hiển thị sản phẩm
-		List<Game> games = gamedao.findTop3ByRating(5);
-		m.addAttribute("top3game",games);
+		
+		// 1. Tạo 3 danh sách chứa tối đa 5 game cho mỗi thể loại
+		List<Game> actionGames = new ArrayList<>();
+		List<Game> rpgGames = new ArrayList<>();
+		List<Game> survivalGames = new ArrayList<>();
+
+		// 2. Quét game và phân loại
+		for (Game game : gamedao.findAll()) {
+			List<GameCategories> categories = gamecategorydao.findByGameid(game.getGame_id());
+			for (GameCategories gc : categories) {
+				// Lọc game Hành động (CAT001)
+				if (gc.getCategory_id().equals("CAT001") && actionGames.size() < 5) {
+					actionGames.add(game);
+				}
+				// Lọc game Nhập vai (CAT002)
+				if (gc.getCategory_id().equals("CAT002") && rpgGames.size() < 5) {
+					rpgGames.add(game);
+				}
+				// Lọc game Sinh tồn (CAT003)
+				if (gc.getCategory_id().equals("CAT003") && survivalGames.size() < 5) {
+					survivalGames.add(game);
+				}
+			}
+			
+			if (actionGames.size() == 5 && rpgGames.size() == 5 && survivalGames.size() == 5) {
+				break;
+			}
+		}
+		m.addAttribute("actionGames", actionGames);
+		m.addAttribute("rpgGames", rpgGames);
+		m.addAttribute("survivalGames", survivalGames);
 		
 		return "trangchu";
 	}
