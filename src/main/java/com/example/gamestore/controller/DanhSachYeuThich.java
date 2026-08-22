@@ -26,6 +26,7 @@ import com.example.gamestore.dao.GameCategoriesDao;
 import com.example.gamestore.entity.Categories;
 import com.example.gamestore.entity.GameCategories;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -139,7 +140,7 @@ public class DanhSachYeuThich {
         return "User/wishlist";
     }
     @GetMapping("/user/wishlist/add/{id}")
-    public String add(@PathVariable String id) {
+    public String add(@PathVariable String id, HttpServletRequest request) {
     	Users user = (Users) session.getAttribute("user");
     	if(user==null) {
 			return "redirect:/login-register";
@@ -164,8 +165,11 @@ public class DanhSachYeuThich {
     		}
     		
     	}
-        String path = (String) session.getAttribute("path");
-        return "redirect:"+path;
+        String referer = request.getHeader("Referer");
+        if (referer != null) {
+            return "redirect:" + referer;
+        }
+        return "redirect:/user/product-list";
     }
     
     // XÓA DANH SÁCH YÊU THÍCH

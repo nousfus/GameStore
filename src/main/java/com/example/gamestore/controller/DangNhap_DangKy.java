@@ -76,7 +76,7 @@ public class DangNhap_DangKy {
 			@RequestParam("confirmPassword")String password2,
 			@RequestParam("devStudio") String devStudio,
 			@RequestParam("devBio") String devBio,
-			@RequestParam("isDeveloper") boolean isDeveloper) {
+			@RequestParam(value = "isDeveloper", required = false, defaultValue = "false") boolean isDeveloper) {
 		if(!password.equals(password2)) {							//Mật khẩu không trùng
 			m.addAttribute("kq","Mật khẩu không trùng");
 			System.out.println("Mật khẩu không trùng");
@@ -85,12 +85,15 @@ public class DangNhap_DangKy {
 			Users user = new Users(username,email,password,fullname,"a",date,"Active");
 			session.setAttribute("user", user);
 			session.setAttribute("otp", generateOTP());
-			if(isDeveloper) {
-				List<DeveloperProfiles> list = devdao.findAll();
-				DeveloperProfiles dev = list.get(devdao.findAll().size()-1);
-				String devId = "DEV00" + (Integer.parseInt(dev.getDeveloperid().substring(5)));
-				devdao.save(new DeveloperProfiles(devId,user.getUsername(),devStudio,devBio,0));
-			}
+			if(isDeveloper) { 
+	            List<DeveloperProfiles> list = devdao.findAll(); 
+	            String devId = "DEV001";
+	            if (!list.isEmpty()) {
+	                DeveloperProfiles dev = list.get(list.size()-1); 
+	                devId = "DEV00" + (Integer.parseInt(dev.getDeveloperid().substring(5)) + 1); 
+	            }
+	            devdao.save(new DeveloperProfiles(devId, user.getUsername(), devStudio, devBio, 0)); 
+	        }
 		}
 		return "redirect:/CheckRegister";
 	}

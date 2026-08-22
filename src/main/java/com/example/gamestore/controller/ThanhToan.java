@@ -86,7 +86,13 @@ public class ThanhToan {
 		
 		String neededCart_id = cartdao.findByUsername(user.getUsername()).getCart_id();
 		String tempusername = user.getUsername();									//Tổng giá sản phẩm
-		float total = instant ? (float) session.getAttribute("instanttotal") : (float) session.getAttribute("total2");						
+		Float sessionTotal = instant ? (Float) session.getAttribute("instanttotal") : (Float) session.getAttribute("total2");
+		float total = 0f;
+		if (sessionTotal != null) {
+		    total = sessionTotal;
+		} else {
+		    return "redirect:/user/cart"; 
+		}						
 		Orders order = new Orders(neworderid, tempusername, date, total, "Paid"); 
 		orderdao.save(order);
 		
@@ -147,6 +153,30 @@ public class ThanhToan {
 		session.removeAttribute("quantity");
 		session.removeAttribute("instantgame");
 		session.removeAttribute("instanttotal");
-		return "redirect:/user/product-list";
+		return "redirect:/payment/success/" + neworderid;
+	}
+	
+	@GetMapping("/payment/success/{orderId}")
+	public String paymentSuccess(@PathVariable("orderId") String orderId, Model m) {
+	    Users user = (Users) session.getAttribute("user");
+	    if (user == null) {
+	        return "redirect:/login-register";
+	    }
+
+	    // Lấy thông tin đơn hàng, chi tiết sản phẩm và thanh toán từ Database
+	    Orders order = orderdao.findById(orderId).orElse(null);
+	    List<OrderDetails> orderDetails = orderdetaildao.findByOrderID(orderId);
+	    Payments payment = paymentdao.findByOrderid(orderId);
+
+	    // Kiểm tra xem đơn hàng có tồn tại và đúng của user hiện tại không
+	    if (order == null || !order.getUsername().equals(user.getUsername())) {
+	        return "redirect:/user/product-list";
+	    }
+
+	    m.addAttribute("order", order);
+	    m.addAttribute("orderDetails", orderDetails);
+	    m.addAttribute("payment", payment);
+
+	    return "User/payment-success";
 	}
 }

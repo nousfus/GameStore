@@ -333,7 +333,7 @@ public class GameList {
 		return "forward:/user/product-detail/"+gameId;
 	}
 	@PostMapping("/user/addcart/{id}")
-	public String addcart(@PathVariable("id") String gameid) {
+	public String addcart(@PathVariable("id") String gameid, HttpServletRequest request) {
 		Users user = (Users) session.getAttribute("user");
 		if(user==null) {
 			return "redirect:/login-register";
@@ -363,7 +363,11 @@ public class GameList {
 	        CartItems newItem = new CartItems(newId,cart.getCart_id(),game);
 	        cartitemdao.save(newItem);
 
-	    return "redirect:/user/product-list";
+	        String referer = request.getHeader("Referer");
+	        if (referer != null) {
+	            return "redirect:" + referer;
+	        }
+	        return "redirect:/user/product-list";
 	}
 	@PostMapping("/delete/{abc}")
 	public String delete(@PathVariable("abc")String id) {

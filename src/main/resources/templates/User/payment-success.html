@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán thành công - GameStore</title>
+    <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background-color: #0f172a; color: white; }
+        .success-container { max-width: 800px; margin: 50px auto; background-color: #111827; padding: 40px; border-radius: 12px; border: 1px solid #374151; text-align: center; }
+        .success-icon { font-size: 60px; color: #10b981; margin-bottom: 20px; }
+        .success-title { font-size: 28px; color: #10b981; margin-bottom: 10px; font-weight: bold; }
+        .success-desc { color: #9ca3af; margin-bottom: 30px; }
+        
+        .order-info { background-color: #0f172a; border: 1px solid #374151; border-radius: 8px; padding: 20px; margin-top: 20px; text-align: left; }
+        .order-info h3 { color: #22d3ee; margin-bottom: 15px; border-bottom: 1px solid #374151; padding-bottom: 10px; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: #d1d5db; font-size: 15px; }
+        .info-row strong { color: white; }
+        .total-row { font-size: 18px; margin-top: 15px; border-top: 1px dashed #374151; padding-top: 15px; }
+        .total-row strong { color: #22d3ee; font-size: 22px; }
+
+        .game-list { margin-top: 10px; }
+        .game-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #374151; }
+        .game-item:last-child { border-bottom: none; }
+        .game-name { font-weight: bold; color: #e5e7eb; }
+        .game-price { color: #9ca3af; }
+
+        .btn-group { margin-top: 35px; display: flex; gap: 15px; justify-content: center; }
+        .btn { padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.3s; font-size: 15px; }
+        .btn-primary { background-color: #22d3ee; color: #0f172a; }
+        .btn-primary:hover { background-color: #67e8f9; transform: translateY(-2px); }
+        .btn-secondary { background-color: #374151; color: white; border: 1px solid #4b5563; }
+        .btn-secondary:hover { background-color: #4b5563; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/header-user :: header-user}"></div>
+
+    <main>
+        <div class="success-container">
+            <div class="success-icon">✔️</div>
+            <h1 class="success-title">Thanh toán thành công!</h1>
+            <p class="success-desc">Cảm ơn bạn đã mua hàng tại GameStore. Đơn hàng của bạn đã được xử lý và lưu vào thư viện.</p>
+
+            <div class="order-info">
+                <h3>Thông tin giao dịch</h3>
+                <div class="info-row"><span>Mã đơn hàng:</span> <strong th:text="${order.order_id}">OD001</strong></div>
+                <div class="info-row"><span>Ngày giao dịch:</span> <strong th:text="${order.order_date}">22/08/2026</strong></div>
+                <div class="info-row"><span>Phương thức thanh toán:</span> <strong style="text-transform: capitalize;" th:text="${payment.payment_method}">Chuyển khoản</strong></div>
+                <div class="info-row"><span>Mã giao dịch (Trạng thái):</span> <strong><span th:text="${payment.transaction_code}">TRANS001</span> (<span th:text="${payment.payment_status}" style="color: #10b981;">Success</span>)</strong></div>
+                <div class="info-row total-row">
+                    <span>Tổng thanh toán:</span> 
+                    <strong th:text="${#numbers.formatDecimal(order.total_amount, 0, 'POINT', 0, 'COMMA')} + ' đ'">100.000 đ</strong>
+                </div>
+            </div>
+
+            <div class="order-info">
+                <h3>Sản phẩm đã mua</h3>
+                <div class="game-list">
+                    <div class="game-item" th:each="detail : ${orderDetails}">
+                        <span class="game-name" th:text="${detail.game.gameName}">Tên game</span>
+                        <span class="game-price" th:text="${#numbers.formatDecimal(detail.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">Giá</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a href="/user/product-list" class="btn btn-secondary">Tiếp tục mua sắm</a>
+                <a href="/user/history" class="btn btn-primary">Xem lịch sử đơn hàng</a>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
