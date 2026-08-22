@@ -572,7 +572,7 @@ grid-template-columns: 1fr 1fr; /* Chuyển thành 2 hàng, mỗi hàng 2 cột 
 
         <div class="page-header">
             <h1>Game yêu thích ❤️</h1>
-            <p class="wishlist-count">Bạn có 18 game trong danh sách yêu thích</p>
+            <p class="wishlist-count"></p>
         </div>
 
         <!-- FILTER & SORT -->
@@ -602,26 +602,28 @@ grid-template-columns: 1fr 1fr; /* Chuyển thành 2 hàng, mỗi hàng 2 cột 
         <!-- WISHLIST ITEMS -->
         <div class="wishlist-container">
 
-            <div class="wishlist-item"  
-                        data-category="Action"
-					    data-price="499000"
-					    data-rating="4.1"
-					    data-date="2025-08-20" th:each = "item : ${wishlistList}">
+            <div class="wishlist-item"
+			     th:each="item : ${wishlistList}"
+			     th:attr="
+			        data-category=${item.game.categories},
+			        data-price=${item.game.price},
+			        data-rating=${item.game.rating},
+			        data-date=${#dates.format(item.added_at,'yyyy-MM-dd')}">
                 <div class="item-image">
 				<img  th:src="@{/images/{file}(file=${item.game.thumbnail})}">
                     <div class="wishlist-badge">♥ YÊU THÍCH</div>
                 </div>
                 <div class="item-info">
-                    <div class="item-title" th:text = "${item.game.gameName}">Dragon's Dogma</div>
+                    <div class="item-title" th:text = "${item.game.gameName}"></div>
 					<div class = "item-rating">
 					    <span th:each="i : ${#numbers.sequence(1,5)}">
 					        <span th:if="${i <= item.game.rating}">★</span>
 					        <span th:if="${i > item.game.rating}">☆</span>
 					    </span>
 					</div>
-                    <div class="item-category">Action | Sci-Fi</div>
-                    <div class="item-date" th:text="${'Ngày thêm :'+item.added_at}">Ngày thêm: 20/08/2025</div>
-                    <div class="item-price" th:text = "${item.game.price}">499.000đ</div>
+                    <div class="item-category" th:text="${item.game.categories}"></div>
+                    <div class="item-date" th:text="${'Ngày thêm :'+item.added_at}"></div>
+                    <div class="item-price" th:text = "${item.game.price}"></div>
                     <div class="item-actions">
 						<!-- Đã mua -->
 						<button class="action-btn cart-btn"
@@ -659,10 +661,16 @@ grid-template-columns: 1fr 1fr; /* Chuyển thành 2 hàng, mỗi hàng 2 cột 
     </main>
 
     <!-- FOOTER -->
+<<<<<<< HEAD
         <div th:replace="~{fragments/footer :: footer}"></div>
 
 
 	
+=======
+   <footer>
+        <p>© 2026 GameStore. All Rights Reserved.</p>
+    </footer>
+>>>>>>> 1891aea3f2b5252d11a27cf63bf02ed686ab43a8
     
 <script>
 const container = document.querySelector(".wishlist-container");
@@ -676,94 +684,160 @@ let currentPage = 1;
 // Lưu toàn bộ game
 const allItems = [...document.querySelectorAll(".wishlist-item")];
 
-// Số trang luôn theo tổng số game ban đầu
-const totalPages = Math.ceil(allItems.length / itemsPerPage);
-
 function render(page = currentPage) {
 
     currentPage = page;
 
     let items = [...allItems];
 
+    // =========================
     // BỘ LỌC THỂ LOẠI
+    // =========================
     if (filter.value !== "all") {
-        items = items.filter(item =>
-            item.dataset.category.includes(filter.value)
-        );
+
+        items = items.filter(item => {
+
+            // Lấy thể loại
+            const category = item.dataset.category || "";
+
+            // Không phân biệt chữ hoa chữ thường
+            return category
+                .toLowerCase()
+                .includes(filter.value.toLowerCase());
+        });
     }
 
-   
-    // BỘ SẮP XẾP (Ngày - Giá - Đánh giá)
+    // =========================
+    // BỘ SẮP XẾP
+    // =========================
     items.sort((a, b) => {
+
         switch (sort.value) {
+
             case "newest":
-                return new Date(b.dataset.date) - new Date(a.dataset.date);
+                return new Date(b.dataset.date) -
+                       new Date(a.dataset.date);
+
             case "oldest":
-                return new Date(a.dataset.date) - new Date(b.dataset.date);
+                return new Date(a.dataset.date) -
+                       new Date(b.dataset.date);
+
             case "priceAsc":
-                return Number(a.dataset.price) - Number(b.dataset.price);
+                return Number(a.dataset.price) -
+                       Number(b.dataset.price);
+
             case "priceDesc":
-                return Number(b.dataset.price) - Number(a.dataset.price);
+                return Number(b.dataset.price) -
+                       Number(a.dataset.price);
+
             case "rating":
-                return Number(b.dataset.rating) - Number(a.dataset.rating);
+                return Number(b.dataset.rating) -
+                       Number(a.dataset.rating);
+
             default:
                 return 0;
         }
     });
-// HIỂN THỊ GAME
-    allItems.forEach(item => item.style.display = "none");
-    container.innerHTML = "";
-    items.forEach(item => container.appendChild(item));
 
+<<<<<<< HEAD
    
     // PHÂN TRANG    const start = (currentPage - 1) * itemsPerPage;
+=======
+    // =========================
+    // TÍNH SỐ TRANG
+    // =========================
+    const totalPages = Math.max(
+        1,
+        Math.ceil(items.length / itemsPerPage)
+    );
+
+    // Nếu đang ở trang lớn hơn số trang hiện tại
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+
+    // =========================
+    // HIỂN THỊ GAME
+    // =========================
+    allItems.forEach(item => {
+        item.style.display = "none";
+    });
+
+    container.innerHTML = "";
+
+    // Đưa các game đã lọc + sắp xếp vào container
+    items.forEach(item => {
+        container.appendChild(item);
+    });
+
+    // =========================
+    // PHÂN TRANG
+    // =========================
+    const start = (currentPage - 1) * itemsPerPage;
+>>>>>>> 1891aea3f2b5252d11a27cf63bf02ed686ab43a8
     const end = start + itemsPerPage;
 
     items.slice(start, end).forEach(item => {
         item.style.display = "block";
     });
 
-    createPagination();
+    createPagination(totalPages);
 
-    // TỰ CUỘN LÊN ĐẦU DANH SÁCH GAME
+    // =========================
+    // CUỘN LÊN ĐẦU
+    // =========================
     window.scrollTo({
         top: 0,
         behavior: "auto"
     });
-
 }
 
-function createPagination() {
+
+// =========================
+// TẠO PHÂN TRANG
+// =========================
+function createPagination(totalPages) {
+
     pagination.innerHTML = "";
 
-   
-    // NÚT TRANG TRƯỚC (<)
+    // NÚT TRANG TRƯỚC
     const prev = document.createElement("button");
+
     prev.innerHTML = "&lt;";
+
     prev.disabled = currentPage === 1;
+
     prev.onclick = () => {
         render(currentPage - 1);
     };
+
     pagination.appendChild(prev);
 
-  
+
     // CÁC NÚT SỐ TRANG
     for (let i = 1; i <= totalPages; i++) {
+
         const btn = document.createElement("button");
+
         btn.innerText = i;
+
         if (i === currentPage) {
             btn.classList.add("active");
         }
+
         btn.onclick = () => {
             render(i);
         };
+
         pagination.appendChild(btn);
     }
 
-    
-    // NÚT TRANG SAU (>)
+
+    // NÚT TRANG SAU
     const next = document.createElement("button");
+
     next.innerHTML = "&gt;";
+
     next.disabled = currentPage === totalPages;
 
     next.onclick = () => {
@@ -773,14 +847,28 @@ function createPagination() {
     pagination.appendChild(next);
 }
 
-// SỰ KIỆN BỘ LỌC
-sort.addEventListener("change", () => render(1));
-filter.addEventListener("change", () => render(1));
 
+// =========================
+// SỰ KIỆN BỘ LỌC
+// =========================
+sort.addEventListener("change", () => {
+    render(1);
+});
+
+filter.addEventListener("change", () => {
+    render(1);
+});
+
+
+// =========================
 // KHỞI TẠO
+// =========================
 render(1);
 
-// Thêm vào giỏ hàng
+
+// =========================
+// THÊM VÀO GIỎ HÀNG
+// =========================
 document.querySelectorAll(".cart-btn").forEach(button => {
 
     button.addEventListener("click", function () {
@@ -790,7 +878,10 @@ document.querySelectorAll(".cart-btn").forEach(button => {
         const item = {
             title: game.querySelector(".item-title").innerText,
             price: game.querySelector(".item-price").innerText,
-            category: game.querySelector(".item-category").innerText,
+
+            // Sửa item-category thành item-categories
+            category: game.querySelector(".item-categories").innerText,
+
             rating: game.querySelector(".item-rating").innerText,
             image: game.querySelector("img").src
         };
@@ -803,25 +894,39 @@ document.querySelectorAll(".cart-btn").forEach(button => {
 
         // Lưu lại
         localStorage.setItem("cart", JSON.stringify(cart));
+
         alert("Đã thêm game vào giỏ hàng!");
 
-        // Nếu muốn chuyển sang trang giỏ hàng ngay thì bỏ comment dòng dưới
         window.location.href = "/user/cart.html";
     });
 });
 
-// Xóa game khỏi Wishlist
-document.querySelectorAll(".remove-btn").forEach(button=>{
-    button.addEventListener("click",function(){
-        const game=this.closest(".wishlist-item");
-        const gameName=game.querySelector(".item-title").innerText;
 
-        if(confirm("Bạn có chắc muốn xóa '" + gameName + "' khỏi danh sách yêu thích?")){
+// =========================
+// XÓA GAME KHỎI WISHLIST
+// =========================
+document.querySelectorAll(".remove-btn").forEach(button => {
+
+    button.addEventListener("click", function() {
+
+        const game = this.closest(".wishlist-item");
+
+        const gameName =
+            game.querySelector(".item-title").innerText;
+
+        if (confirm(
+            "Bạn có chắc muốn xóa '" +
+            gameName +
+            "' khỏi danh sách yêu thích?"
+        )) {
+
             game.remove();
-alert("Đã xóa thành công!");
+
+            alert("Đã xóa thành công!");
         }
     });
 });
+
 </script>
 </body>
 </html>
